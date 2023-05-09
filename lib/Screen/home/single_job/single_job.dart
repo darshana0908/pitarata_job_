@@ -93,7 +93,7 @@ class SingleJob extends StatelessWidget {
                         'Job description coes heare.The full description of the ob coes heare.This area is for the details of the ob. All details can be found in this section.',
                   ),
                 ),
-                //bhbhbhbhbh
+                //bhbhbhbhbhggggg
                 CustomContainer(
                     icon: 'assets/briefcase.svg',
                     text1: 'Job Category Name',
