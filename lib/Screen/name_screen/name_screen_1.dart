@@ -7,6 +7,7 @@ import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:sizer/sizer.dart';
 
 import 'name_screen.dart';
 
@@ -31,7 +32,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
+              height: 100.h,
               child: Stack(children: [
                 Column(
                   children: [

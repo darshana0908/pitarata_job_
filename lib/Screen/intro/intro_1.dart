@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pitarata_job/Screen/intro/intro_2.dart';
 import 'package:pitarata_job/color/colors.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../widget/arrow_button.dart';
 
@@ -39,14 +40,14 @@ class _IntroOnePageState extends State<IntroOnePage> {
           padding: const EdgeInsets.symmetric(horizontal: 100),
           child: Lottie.asset('assets/intro_1.json'),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height / 6),
+        SizedBox(height: 6.h),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
               ' Welcome to the Pita Rata Jobs.\n The app that helps you find job opportunities abroad!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.white, fontFamily: 'Viga', fontSize: 27)),
+                  color: Colors.white, fontFamily: 'Viga', fontSize: 20.sp)),
         ),
         Expanded(
           child: Container(

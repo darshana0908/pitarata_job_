@@ -10,6 +10,7 @@ import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:sizer/sizer.dart';
 
 import 'name_screen_1.dart';
 
@@ -34,53 +35,55 @@ class _NameScreenState extends State<NameScreen> {
     return Scaffold(
       backgroundColor: black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 100.h,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()),
-                            );
-                          },
-                          child: Text(
-                            'skip',
-                            style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 15,
-                                decoration: TextDecoration.underline),
-                          )),
+                  SizedBox(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 1.h),
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()),
+                              );
+                            },
+                            child: Text(
+                              'skip',
+                              style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 15,
+                                  decoration: TextDecoration.underline),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: const EdgeInsets.only(top: 4),
                     child: CustomText(
                         fontWeight: FontWeight.normal,
                         color: white,
                         text: 'Login to your account',
-                        fontSize: 27,
+                        fontSize: 20.sp,
                         fontFamily: 'Viga'),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: MediaQuery.of(context).size.height / 100,
-                        horizontal: MediaQuery.of(context).size.width / 40),
+                        vertical: 0.20.h,
+                        horizontal: MediaQuery.of(context).size.width / 5.w),
                     child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Lottie.asset('assets/login_screen.json',
-                            fit: BoxFit.fill)),
+                        width: 50.h,
+                        child: Lottie.asset(
+                          'assets/login_screen.json',
+                          fit: BoxFit.fill,
+                        )),
                   ),
                   Form(
                       autovalidateMode: AutovalidateMode.always,
