@@ -53,8 +53,8 @@ class _IntroOnePageState extends State<IntroOnePage> {
           child: Container(
             alignment: Alignment.bottomRight,
             child: InkWell(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => IntroTwoPage()),
                   );

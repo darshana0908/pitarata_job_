@@ -29,10 +29,13 @@ class WelcomePage extends StatelessWidget {
                       fontFamily: 'Viga',
                       fontSize: 40.sp)),
             ),
-            Text('Take a moment each day to improve yourself. ',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Viga', fontSize: 26)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text('Take a moment each day to improve yourself. ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: 'Viga', fontSize: 26)),
+            ),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,

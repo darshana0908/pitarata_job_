@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -10,7 +11,7 @@ import 'package:pitarata_job/widget/custom_home.dart';
 import 'package:pitarata_job/widget/custom_list.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/drawer.dart';
-
+import 'package:http/http.dart' as http;
 import '../notification/notification.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+ 
+
   int _selectedIndex = 0;
   String title = '';
   static const List<Widget> _pages = <Widget>[

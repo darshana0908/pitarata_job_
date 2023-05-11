@@ -37,6 +37,7 @@ dependencies:
   responsive_framework: ^1.0.0
   email_validator: ^2.1.17
   sizer: ^2.0.15
+  http: ^0.13.5
 
 
   # The following adds the Cupertino Icons font to your application.

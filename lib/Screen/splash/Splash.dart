@@ -54,7 +54,7 @@ class _SplashPageState extends State<SplashPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
                   child: Image.asset(
-                    'assets/app-logo.png',
+                    'assets/app icon.png',
                   ),
                 ),
               ),
