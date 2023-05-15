@@ -1,25 +1,91 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:pitarata_job/Screen/home/single_job/single_job.dart';
-
 import '../color/colors.dart';
 import 'custom_list.dart';
 import 'custom_text.dart';
+import 'package:http/http.dart' as http;
 
-class MyHome extends StatefulWidget {
-  const MyHome({super.key});
+class CustomHome extends StatefulWidget {
+  const CustomHome({super.key});
 
   @override
-  State<MyHome> createState() => _MyHomeState();
+  State<CustomHome> createState() => _CustomHomeState();
 }
 
-class _MyHomeState extends State<MyHome> {
+class _CustomHomeState extends State<CustomHome> {
   List cat = ['All', 'Cat 1', 'Cat 2', 'Cat 3', 'Cat 4'];
+  bool isLoading = false;
+  @override
+  void initState() {
+    getTextData();
+    getCategoryData();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  getTextData() async {
+    setState(() {
+      isLoading = true;
+    });
+    log('vvvvvvvvvvvvvv');
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://lol.novasoft.lk/_ready_only/aws_nzone_api/getFunData'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "novatechzone._lol",
+          "api_key": "44552522",
+          "from": '0',
+          "to": '20'
+        }));
+
+    setState(() {
+      var res = jsonDecode(response.body.toString());
+      log(res.toString());
+
+      // log(textList.toString());
+      isLoading = false;
+    });
+  }
+
+  getCategoryData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/registerCustomer'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "password": "12345678",
+          "notification_key": "12345678",
+          "name": "darshana",
+          "mobile_number": "0716232224",
+          "email": "darsha@gaai.com"
+        }));
+    log('hhhhhhhaaaahhhhhhhhhhhh');
+    setState(() {
+      var res = jsonDecode(response.body.toString());
+      log('gccfcfcfcfc' + res.toString());
+
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

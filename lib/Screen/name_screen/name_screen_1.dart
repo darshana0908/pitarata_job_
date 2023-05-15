@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 import 'name_screen.dart';
 
@@ -27,6 +29,42 @@ class _NameScreenOneState extends State<NameScreenOne> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   bool checkBox = false;
+  bool isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  getCategoryData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/registerCustomer'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "password": password.text.toString(),
+          "notification_key": confirmPassword.text.toString(),
+          "name": name.text.toString(),
+          "mobile_number": mobile.text.toString(),
+          "email": email.text.toString()
+        }));
+    log('hhhhhhhaaaahhhhhhhhhhhh');
+    setState(() {
+      var res = jsonDecode(response.body.toString());
+      log(res.toString());
+
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,10 +225,11 @@ class _NameScreenOneState extends State<NameScreenOne> {
                             email.text.contains(".")) {
                           if (password.text == confirmPassword.text) {
                             if (checkBox == true) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NameScreenTwo()));
+                              getCategoryData();
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => NameScreenTwo()));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("check Box  ")));

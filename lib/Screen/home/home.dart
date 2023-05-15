@@ -22,12 +22,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
- 
-
   int _selectedIndex = 0;
   String title = '';
   static const List<Widget> _pages = <Widget>[
-    MyHome(),
+    CustomHome(),
     FavoriteScreen(),
     NotificationScreen(),
     Blog(),
