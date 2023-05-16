@@ -38,6 +38,7 @@ dependencies:
   email_validator: ^2.1.17
   sizer: ^2.0.15
   http: ^0.13.5
+  carousel_slider: ^4.2.1
 
 
 

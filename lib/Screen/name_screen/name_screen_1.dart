@@ -32,6 +32,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
   bool isLoading = false;
   @override
   void initState() {
+    getCategoryData();
     // TODO: implement initState
     super.initState();
   }
