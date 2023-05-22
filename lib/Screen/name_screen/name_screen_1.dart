@@ -30,6 +30,8 @@ class _NameScreenOneState extends State<NameScreenOne> {
   TextEditingController confirmPassword = TextEditingController();
   bool checkBox = false;
   bool isLoading = false;
+  String resp = '';
+  String msg = '';
   @override
   void initState() {
     getCategoryData();
@@ -61,6 +63,10 @@ class _NameScreenOneState extends State<NameScreenOne> {
     setState(() {
       var res = jsonDecode(response.body.toString());
       log(res.toString());
+
+      log(res['msg']);
+      resp = res['resultStatus'];
+      msg = res['msg'];
 
       isLoading = false;
     });
@@ -227,10 +233,18 @@ class _NameScreenOneState extends State<NameScreenOne> {
                           if (password.text == confirmPassword.text) {
                             if (checkBox == true) {
                               getCategoryData();
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => NameScreenTwo()));
+                              if (resp == 'SUCCESSFUL') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NameScreenTwo()));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(msg)));
+                              }
+                              if (resp == 'FAIL') {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(msg)));
+                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("check Box  ")));

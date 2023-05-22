@@ -5,6 +5,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/get_Job.dart';
 
 class CustomList extends StatefulWidget {
   const CustomList({super.key, required this.cat});
@@ -16,6 +19,7 @@ class CustomList extends StatefulWidget {
 
 class _CustomListState extends State<CustomList> {
   String selected = 'All';
+
   @override
   void initState() {
     setState(() {
@@ -27,9 +31,10 @@ class _CustomListState extends State<CustomList> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedItems = Provider.of<getJobId>(context);
     bool color = false;
     return Container(
-      height: 80,
+      height: 130,
       child: ListView.builder(
           itemCount: widget.cat.length,
           scrollDirection: Axis.horizontal,
@@ -37,9 +42,9 @@ class _CustomListState extends State<CustomList> {
             return InkWell(
               onTap: () {
                 setState(() {
-                  selected = widget.cat[index];
+                  selected = widget.cat[index]['category_id'];
                 });
-                if (selected == widget.cat[index]) {
+                if (selected == widget.cat[index]['category_id']) {
                   log(selected);
                   setState(() {
                     color = true;
@@ -49,11 +54,11 @@ class _CustomListState extends State<CustomList> {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Container(
-                  width: 80,
-                  height: 70,
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: selected == widget.cat[index]
+                      color: selected == widget.cat[index]['category_id']
                           ? background_green
                           : light_dark),
                   child: Column(children: [
@@ -64,12 +69,14 @@ class _CustomListState extends State<CustomList> {
                         scale: 2,
                       ),
                     ),
-                    CustomText(
-                        text: widget.cat[index],
-                        fontSize: 15,
-                        fontFamily: 'Viga',
-                        color: white,
-                        fontWeight: FontWeight.normal)
+                    SingleChildScrollView(
+                      child: CustomText(
+                          text: widget.cat[index]['category_name'],
+                          fontSize: 15,
+                          fontFamily: 'Viga',
+                          color: white,
+                          fontWeight: FontWeight.normal),
+                    )
                   ]),
                 ),
               ),

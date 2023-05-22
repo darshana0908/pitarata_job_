@@ -44,6 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
       log(_selectedIndex.toString());
     });
+    if (_selectedIndex == 0) {
+      setState(() {
+        title = '';
+      });
+    }
     if (_selectedIndex == 1) {
       setState(() {
         title = 'Favorite';

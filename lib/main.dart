@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pitarata_job/Screen/splash/Splash.dart';
+import 'package:pitarata_job/provider/get_Job.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => getJobId()),
+      // ChangeNotifierProvider(create: (_) => imgload()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

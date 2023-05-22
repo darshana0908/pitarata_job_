@@ -35,8 +35,16 @@ class _JobCategoriesState extends State<JobCategories> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SingleJob(
-                            img: 'assets/Favourite.jpg',
-                            cat: widget.catlist[index].toString())),
+                              similarJob: [],
+                              email: '',
+                              mobile: '',
+                              whatapp: '',
+                              salary: '',
+                              categoryName: '',
+                              addId: '',
+                              description: '',
+                              img: 'assets/Favourite.jpg',
+                            )),
                   );
                 },
                 child: Padding(

@@ -12,9 +12,27 @@ import '../../../widget/custom_text.dart';
 import '../../../widget/job_categories.dart';
 
 class SingleJob extends StatelessWidget {
-  const SingleJob({super.key, required this.cat, required this.img});
-  final String cat;
+  const SingleJob(
+      {super.key,
+      required this.img,
+      required this.description,
+      required this.addId,
+      required this.categoryName,
+      required this.salary,
+      required this.email,
+      required this.mobile,
+      required this.whatapp,
+      required this.similarJob});
+
   final String img;
+  final String description;
+  final String addId;
+  final String categoryName;
+  final String salary;
+  final String email;
+  final String mobile;
+  final String whatapp;
+  final List similarJob;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +61,7 @@ class SingleJob extends StatelessWidget {
           SizedBox(
               width: double.infinity,
               height: MediaQuery.of(context).size.height / 3,
-              child: Image.asset(
+              child: Image.network(
                 img,
                 fit: BoxFit.fill,
               )),
@@ -60,7 +78,7 @@ class SingleJob extends StatelessWidget {
                       fontFamily: 'Comfortaa-VariableFont_wght',
                       fontSize: 13,
                       fontWeight: FontWeight.normal,
-                      text: 'Job id # 1252',
+                      text: 'Job id #$addId',
                     ),
                     Container(
                       child: Row(
@@ -89,19 +107,18 @@ class SingleJob extends StatelessWidget {
                     fontFamily: 'Comfortaa-VariableFont_wght',
                     fontSize: 17,
                     fontWeight: FontWeight.normal,
-                    text:
-                        'Job description coes heare.The full description of the ob coes heare.This area is for the details of the ob. All details can be found in this section.',
+                    text: description,
                   ),
                 ),
                 //bhbhbhbhbhggggg
                 CustomContainer(
                     icon: 'assets/briefcase.svg',
-                    text1: 'Job Category Name',
+                    text1: categoryName,
                     text2: 'Job Category',
                     colorText: font_green),
                 CustomContainer(
                     icon: 'assets/doller.svg',
-                    text1: 'SEK 100 - SEK 200',
+                    text1: salary,
                     text2: 'salary',
                     colorText: Colors.blue),
                 Padding(
@@ -128,7 +145,12 @@ class SingleJob extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => JobContact()),
+                          MaterialPageRoute(
+                              builder: (context) => JobContact(
+                                    email: email,
+                                    mobile: mobile,
+                                    whatapp: whatapp,
+                                  )),
                         );
                       },
                       child: RadiusButton(
@@ -153,6 +175,7 @@ class SingleJob extends StatelessWidget {
                 ),
                 SizedBox(
                     child: CustomGrid(
+                  gridList: similarJob,
                   row: false,
                 )),
                 Padding(

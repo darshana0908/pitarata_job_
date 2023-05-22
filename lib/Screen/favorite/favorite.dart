@@ -20,7 +20,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: CustomGrid(row: true),
+      body: CustomGrid(gridList: [], row: true),
     );
   }
 }

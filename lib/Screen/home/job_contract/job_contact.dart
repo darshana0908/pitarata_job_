@@ -11,7 +11,14 @@ import '../../../widget/custom_text.dart';
 import '../../../widget/custom_text_two.dart';
 
 class JobContact extends StatelessWidget {
-  const JobContact({super.key});
+  const JobContact(
+      {super.key,
+      required this.email,
+      required this.mobile,
+      required this.whatapp});
+  final String email;
+  final String mobile;
+  final String whatapp;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +50,7 @@ class JobContact extends StatelessWidget {
               iconColor: red,
               textColor: red,
               text: 'Email Address',
-              text1: ' info@novatechzone.com',
+              text1: email,
               icon: Icons.email_outlined,
               color1: black,
               color: Color.fromARGB(255, 93, 9, 3),
@@ -52,7 +59,7 @@ class JobContact extends StatelessWidget {
               iconColor: background_green,
               textColor: background_green,
               text: 'Contact Number',
-              text1: '+94115812710',
+              text1: mobile,
               icon: Icons.add_call,
               color1: black,
               color: Color.fromARGB(43, 4, 115, 45),
@@ -61,7 +68,7 @@ class JobContact extends StatelessWidget {
               iconColor: Color.fromARGB(255, 12, 20, 168),
               textColor: Color.fromARGB(255, 12, 20, 168),
               text: 'Whats app Number',
-              text1: '+94115812710',
+              text1: whatapp,
               icon: Icons.whatsapp_rounded,
               color1: black,
               color: Color.fromARGB(255, 4, 22, 75),

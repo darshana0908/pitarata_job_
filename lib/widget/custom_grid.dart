@@ -8,9 +8,10 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import '../Screen/home/single_job/single_job.dart';
 
 class CustomGrid extends StatefulWidget {
-  const CustomGrid({super.key, required this.row});
+  const CustomGrid({super.key, required this.row, required this.gridList});
 
   final bool row;
+  final List gridList;
 
   @override
   State<CustomGrid> createState() => _CustomGridState();
@@ -27,7 +28,7 @@ class _CustomGridState extends State<CustomGrid> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
           ),
-          itemCount: cat.length,
+          itemCount: widget.gridList.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -47,19 +48,39 @@ class _CustomGridState extends State<CustomGrid> {
                       onTap: () {
                         log(index.toString());
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SingleJob(
-                                  img: 'assets/Favourite.jpg',
-                                  cat: cat[index].toString())),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SingleJob(
+                                      whatapp: widget.gridList[index]
+                                              ['job_whatsapp']
+                                          .toString(),
+                                      similarJob: widget.gridList,
+                                      mobile: widget.gridList[index]
+                                              ['job_mobile']
+                                          .toString(),
+                                      email: widget.gridList[index]['job_email']
+                                          .toString(),
+                                      salary: widget.gridList[index]
+                                              ['job_salary']
+                                          .toString(),
+                                      categoryName: widget.gridList[index]
+                                              ['biz_category_name']
+                                          .toString(),
+                                      addId: widget.gridList[index]['ads_id']
+                                          .toString(),
+                                      description: widget.gridList[index]
+                                              ['description']
+                                          .toString(),
+                                      img:
+                                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
+                                    )));
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10)),
-                        child: Image.asset(
-                          'assets/Favourite.jpg',
+                        child: Image.network(
+                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -84,7 +105,8 @@ class _CustomGridState extends State<CustomGrid> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomText(
-                              text: 'Job Categary',
+                              text: widget.gridList[index]['biz_category_name']
+                                  .toString(),
                               fontSize: 12,
                               fontFamily: 'Comfortaa-VariableFont_wght',
                               color: white,
