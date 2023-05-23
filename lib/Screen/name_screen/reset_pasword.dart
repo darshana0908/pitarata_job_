@@ -7,7 +7,6 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pitarata_job/Screen/home/home.dart';
-import 'package:pitarata_job/Screen/name_screen/reset_pasword.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
@@ -15,26 +14,46 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'name_screen_1.dart';
+import 'new_password.dart';
 
-class NameScreen extends StatefulWidget {
-  const NameScreen({super.key});
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({super.key});
 
   @override
-  State<NameScreen> createState() => _NameScreenState();
+  State<ResetPassword> createState() => _ResetPasswordState();
 }
 
-class _NameScreenState extends State<NameScreen> {
-  final email = TextEditingController();
-  final TextEditingController password = TextEditingController();
+class _ResetPasswordState extends State<ResetPassword> {
+  final TextEditingController email = TextEditingController();
   bool isLoading = false;
   var resp;
   var msg;
+
+  loading() {
+    log('fffffffffffffffffffffffffff');
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   resetPassword() async {
     setState(() {
       isLoading = true;
     });
-
+    isLoading
+        ? showDialog(
+            context: context,
+            builder: (context) {
+              return Center(
+                  child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(
+                        color: red,
+                      )));
+            },
+          )
+        : null;
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
@@ -54,49 +73,21 @@ class _NameScreenState extends State<NameScreen> {
     var resp = res['status'];
     var msg = res['msg'];
     log(resp);
-    isLoading = false;
-
-    if (resp.toString().isNotEmpty) {
-      if (resp == '1') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    }
-  }
-
-  login() async {
+    log(res['data']['cid'].toString());
+    String cid = res['data']['cid'].toString();
     setState(() {
-      isLoading = true;
+      isLoading = false;
     });
 
-    var headers = {'Content-Type': 'application/json'};
-
-    // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/loginCustomer'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "password": password.text.toString(),
-          "notification_key": password.text.toString(),
-          "username": email.text.toString()
-        }));
-
-    var res = jsonDecode(response.body.toString());
-    log(res.toString());
-
-    log(res['msg']);
-    var resp = res['status'];
-    var msg = res['msg'];
-    log(resp);
-    isLoading = false;
-
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => NewPassword(
+                      cId: cid,
+                      loading: loading,
+                    )));
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
@@ -144,24 +135,27 @@ class _NameScreenState extends State<NameScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.only(top: 4, bottom: 30),
                     child: CustomText(
                         fontWeight: FontWeight.normal,
                         color: white,
-                        text: 'Login to your account',
+                        text: 'Reset Your Password',
                         fontSize: 20.sp,
                         fontFamily: 'Viga'),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        vertical: 0.20.h,
+                        vertical: 20,
                         horizontal: MediaQuery.of(context).size.width / 5.w),
                     child: Container(
-                        width: 50.h,
-                        child: Lottie.asset(
-                          'assets/login_screen.json',
+                        width: 30.h,
+                        child: Image.asset(
+                          'assets/reset.png',
                           fit: BoxFit.fill,
                         )),
+                  ),
+                  SizedBox(
+                    height: 100,
                   ),
                   Form(
                       autovalidateMode: AutovalidateMode.always,
@@ -174,33 +168,6 @@ class _NameScreenState extends State<NameScreen> {
                   SizedBox(
                     height: 5,
                   ),
-                  CustomTextField(
-                    icon: Icons.key,
-                    keyInput: TextInputType.text,
-                    controller: password,
-                    hintText: 'password',
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResetPassword()),
-                          );
-                        },
-                        child: CustomText(
-                          color: Colors.white54,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          fontSize: 13,
-                          text: 'Reset my password',
-                        ),
-                      )),
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
@@ -208,18 +175,10 @@ class _NameScreenState extends State<NameScreen> {
                         onTap: () {
                           log(email.text.toString());
 
-                          if (email.text.isNotEmpty &&
-                              password.text.isNotEmpty) {
+                          if (email.text.isNotEmpty) {
                             if (email.text.contains("@") &&
                                 email.text.contains(".")) {
-                              showDialog(
-                                  // barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => Center(
-                                      child: isLoading
-                                          ? CircularProgressIndicator()
-                                          : Container()));
-                              login();
+                              resetPassword();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Enter valid email")),
@@ -227,9 +186,7 @@ class _NameScreenState extends State<NameScreen> {
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text(" Incorrect email or password")),
+                              SnackBar(content: Text(" Enter user email ")),
                             );
                           }
                         },
@@ -238,7 +195,7 @@ class _NameScreenState extends State<NameScreen> {
                           child: RadiusButton(
                             color: font_green,
                             colortext: white,
-                            text: 'LOGIN',
+                            text: 'Send OTP',
                             width: 200,
                             height: 60,
                           ),
@@ -269,12 +226,12 @@ class _NameScreenState extends State<NameScreen> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NameScreenOne()),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           ),
+                                        // );
                                       },
                                       child: Text(
                                         "Create a new account",

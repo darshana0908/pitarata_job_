@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:pitarata_job/Screen/intro/intro_1.dart';
+import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
@@ -19,22 +21,29 @@ class _SplashPageState extends State<SplashPage> {
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => IntroOnePage()),
-        );
+       
+        userLogin();
       },
     );
     // TODO: implement initState
     super.initState();
   }
 
-  svg() async {
-    // assetName = await rootBundle.loadString('assets/create_new_account.json');
-    assetName = jsonDecode('assets/create_new_account.json');
+  userLogin() async {  log('jjjjjjjjjjjjjjjj');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      assetName;
-      log(assetName.toString());
+      var userLogin = sharedPreferences.getBool('userLoging');
+      if (userLogin == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const NameScreen()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => IntroOnePage()),
+        );
+      }
     });
   }
 

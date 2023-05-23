@@ -34,16 +34,33 @@ class _NameScreenOneState extends State<NameScreenOne> {
   String msg = '';
   @override
   void initState() {
-    getCategoryData();
     // TODO: implement initState
     super.initState();
   }
 
-  getCategoryData() async {
+  loding() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  register() async {
     setState(() {
       isLoading = true;
     });
-
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: SizedBox(
+              height: 100,
+              width: 100,
+              child: CircularProgressIndicator(
+                color: red,
+              )),
+        );
+      },
+    );
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
@@ -70,6 +87,20 @@ class _NameScreenOneState extends State<NameScreenOne> {
 
       isLoading = false;
     });
+    if (resp == 'SUCCESSFUL') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NameScreenTwo(
+                    loading: loding,
+                    phone: mobile.text,
+                    email: email.text,
+                  )));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    }
+    if (resp == 'FAIL') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    }
   }
 
   @override
@@ -232,19 +263,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                             email.text.contains(".")) {
                           if (password.text == confirmPassword.text) {
                             if (checkBox == true) {
-                              getCategoryData();
-                              if (resp == 'SUCCESSFUL') {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NameScreenTwo()));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text(msg)));
-                              }
-                              if (resp == 'FAIL') {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(content: Text(msg)));
-                              }
+                              register();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("check Box  ")));
