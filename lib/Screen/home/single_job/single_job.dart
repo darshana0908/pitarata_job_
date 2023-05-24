@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:pitarata_job/Screen/home/job_contract/job_contact.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -11,7 +13,7 @@ import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
 import '../../../widget/job_categories.dart';
 
-class SingleJob extends StatelessWidget {
+class SingleJob extends StatefulWidget {
   const SingleJob(
       {super.key,
       required this.img,
@@ -35,6 +37,11 @@ class SingleJob extends StatelessWidget {
   final List similarJob;
 
   @override
+  State<SingleJob> createState() => _SingleJobState();
+}
+
+class _SingleJobState extends State<SingleJob> {
+  @override
   Widget build(BuildContext context) {
     List cat = [' All', 'Cat 1', 'Cat 2', 'Cat 3', 'Cat 4'];
     return Scaffold(
@@ -53,17 +60,17 @@ class SingleJob extends StatelessWidget {
               fontFamily: 'Comfortaa-VariableFont_wght',
               fontSize: 17,
               fontWeight: FontWeight.w900,
-              text: 'Job Category',
+              text: widget.categoryName,
             )),
       ),
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 3,
+              // height: MediaQuery.of(context).size.height / 3,
               child: Image.network(
-                img,
-                fit: BoxFit.fill,
+                widget.img,
+                fit: BoxFit.contain,
               )),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -78,7 +85,7 @@ class SingleJob extends StatelessWidget {
                       fontFamily: 'Comfortaa-VariableFont_wght',
                       fontSize: 13,
                       fontWeight: FontWeight.normal,
-                      text: 'Job id #$addId',
+                      text: 'Job id #${widget.addId}',
                     ),
                     Container(
                       child: Row(
@@ -107,18 +114,18 @@ class SingleJob extends StatelessWidget {
                     fontFamily: 'Comfortaa-VariableFont_wght',
                     fontSize: 17,
                     fontWeight: FontWeight.normal,
-                    text: description,
+                    text: widget.description,
                   ),
                 ),
                 //bhbhbhbhbhggggg
                 CustomContainer(
                     icon: 'assets/briefcase.svg',
-                    text1: categoryName,
+                    text1: widget.categoryName,
                     text2: 'Job Category',
                     colorText: font_green),
                 CustomContainer(
                     icon: 'assets/doller.svg',
-                    text1: salary,
+                    text1: widget.salary,
                     text2: 'salary',
                     colorText: Colors.blue),
                 Padding(
@@ -147,9 +154,9 @@ class SingleJob extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => JobContact(
-                                    email: email,
-                                    mobile: mobile,
-                                    whatapp: whatapp,
+                                    email: widget.email,
+                                    mobile: widget.mobile,
+                                    whatapp: widget.whatapp,
                                   )),
                         );
                       },
@@ -175,7 +182,7 @@ class SingleJob extends StatelessWidget {
                 ),
                 SizedBox(
                     child: CustomGrid(
-                  gridList: similarJob,
+                  gridList: widget.similarJob,
                   row: false,
                 )),
                 Padding(
@@ -246,5 +253,95 @@ class SingleJob extends StatelessWidget {
         ]),
       ),
     );
+  }
+
+   alert(String text, bool item, bool save) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            backgroundColor: black,
+            content: Container(
+              height: 300,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: black, borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white70,
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: CustomText(
+                        text: text,
+                        fontSize: 20,
+                        fontFamily: 'Comfortaa-VariableFont_wght',
+                        color: white,
+                        fontWeight: FontWeight.normal),
+                  ),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  item && save
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                Navigator.pop(context);
+                                log('ggggg');
+                              },
+                              child: RadiusButton(
+                                colortext: black,
+                                color: white,
+                                height: 70,
+                                width: 110,
+                                text: 'NO',
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                // if (item) {
+                                //   var res = await sqlDb.insertData(
+                                //       'INSERT INTO favorite ("name","mid","title") VALUES("$name","$id","text")');
+                                //   setState(() {
+                                //     favoriteItem();
+                                //     textList;
+                                //   });
+                                // } else {
+                                //   Share.share(name);
+                                //   log('ggggggggggg');
+                                // }
+
+                                Navigator.pop(context);
+                              },
+                              child: RadiusButton(
+                                colortext: black,
+                                color: font_green,
+                                height: 70,
+                                width: 110,
+                                text: 'YES',
+                              ),
+                            ),
+                          ],
+                        )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

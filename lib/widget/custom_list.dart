@@ -62,13 +62,6 @@ class _CustomListState extends State<CustomList> {
                           ? background_green
                           : light_dark),
                   child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Image.asset(
-                        'assets/c1.PNG',
-                        scale: 2,
-                      ),
-                    ),
                     SingleChildScrollView(
                       child: CustomText(
                           text: widget.cat[index]['category_name'],

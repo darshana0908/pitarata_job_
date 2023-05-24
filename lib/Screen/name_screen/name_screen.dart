@@ -5,13 +5,16 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/home.dart';
 import 'package:pitarata_job/Screen/name_screen/reset_pasword.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'name_screen_1.dart';
@@ -69,7 +72,7 @@ class _NameScreenState extends State<NameScreen> {
     setState(() {
       isLoading = true;
     });
-
+    isload();
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
@@ -85,21 +88,38 @@ class _NameScreenState extends State<NameScreen> {
         }));
 
     var res = jsonDecode(response.body.toString());
-    log(res.toString());
 
-    log(res['msg']);
     var resp = res['status'];
     var msg = res['msg'];
-    log(resp);
+
     isLoading = false;
+    Navigator.pop(context);
 
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
+        userLoginCheq();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+      MotionToast.info(title: Text("Info"), description: Text(msg))
+          .show(context);
+
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
+  }
+
+  isload() {
+    showDialog(
+        // barrierDismissible: false,
+        context: context,
+        builder: (context) => Center(
+            child: isLoading ? CircularProgressIndicator() : Container()));
+  }
+
+  userLoginCheq() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('userLoging', true);
   }
 
   @override
@@ -208,29 +228,28 @@ class _NameScreenState extends State<NameScreen> {
                         onTap: () {
                           log(email.text.toString());
 
-                          if (email.text.isNotEmpty &&
-                              password.text.isNotEmpty) {
+                          if (email.text.isNotEmpty) {
                             if (email.text.contains("@") &&
                                 email.text.contains(".")) {
-                              showDialog(
-                                  // barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => Center(
-                                      child: isLoading
-                                          ? CircularProgressIndicator()
-                                          : Container()));
-                              login();
+                              if (password.text.isNotEmpty) {
+                                login();
+                              } else {
+                                MotionToast.error(
+                                        title: Text("Error"),
+                                        description: Text("Password required"))
+                                    .show(context);
+                              }
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Enter valid email")),
-                              );
+                              MotionToast.error(
+                                      title: Text("Error"),
+                                      description: Text("Enter valid email"))
+                                  .show(context);
                             }
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text(" Incorrect email or password")),
-                            );
+                            MotionToast.error(
+                                    title: Text("Error"),
+                                    description: Text("email  required"))
+                                .show(context);
                           }
                         },
                         child: Padding(

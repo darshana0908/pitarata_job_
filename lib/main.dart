@@ -4,8 +4,13 @@ import 'package:pitarata_job/provider/get_Job.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => getJobId()),

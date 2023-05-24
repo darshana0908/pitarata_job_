@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen_2.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -86,6 +87,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
       msg = res['msg'];
 
       isLoading = false;
+      Navigator.pop(context);
     });
     if (resp == 'SUCCESSFUL') {
       Navigator.push(
@@ -96,10 +98,13 @@ class _NameScreenOneState extends State<NameScreenOne> {
                     phone: mobile.text,
                     email: email.text,
                   )));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+      MotionToast.info(title: Text("Info "), description: Text(msg))
+          .show(context);
     }
     if (resp == 'FAIL') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      MotionToast.error(title: Text("Error"), description: Text(msg))
+          .show(context);
     }
   }
 
@@ -255,33 +260,59 @@ class _NameScreenOneState extends State<NameScreenOne> {
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
                     onTap: () {
-                      if (name.text.isNotEmpty &&
-                          mobile.text.isNotEmpty &&
-                          email.text.isNotEmpty &&
-                          password.text.isNotEmpty) {
-                        if (email.text.contains("@") &&
-                            email.text.contains(".")) {
-                          if (password.text == confirmPassword.text) {
-                            if (checkBox == true) {
-                              register();
+                      if (name.text.isNotEmpty) {
+                        if (mobile.text.isNotEmpty) {
+                          if (email.text.contains("@") &&
+                              email.text.contains(".")) {
+                            if (email.text.isNotEmpty) {
+                              if (password.text.isNotEmpty) {
+                                if (password.text == confirmPassword.text) {
+                                  if (checkBox == true) {
+                                    register();
+                                  } else {
+                                    MotionToast.error(
+                                            title: Text("Error"),
+                                            description:
+                                                Text("select the check Box"))
+                                        .show(context);
+                                  }
+                                } else {
+                                  MotionToast.error(
+                                          title: Text("Error"),
+                                          description:
+                                              Text("check the password"))
+                                      .show(context);
+                                }
+                              } else {
+                                MotionToast.error(
+                                        title: Text("Error"),
+                                        description: Text("Enter the password"))
+                                    .show(context);
+                              }
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("check Box  ")));
+                              MotionToast.error(
+                                      title: Text("Error"),
+                                      description: Text("Enter the email"))
+                                  .show(context);
                             }
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("password incorrect ")));
+                            MotionToast.error(
+                                    title: Text("Error"),
+                                    description: Text("enter the valid email"))
+                                .show(context);
                           }
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("enter valid email ")),
-                          );
+                          MotionToast.error(
+                                  title: Text("Error"),
+                                  description:
+                                      Text("enter the mobile numberr "))
+                              .show(context);
                         }
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("required fill all ")),
-                        );
+                        MotionToast.error(
+                                title: Text("Error"),
+                                description: Text("enter the name"))
+                            .show(context);
                       }
                     },
                     child: RadiusButton(

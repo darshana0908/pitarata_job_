@@ -18,7 +18,6 @@ class CustomGrid extends StatefulWidget {
 }
 
 class _CustomGridState extends State<CustomGrid> {
-  List cat = ['{ All}', '{Cat 1}', 'Cat 2', 'Cat 3', 'Cat 4'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,7 +45,8 @@ class _CustomGridState extends State<CustomGrid> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        log(index.toString());
+                        log(widget.gridList[index]['biz_category_name']
+                            .toString());
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -80,7 +80,7 @@ class _CustomGridState extends State<CustomGrid> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10)),
                         child: Image.network(
-                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
+                          'https://pitaratajobs.novasoft.lk/reso/post_2022_12_19/NovaTechZone_184845140620221219061102pm.jpg#}',
                           fit: BoxFit.fill,
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/start/start.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -116,6 +117,7 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
       msg = res['msg'];
 
       isLoading = false;
+      Navigator.pop(context);
     });
 
     if (resp == '1') {
@@ -126,16 +128,11 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                     text:
                         " Your account created\n successfully! \n Now you can login to your\n account! .",
                   )));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    }
-    if (resp == '4') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    }
-    if (resp == '6') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-    }
-    if (resp == '7') {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      MotionToast.info(title: Text("Info "), description: Text(msg))
+          .show(context);
+    } else {
+      MotionToast.error(title: Text("Error"), description: Text(msg))
+          .show(context);
     }
   }
 
@@ -225,9 +222,11 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                           if (code.text.isNotEmpty) {
                             enterOtp();
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    ' You must enter OTP to create a new account ')));
+                            MotionToast.error(
+                                    title: Text("Error"),
+                                    description: Text(
+                                        ' You must enter OTP to create a new account '))
+                                .show(context);
                           }
 
                           // Navigator.push(

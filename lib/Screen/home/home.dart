@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String title = '';
   bool userLoging = true;
-  static const List<Widget> _pages = <Widget>[
+  static List<Widget> _pages = <Widget>[
     CustomHome(),
     FavoriteScreen(),
     NotificationScreen(),
@@ -43,6 +43,22 @@ class _HomeScreenState extends State<HomeScreen> {
       size: 150,
     ),
   ];
+  userLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      var userLogin = sharedPreferences.getBool('userLoging');
+      if (userLogin == true) {
+        setState(() {
+          userLoging = true;
+        });
+      } else {
+        setState(() {
+          userLoging = false;
+        });
+        log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
+      }
+    });
+  }
 
   loading() async {
     return await showDialog(
@@ -152,15 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  userLoginCheq() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('userLoging', userLoging);
-    print(userLoging);
-  }
-
   @override
   void initState() {
-    userLoginCheq();
+    userLogin();
     // TODO: implement initState
     super.initState();
   }
