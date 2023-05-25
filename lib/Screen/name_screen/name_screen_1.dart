@@ -272,8 +272,8 @@ class _NameScreenOneState extends State<NameScreenOne> {
                                   } else {
                                     MotionToast.error(
                                             title: Text("Error"),
-                                            description:
-                                                Text("select the check Box"))
+                                            description: Text(
+                                                "You must read and agree to our Terms & Conditions before creating a new account!"))
                                         .show(context);
                                   }
                                 } else {

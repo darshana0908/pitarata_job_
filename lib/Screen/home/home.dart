@@ -18,6 +18,7 @@ import '../../widget/fade_home.dart';
 import '../../widget/radius_button.dart';
 import '../name_screen/name_screen.dart';
 import '../notification/notification.dart';
+import 'profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +30,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String title = '';
-  bool userLoging = true;
+  bool userLoging = false;
   bool x = false;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var res = sharedPreferences.setBool("user", true);
     setState(() {
       var userLogin = sharedPreferences.getBool('userLoging');
       if (userLogin == true) {
@@ -173,10 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FavoriteScreen(),
       NotificationScreen(),
       Blog(),
-      Icon(
-        Icons.chat,
-        size: 150,
-      ),
+      Profile(),
       Icon(
         Icons.chat,
         size: 150,
@@ -253,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        drawer: CustomDrawer(),
+        drawer: CustomDrawer(loging: userLoging),
         body: Center(
           child: _pages.elementAt(_selectedIndex), //New
         ),

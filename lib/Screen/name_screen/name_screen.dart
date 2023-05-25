@@ -97,7 +97,7 @@ class _NameScreenState extends State<NameScreen> {
 
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
-        userLoginCheq();
+        userLoginCheq(true);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
@@ -117,13 +117,12 @@ class _NameScreenState extends State<NameScreen> {
             child: isLoading ? CircularProgressIndicator() : Container()));
   }
 
-  userLoginCheq() async {
+  userLoginCheq(bool x) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('userLoging', true);
+    await prefs.setBool('userLoging', x);
   }
 
-
-    userloginstatus() async {
+  userloginstatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('userLoging', true);
   }
@@ -152,7 +151,8 @@ class _NameScreenState extends State<NameScreen> {
                       child: Container(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              userLoginCheq(false);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

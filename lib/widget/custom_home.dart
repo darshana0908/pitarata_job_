@@ -630,23 +630,23 @@ class _CustomHomeState extends State<CustomHome> {
                                                             }
                                                           },
                                                           icon: Icon(
-                                                            favoritesList.any((element) =>
-                                                                    element["addId"]
-                                                                        .toString() ==
-                                                                    jobCategory[index]
-                                                                            [
-                                                                            "ads_id"]
-                                                                        .toString())
+                                                            userLoging ==
+                                                                        true &&
+                                                                    favoritesList.any((element) =>
+                                                                        element["addId"]
+                                                                            .toString() ==
+                                                                        jobCategory[index]["ads_id"]
+                                                                            .toString())
                                                                 ? Icons.favorite
                                                                 : Icons
                                                                     .favorite_border,
-                                                            color: favoritesList.any((element) =>
-                                                                    element["addId"]
-                                                                        .toString() ==
-                                                                    jobCategory[index]
-                                                                            [
-                                                                            "ads_id"]
-                                                                        .toString())
+                                                            color: userLoging ==
+                                                                        true &&
+                                                                    favoritesList.any((element) =>
+                                                                        element["addId"]
+                                                                            .toString() ==
+                                                                        jobCategory[index]["ads_id"]
+                                                                            .toString())
                                                                 ? red
                                                                 : white,
                                                           )),

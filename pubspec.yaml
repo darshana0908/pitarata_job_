@@ -48,6 +48,7 @@ dependencies:
   share_plus: ^7.0.0
   url_launcher:
   dropdown_below: ^1.0.3
+  in_app_review: ^2.0.6
 
 
 

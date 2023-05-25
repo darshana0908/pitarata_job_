@@ -21,7 +21,6 @@ class _SplashPageState extends State<SplashPage> {
     Future.delayed(
       const Duration(seconds: 2),
       () {
-       
         userLogin();
       },
     );
@@ -29,10 +28,11 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
   }
 
-  userLogin() async {  log('jjjjjjjjjjjjjjjj');
+  userLogin() async {
+    log('jjjjjjjjjjjjjjjj');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      var userLogin = sharedPreferences.getBool('userLoging');
+      var userLogin = sharedPreferences.getBool('user');
       if (userLogin == true) {
         Navigator.push(
           context,

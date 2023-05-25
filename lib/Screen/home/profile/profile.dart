@@ -44,14 +44,8 @@ class Profile extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child:
-                                ArrowButton(icons: Icons.arrow_back_ios_new)),
                         CustomText(
                             text: 'My Profile',
                             fontSize: 30,
