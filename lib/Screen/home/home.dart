@@ -138,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         title = '';
       });
+      authenticateCustomer();
     }
     if (_selectedIndex == 1) {
       setState(() {
@@ -161,9 +162,33 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  authenticateCustomer() async {
+    setState(() {
+      // isLoading = true;customer_id: 535, user_type: 1, verification: 74668
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/authenticateCustomer'),
+        headers: headers,
+        body: json.encode({
+          "verification": "24955",
+          "app_id": "nzone_4457Was555@qsd_job",
+          "customer_id": "534",
+          "api_key": "448755456"
+        }));
+    var res = jsonDecode(response.body.toString());
+
+    log("ddddddddddddddddddddddddddddddddddddddddddddd" + res.toString());
+  }
+
   @override
   void initState() {
     userLogin();
+    authenticateCustomer();
     // TODO: implement initState
     super.initState();
   }

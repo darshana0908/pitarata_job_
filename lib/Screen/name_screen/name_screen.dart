@@ -88,7 +88,7 @@ class _NameScreenState extends State<NameScreen> {
         }));
 
     var res = jsonDecode(response.body.toString());
-
+    log(res.toString());
     var resp = res['status'];
     var msg = res['msg'];
 
@@ -96,6 +96,8 @@ class _NameScreenState extends State<NameScreen> {
     Navigator.pop(context);
 
     if (resp.toString().isNotEmpty) {
+
+      
       if (resp == '1') {
         userLoginCheq(true);
         Navigator.push(
@@ -104,8 +106,6 @@ class _NameScreenState extends State<NameScreen> {
 
       MotionToast.info(title: Text("Info"), description: Text(msg))
           .show(context);
-
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
   }
 
