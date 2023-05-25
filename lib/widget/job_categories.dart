@@ -35,6 +35,7 @@ class _JobCategoriesState extends State<JobCategories> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SingleJob(
+                              x: true,
                               similarJob: [],
                               email: '',
                               mobile: '',

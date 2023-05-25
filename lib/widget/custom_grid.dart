@@ -45,12 +45,20 @@ class _CustomGridState extends State<CustomGrid> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        log(widget.gridList[index]['biz_category_name']
-                            .toString());
+                        bool selected = false;
+                        // if (favoritesList.any((element) =>
+                        //     element["addId"].toString() ==
+                        //     jobCategory[index]["ads_id"]
+                        //         .toString())) {
+                        //   setState(() {
+                        //     selected = true;
+                        //   });
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SingleJob(
+                                      x: true,
                                       whatapp: widget.gridList[index]
                                               ['job_whatsapp']
                                           .toString(),

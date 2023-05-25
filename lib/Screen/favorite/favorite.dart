@@ -8,7 +8,9 @@ import 'package:pitarata_job/db/sqldb.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../widget/radius_button.dart';
 import '../home/single_job/single_job.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   List gridList = [];
   SqlDb sqlDb = SqlDb();
+  String id = '';
 
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
@@ -43,6 +46,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // favoritesData();
+          var n = await sqlDb.deleteData("delete  from favorite");
+          log(n.toString());
+        },
+      ),
       backgroundColor: black,
       body: SingleChildScrollView(
         child: GridView.builder(
@@ -107,7 +117,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10)),
                           child: Image.network(
-                            'https://pitaratajobs.novasoft.lk/reso/post_2022_12_19/${gridList[index]['img']}}',
+                            '${gridList[index]['img']}}',
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -132,8 +142,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CustomText(
-                                text: gridList[index]['biz_category_name']
-                                    .toString(),
+                                text:
+                                    gridList[index]['categoryName'].toString(),
                                 fontSize: 12,
                                 fontFamily: 'Comfortaa-VariableFont_wght',
                                 color: white,
@@ -145,7 +155,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    // alert('Share this record');
+                                    alert(
+                                        'Are you sure you need to Share this record',
+                                        false);
                                   },
                                   child: Icon(
                                     Icons.upload_sharp,
@@ -155,10 +167,14 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 InkWell(
                                   splashColor: font_gold,
                                   hoverColor: font_green,
-                                  // onTap: () {
-                                  //   alert(
-                                  //       'Are you sure you you need to remove this job from  your favorite list ?');
-                                  // },
+                                  onTap: () {
+                                    setState(() {
+                                      id = gridList[index]['addId'].toString();
+                                    });
+                                    alert(
+                                        'Are you sure you  need to remove this job from  your favorite list ?',
+                                        true);
+                                  },
                                   child: Container(
                                     alignment: Alignment.center,
                                     child: Padding(
@@ -182,5 +198,96 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             }),
       ),
     );
+  }
+
+  alert(
+    String text,
+    bool item,
+  ) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            backgroundColor: black,
+            content: Container(
+              height: 300,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: black, borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white70,
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: CustomText(
+                        text: text,
+                        fontSize: 20,
+                        fontFamily: 'Comfortaa-VariableFont_wght',
+                        color: white,
+                        fontWeight: FontWeight.normal),
+                  ),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          log('ggggg');
+                        },
+                        child: RadiusButton(
+                          colortext: black,
+                          color: white,
+                          height: 70,
+                          width: 110,
+                          text: 'NO',
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          if (item) {
+                            var res = await sqlDb.deleteData(
+                                'delete from favorite  where addId = $id ');
+                            setState(() {
+                              favoritesData();
+                            });
+                          } else {
+                            Share.share(
+                                'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\nhttps://pitaratajobs.novasoft.lk/single.php?id=$id\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
+                            log('ggggggggggg');
+                          }
+
+                          Navigator.pop(context);
+                        },
+                        child: RadiusButton(
+                          colortext: black,
+                          color: font_green,
+                          height: 70,
+                          width: 110,
+                          text: 'YES',
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

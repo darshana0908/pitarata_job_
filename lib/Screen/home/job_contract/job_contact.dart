@@ -9,6 +9,7 @@ import '../../../widget/color_container.dart';
 import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
 import '../../../widget/custom_text_two.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class JobContact extends StatelessWidget {
   const JobContact(
@@ -46,32 +47,51 @@ class JobContact extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            ColorContainer(
-              iconColor: red,
-              textColor: red,
-              text: 'Email Address',
-              text1: email,
-              icon: Icons.email_outlined,
-              color1: black,
-              color: Color.fromARGB(255, 93, 9, 3),
+            InkWell(
+              onTap: () {
+                _launchURL();
+              },
+              child: ColorContainer(
+                iconColor: red,
+                textColor: red,
+                text: 'Email Address',
+                text1: email,
+                icon: Icons.email_outlined,
+                color1: black,
+                color: Color.fromARGB(255, 93, 9, 3),
+              ),
             ),
-            ColorContainer(
-              iconColor: background_green,
-              textColor: background_green,
-              text: 'Contact Number',
-              text1: mobile,
-              icon: Icons.add_call,
-              color1: black,
-              color: Color.fromARGB(43, 4, 115, 45),
+            InkWell(
+              onTap: () async {
+                if (mobile.isNotEmpty) {
+                  makingPhoneCall();
+                }
+              },
+              child: ColorContainer(
+                iconColor: background_green,
+                textColor: background_green,
+                text: 'Contact Number',
+                text1: mobile,
+                icon: Icons.add_call,
+                color1: black,
+                color: Color.fromARGB(43, 4, 115, 45),
+              ),
             ),
-            ColorContainer(
-              iconColor: Color.fromARGB(255, 12, 20, 168),
-              textColor: Color.fromARGB(255, 12, 20, 168),
-              text: 'Whats app Number',
-              text1: whatapp,
-              icon: Icons.whatsapp_rounded,
-              color1: black,
-              color: Color.fromARGB(255, 4, 22, 75),
+            InkWell(
+              onTap: () async {
+                if (whatapp.isNotEmpty) {
+                  makingWhatsappCall();
+                }
+              },
+              child: ColorContainer(
+                iconColor: Color.fromARGB(255, 12, 20, 168),
+                textColor: Color.fromARGB(255, 12, 20, 168),
+                text: 'Whats app Number',
+                text1: whatapp,
+                icon: Icons.whatsapp_rounded,
+                color1: black,
+                color: Color.fromARGB(255, 4, 22, 75),
+              ),
             ),
             AdArea(),
             Padding(
@@ -96,5 +116,35 @@ class JobContact extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  makingPhoneCall() async {
+    var url = Uri.parse("tel:$mobile");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  makingWhatsappCall() async {
+    var url = Uri.parse("https://wa.me/$whatapp?text=Hello");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _launchURL() async {
+    final Uri params = Uri(scheme: 'mailto', path: email, queryParameters: {
+      'subject': 'Default Subject',
+      'body': 'Default body'
+    });
+    if (await canLaunchUrl(params)) {
+      await launchUrl(params);
+    } else {
+      print('Could not launch $params');
+    }
   }
 }

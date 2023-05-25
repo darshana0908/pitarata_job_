@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:pitarata_job/Screen/home/job_contract/job_contact.dart';
 import 'package:pitarata_job/color/colors.dart';
+import 'package:pitarata_job/db/sqldb.dart';
 import 'package:pitarata_job/widget/ad_area.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text_two.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
@@ -24,7 +26,8 @@ class SingleJob extends StatefulWidget {
       required this.email,
       required this.mobile,
       required this.whatapp,
-      required this.similarJob});
+      required this.similarJob,
+      required this.x});
 
   final String img;
   final String description;
@@ -35,12 +38,41 @@ class SingleJob extends StatefulWidget {
   final String mobile;
   final String whatapp;
   final List similarJob;
+  final bool x;
 
   @override
   State<SingleJob> createState() => _SingleJobState();
 }
 
 class _SingleJobState extends State<SingleJob> {
+  SqlDb sqlDb = SqlDb();
+  String id = '';
+  List favoritesList = [];
+  bool selected = false;
+  favoritesData() async {
+    List resp = await sqlDb.readData("select * from favorite");
+
+    setState(() {
+      favoritesList = resp;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    log(widget.x.toString());
+    // favoritesData();
+  }
+
+  ifselected() {
+    favoritesList.any((element) => element["addId"].toString() == widget.addId);
+
+    log(favoritesList
+        .any((element) => element["addId"].toString() == widget.addId)
+        .toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     List cat = [' All', 'Cat 1', 'Cat 2', 'Cat 3', 'Cat 4'];
@@ -91,13 +123,27 @@ class _SingleJobState extends State<SingleJob> {
                       child: Row(
                         children: [
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (widget.x == true) {
+                                  alert('you already save this', true, true);
+                                } else {
+                                  alert('Are you sure you want to Save this? ',
+                                      true, false);
+                                }
+                              },
                               icon: Icon(
-                                Icons.favorite_border,
-                                color: white,
+                                widget.x
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: widget.x ? red : white,
                               )),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                alert(
+                                    'Are you sure you need to Share this record ?',
+                                    false,
+                                    false);
+                              },
                               icon: Icon(
                                 Icons.share,
                                 color: font_green,
@@ -255,7 +301,7 @@ class _SingleJobState extends State<SingleJob> {
     );
   }
 
-   alert(String text, bool item, bool save) async {
+  alert(String text, bool item, bool save) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -294,7 +340,7 @@ class _SingleJobState extends State<SingleJob> {
                   SizedBox(
                     height: 35,
                   ),
-                  item && save
+                  save && item
                       ? Container()
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -314,17 +360,23 @@ class _SingleJobState extends State<SingleJob> {
                             ),
                             InkWell(
                               onTap: () async {
-                                // if (item) {
-                                //   var res = await sqlDb.insertData(
-                                //       'INSERT INTO favorite ("name","mid","title") VALUES("$name","$id","text")');
-                                //   setState(() {
-                                //     favoriteItem();
-                                //     textList;
-                                //   });
-                                // } else {
-                                //   Share.share(name);
-                                //   log('ggggggggggg');
-                                // }
+                                if (item) {
+                                  var res = await sqlDb.insertData(
+                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp","similarJob") VALUES("${widget.img}","${widget.description}","${widget.addId}","${widget.categoryName}","${widget.salary}","${widget.email}","${widget.mobile}","${widget.whatapp}","${widget.similarJob}")');
+                                  setState(() {
+                                    favoritesData();
+                                    favoritesList;
+                                  });
+                                  var resp = await sqlDb
+                                      .readData("select * from favorite");
+                                  log(resp.toString());
+                                  Navigator.pop(context);
+                                } else {
+                                  Share.share(
+                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
+                                  log('ggggggggggg');
+                                  log('ggggggggggg');
+                                }
 
                                 Navigator.pop(context);
                               },

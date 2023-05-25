@@ -10,6 +10,7 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:pitarata_job/Screen/home/single_job/single_job.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/db/sqldb.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import '../color/colors.dart';
@@ -57,6 +58,7 @@ class _CustomHomeState extends State<CustomHome> {
   var img;
   var mobile;
   List favoritesList = [];
+  bool x = false;
 
   @override
   void initState() {
@@ -405,12 +407,30 @@ class _CustomHomeState extends State<CustomHome> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return InkWell(
-                                        onTap: () {
-                                          Navigator.push(
+                                        onTap: () async {
+                                          if (userLoging == true) {
+                                            if (favoritesList.any((element) =>
+                                                    element["addId"]
+                                                        .toString() ==
+                                                    jobCategory[index]["ads_id"]
+                                                        .toString()) ==
+                                                true) {
+                                              setState(() {
+                                                x = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                x = false;
+                                              });
+                                            }
+                                          }
+
+                                          await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       SingleJob(
+                                                        x: x,
                                                         whatapp: jobCategory[
                                                                     index]
                                                                 ['job_whatsapp']
@@ -542,8 +562,12 @@ class _CustomHomeState extends State<CustomHome> {
                                                                       [
                                                                       'job_whatsapp']
                                                                   .toString();
-                                                              similarJob =
-                                                                  jobCategory;
+                                                              similarJob = jobCategory[
+                                                                          index]
+                                                                      [
+                                                                      'biz_category_name']
+                                                                  .toString();
+                                                              ;
 
                                                               mobile = jobCategory[
                                                                           index]

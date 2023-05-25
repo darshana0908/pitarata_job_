@@ -122,6 +122,12 @@ class _NameScreenState extends State<NameScreen> {
     await prefs.setBool('userLoging', true);
   }
 
+
+    userloginstatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('userLoging', true);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
