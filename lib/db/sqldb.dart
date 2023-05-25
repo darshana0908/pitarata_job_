@@ -15,9 +15,9 @@ class SqlDb {
 
   intialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'db.db');
+    String path = join(databasepath, 'dbn.db');
     Database mydb = await openDatabase(path,
-        onCreate: _onCreate, version: 2, onUpgrade: _onUpgrade);
+        onCreate: _onCreate, version: 3, onUpgrade: _onUpgrade);
     return mydb;
   }
 
@@ -36,8 +36,8 @@ class SqlDb {
       "salary" TEXT NOT NULL,
       "email" TEXT  NOT NULL,
        "mobile" TEXT NOT NULL,
-      "whatapp" TEXT NOT NULL,
-      "similarJob" TEXT  NOT NULL
+      "whatapp" TEXT NOT NULL
+     
  
  
   

@@ -9,9 +9,11 @@ import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widget/radius_button.dart';
 import '../home/single_job/single_job.dart';
+import '../name_screen/name_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({
@@ -26,6 +28,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   List gridList = [];
   SqlDb sqlDb = SqlDb();
   String id = '';
+  bool userLoging = false;
 
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
@@ -39,20 +42,114 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    favoritesData();
+
+    userLogin();
     //
+  }
+
+  userLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      var userLogin = sharedPreferences.getBool('userLoging');
+      if (userLogin == true) {
+        setState(() {
+          favoritesData();
+        });
+      } else {
+        setState(() {
+          userLoging = false;
+          userCheck();
+        });
+        log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
+      }
+    });
+  }
+
+  userCheck() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      return await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0))),
+              contentPadding: EdgeInsets.only(top: 10.0),
+              backgroundColor: black,
+              content: Container(
+                height: 300,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: black, borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white70,
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomText(
+                          text:
+                              'Please login to your account to access your favorite jobs!',
+                          fontSize: 20,
+                          fontFamily: 'Comfortaa-VariableFont_wght',
+                          color: white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: white,
+                            height: 70,
+                            width: 110,
+                            text: 'NO',
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NameScreen()),
+                            );
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: font_green,
+                            height: 70,
+                            width: 110,
+                            text: 'YES',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // favoritesData();
-          var n = await sqlDb.deleteData("delete  from favorite");
-          log(n.toString());
-        },
-      ),
       backgroundColor: black,
       body: SingleChildScrollView(
         child: GridView.builder(

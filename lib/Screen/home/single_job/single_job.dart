@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/job_contract/job_contact.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/db/sqldb.dart';
@@ -9,6 +10,7 @@ import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text_two.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:pitarata_job/widget/report.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../widget/custom_container.dart';
@@ -215,7 +217,15 @@ class _SingleJobState extends State<SingleJob> {
                     ),
                   ),
                 ),
-                AdArea(),
+                InkWell(
+                    onTap: () {
+                      MotionToast.info(
+                              title: Text("Info"),
+                              description:
+                                  Text('"This option will be enabled soon!"'))
+                          .show(context);
+                    },
+                    child: AdArea()),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: CustomTextTwo(
@@ -228,12 +238,22 @@ class _SingleJobState extends State<SingleJob> {
                 ),
                 SizedBox(
                     child: CustomGrid(
+                  x: widget.x,
                   gridList: widget.similarJob,
                   row: false,
                 )),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: AdArea(),
+                InkWell(
+                  onTap: () {
+                    MotionToast.info(
+                            title: Text("Info"),
+                            description:
+                                Text('"This option will be enabled soon!"'))
+                        .show(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: AdArea(),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {},
@@ -257,14 +277,19 @@ class _SingleJobState extends State<SingleJob> {
                             ),
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: CustomText(
-                            color: white,
-                            fontFamily: 'Comfortaa-VariableFont_wght',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            text: 'Report this post',
+                        InkWell(
+                          onTap: () {
+                            reportAdd();
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: CustomText(
+                              color: white,
+                              fontFamily: 'Comfortaa-VariableFont_wght',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              text: 'Report this post',
+                            ),
                           ),
                         ),
                         Padding(
@@ -280,7 +305,9 @@ class _SingleJobState extends State<SingleJob> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      feedback();
+                    },
                     child: Container(
                       alignment: Alignment.center,
                       child: CustomText(
@@ -362,7 +389,7 @@ class _SingleJobState extends State<SingleJob> {
                               onTap: () async {
                                 if (item) {
                                   var res = await sqlDb.insertData(
-                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp","similarJob") VALUES("${widget.img}","${widget.description}","${widget.addId}","${widget.categoryName}","${widget.salary}","${widget.email}","${widget.mobile}","${widget.whatapp}","${widget.similarJob}")');
+                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp") VALUES("${widget.img}","${widget.description}","${widget.addId}","${widget.categoryName}","${widget.salary}","${widget.email}","${widget.mobile}","${widget.whatapp}")');
                                   setState(() {
                                     favoritesData();
                                     favoritesList;
@@ -391,6 +418,281 @@ class _SingleJobState extends State<SingleJob> {
                           ],
                         )
                 ],
+              ),
+            ),
+          );
+        });
+  }
+
+  reportAdd() async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            backgroundColor: white,
+            content: Container(
+              height: 650,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: black,
+                          )),
+                    ),
+                    CustomText(
+                        text: 'Report this job post',
+                        fontSize: 27,
+                        fontFamily: 'Viga',
+                        color: red,
+                        fontWeight: FontWeight.w400),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Is there something wrong with this post?',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Viga',
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Were constantly working hard to assure that our job posts meet high standards and we are very grateful for any kind of feedback from our users. ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Viga',
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Reasons',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Viga',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          height: 60,
+                          width: 300,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black38),
+                              borderRadius: BorderRadius.circular(2)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('-select a reasons'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DropdownButton<String>(
+                                  borderRadius: BorderRadius.circular(4),
+                                  items: <String>[
+                                    'item sold/',
+                                    'Fraud',
+                                    'Duplicate',
+                                    'Spam',
+                                    "Wrong Category",
+                                    "Offensive",
+                                    "Other"
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (_) {},
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Message',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Viga',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 40.0),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.black38), //<-- SEE HERE
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            color: red, borderRadius: BorderRadius.circular(5)),
+                        child: Text(
+                          'Send Report',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Viga',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  feedback() async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            backgroundColor: white,
+            content: Container(
+              height: 500,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: black,
+                          )),
+                    ),
+                    CustomText(
+                        text: 'Your Feedback',
+                        fontSize: 27,
+                        fontFamily: 'Viga',
+                        color: red,
+                        fontWeight: FontWeight.w400),
+                    Divider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'We are happy to hear your feedback about our services.',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Viga',
+                        color: Colors.black54,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Message',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Viga',
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 40.0),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.black38), //<-- SEE HERE
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Divider(),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 50,
+                        width: 250,
+                        decoration: BoxDecoration(
+                            color: red, borderRadius: BorderRadius.circular(5)),
+                        child: Text(
+                          'Send My Feedback',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Viga',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

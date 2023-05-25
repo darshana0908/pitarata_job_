@@ -745,7 +745,7 @@ class _CustomHomeState extends State<CustomHome> {
                                 if (item == true) {
                                   log('hhhhhh');
                                   var res = await sqlDb.insertData(
-                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp","similarJob") VALUES("$img","$description","$addId","$categoryName","$salary","$email","$mobile","$whatapp","$similarJob")');
+                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp") VALUES("$img","$description","$addId","$categoryName","$salary","$email","$mobile","$whatapp")');
                                   setState(() {
                                     favoritesData();
                                     favoritesList;

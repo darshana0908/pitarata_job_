@@ -8,16 +8,25 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import '../Screen/home/single_job/single_job.dart';
 
 class CustomGrid extends StatefulWidget {
-  const CustomGrid({super.key, required this.row, required this.gridList});
+  const CustomGrid(
+      {super.key, required this.row, required this.gridList, required this.x});
 
   final bool row;
   final List gridList;
+  final bool x;
 
   @override
   State<CustomGrid> createState() => _CustomGridState();
 }
 
 class _CustomGridState extends State<CustomGrid> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    log(widget.gridList.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +36,7 @@ class _CustomGridState extends State<CustomGrid> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
           ),
-          itemCount: widget.gridList.length,
+          itemCount: widget.gridList.length.clamp(0, 6),
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -45,15 +54,7 @@ class _CustomGridState extends State<CustomGrid> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        bool selected = false;
-                        // if (favoritesList.any((element) =>
-                        //     element["addId"].toString() ==
-                        //     jobCategory[index]["ads_id"]
-                        //         .toString())) {
-                        //   setState(() {
-                        //     selected = true;
-                        //   });
-
+                        log(widget.gridList[index]['main_image']);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -84,12 +85,10 @@ class _CustomGridState extends State<CustomGrid> {
                                     )));
                       },
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Image.network(
-                          'https://pitaratajobs.novasoft.lk/reso/post_2022_12_19/NovaTechZone_184845140620221219061102pm.jpg#}',
-                          fit: BoxFit.fill,
+                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -238,4 +237,6 @@ class _CustomGridState extends State<CustomGrid> {
           );
         });
   }
+
+
 }

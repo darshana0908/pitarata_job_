@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widget/fade_home.dart';
 import '../../widget/radius_button.dart';
+import '../name_screen/name_screen.dart';
 import '../notification/notification.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,20 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String title = '';
   bool userLoging = true;
-  static List<Widget> _pages = <Widget>[
-    CustomHome(),
-    FavoriteScreen(),
-    NotificationScreen(),
-    Blog(),
-    Icon(
-      Icons.chat,
-      size: 150,
-    ),
-    Icon(
-      Icons.chat,
-      size: 150,
-    ),
-  ];
+  bool x = false;
+
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
@@ -50,10 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if (userLogin == true) {
         setState(() {
           userLoging = true;
+          x = false;
         });
       } else {
         setState(() {
           userLoging = false;
+          x = false;
         });
         log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
       }
@@ -177,6 +168,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _pages = <Widget>[
+      CustomHome(),
+      FavoriteScreen(),
+      NotificationScreen(),
+      Blog(),
+      Icon(
+        Icons.chat,
+        size: 150,
+      ),
+      Icon(
+        Icons.chat,
+        size: 150,
+      ),
+    ];
     return WillPopScope(
       onWillPop: () {
         return loading();
@@ -196,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )),
         ),
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(4.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: BottomNavigationBar(
@@ -206,9 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
               unselectedItemColor: Colors.deepOrangeAccent,
               selectedIconTheme: IconThemeData(color: font_green, size: 40),
               selectedItemColor: font_green,
+              elevation: 20,
               onTap: _onItemTapped,
               showSelectedLabels: false,
-              showUnselectedLabels: true,
+              showUnselectedLabels: false,
               backgroundColor: light_dark,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
@@ -253,5 +259,87 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  alert(
+    String text,
+  ) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            backgroundColor: black,
+            content: Container(
+              height: 300,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: black, borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white70,
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: CustomText(
+                        text: text,
+                        fontSize: 20,
+                        fontFamily: 'Comfortaa-VariableFont_wght',
+                        color: white,
+                        fontWeight: FontWeight.normal),
+                  ),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          Navigator.pop(context);
+                          log('ggggg');
+                        },
+                        child: RadiusButton(
+                          colortext: black,
+                          color: white,
+                          height: 70,
+                          width: 110,
+                          text: "Cancel",
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NameScreen()),
+                          );
+                        },
+                        child: RadiusButton(
+                          colortext: black,
+                          color: font_green,
+                          height: 70,
+                          width: 110,
+                          text: "Login",
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

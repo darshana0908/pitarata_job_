@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/widget/ad_area.dart';
 
 import '../../../color/colors.dart';
@@ -93,7 +94,15 @@ class JobContact extends StatelessWidget {
                 color: Color.fromARGB(255, 4, 22, 75),
               ),
             ),
-            AdArea(),
+            InkWell(
+                onTap: () {
+                  MotionToast.info(
+                          title: Text("Info"),
+                          description:
+                              Text('"This option will be enabled soon!"'))
+                      .show(context);
+                },
+                child: AdArea()),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: CustomTextTwo(
@@ -105,7 +114,13 @@ class JobContact extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                MotionToast.info(
+                        title: Text("Info"),
+                        description:
+                            Text('"This option will be enabled soon!"'))
+                    .show(context);
+              },
               child: CustomContainer(
                   icon: 'assets/send.svg',
                   text1: 'Send My CV to this Job',

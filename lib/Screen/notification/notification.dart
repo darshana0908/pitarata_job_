@@ -6,6 +6,10 @@ import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../widget/radius_button.dart';
+import '../name_screen/name_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -15,12 +19,122 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  int x = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    userLogin();
+    //
+  }
+
+  userLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      var userLogin = sharedPreferences.getBool('userLoging');
+      if (userLogin == true) {
+        setState(() {
+          x = 10;
+        });
+      } else {
+        setState(() {
+          x = 0;
+          userCheck();
+        });
+        log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
+      }
+    });
+  }
+
+  userCheck() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      return await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0))),
+              contentPadding: EdgeInsets.only(top: 10.0),
+              backgroundColor: black,
+              content: Container(
+                height: 300,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: black, borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white70,
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomText(
+                          text:
+                              'Please login to your account to access your favorite jobs!',
+                          fontSize: 20,
+                          fontFamily: 'Comfortaa-VariableFont_wght',
+                          color: white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: white,
+                            height: 70,
+                            width: 110,
+                            text: 'NO',
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NameScreen()),
+                            );
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: font_green,
+                            height: 70,
+                            width: 110,
+                            text: 'YES',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
       body: ListView.builder(
-          itemCount: 10,
+          itemCount: x,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
