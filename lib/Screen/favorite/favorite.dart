@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import '../../widget/radius_button.dart';
 import '../home/single_job/single_job.dart';
 import '../name_screen/name_screen.dart';
@@ -25,16 +26,19 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  List gridList = [];
+  List favoritesList = [];
   SqlDb sqlDb = SqlDb();
   String id = '';
   bool userLoging = false;
+  String verification = '';
+  String customer_id = '';
+  bool x = false;
 
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
     log(resp.toString());
     setState(() {
-      gridList = resp;
+      favoritesList = resp;
     });
   }
 
@@ -50,19 +54,93 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      var userLogin = sharedPreferences.getBool('userLoging');
-      if (userLogin == true) {
+      var z = sharedPreferences.getString('verification');
+      var y = sharedPreferences.getString('customer_id');
+      setState(() {
+        verification = z.toString();
+        customer_id = y.toString();
+      });
+
+      log("verificatio" + verification);
+      if (verification != '0') {
         setState(() {
-          favoritesData();
+          getFavouriteJobs();
+          log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
+          userLoging = true;
         });
       } else {
         setState(() {
-          userLoging = false;
           userCheck();
+          log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
+          userLoging = false;
         });
-        log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
       }
     });
+  }
+
+  getFavouriteJobs() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+            child: CircularProgressIndicator(
+          color: Colors.grey,
+        ));
+      },
+    );
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "verification": verification,
+          "customer_id": customer_id
+        }));
+    var res = jsonDecode(response.body.toString());
+    log(res['data'].toString());
+    Navigator.pop(context);
+    setState(() {
+      favoritesList = res['data'];
+      log(favoritesList.toString());
+    });
+  }
+
+  updateFavorites() {
+    setState(() {
+      getFavouriteJobs();
+    });
+  }
+
+  removeFavoriteJobs() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+            child: CircularProgressIndicator(
+          color: Colors.grey,
+        ));
+      },
+    );
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/removeFavourite'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "verification": verification,
+          "customer_id": customer_id,
+          " job_id": id
+        }));
+
+    log(verification + customer_id + id);
+    getFavouriteJobs();
+    var res = jsonDecode(response.body.toString());
+    log(res['data'].toString());
+    Navigator.pop(context);
+    setState(() {});
   }
 
   userCheck() {
@@ -158,7 +236,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
-            itemCount: gridList.length,
+            itemCount: favoritesList.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -175,46 +253,45 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: InkWell(
-                        onTap: () {
-                          log(gridList[index]['addId'].toString());
-                          log(gridList[index]['job_whatsapp'].toString());
-                          log(gridList[index]['job_mobile'].toString());
-                          log(gridList[index]['job_email'].toString());
-                          log(gridList[index]['job_salary'].toString());
-                          log(gridList[index]['biz_category_name'].toString());
-                          log(gridList[index]['description'].toString());
-
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => SingleJob(
-                          //               whatapp: gridList[index]['job_whatsapp']
-                          //                   .toString(),
-                          //               similarJob: gridList,
-                          //               mobile: gridList[index]['job_mobile']
-                          //                   .toString(),
-                          //               email: gridList[index]['job_email']
-                          //                   .toString(),
-                          //               salary: gridList[index]['job_salary']
-                          //                   .toString(),
-                          //               categoryName: gridList[index]
-                          //                       ['biz_category_name']
-                          //                   .toString(),
-                          //               addId: gridList[index]['ads_id']
-                          //                   .toString(),
-                          //               description: gridList[index]
-                          //                       ['description']
-                          //                   .toString(),
-                          //               img:
-                          //                   'https://pitaratajobs.novasoft.lk/${gridList[index]['main_image']}',
-                          //             )));
+                        onTap: () async {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SingleJob(
+                                        update: updateFavorites,
+                                        categoryId: favoritesList[index]
+                                                ['biz_category_id']
+                                            .toString(),
+                                        x: userLoging,
+                                        whatapp: favoritesList[index]
+                                                ['job_whatsapp']
+                                            .toString(),
+                                        mobile: favoritesList[index]
+                                                ['job_mobile']
+                                            .toString(),
+                                        email: favoritesList[index]['job_email']
+                                            .toString(),
+                                        salary: favoritesList[index]
+                                                ['job_salary']
+                                            .toString(),
+                                        categoryName: favoritesList[index]
+                                                ['biz_category_name']
+                                            .toString(),
+                                        addId: favoritesList[index]['ads_id']
+                                            .toString(),
+                                        description: favoritesList[index]
+                                                ['description']
+                                            .toString(),
+                                        img:
+                                            'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}',
+                                      )));
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10)),
                           child: Image.network(
-                            '${gridList[index]['img']}}',
+                            'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}',
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -239,8 +316,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CustomText(
-                                text:
-                                    gridList[index]['categoryName'].toString(),
+                                text: favoritesList[index]['biz_category_name']
+                                    .toString(),
                                 fontSize: 12,
                                 fontFamily: 'Comfortaa-VariableFont_wght',
                                 color: white,
@@ -266,7 +343,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   hoverColor: font_green,
                                   onTap: () {
                                     setState(() {
-                                      id = gridList[index]['addId'].toString();
+                                      id = favoritesList[index]['ads_id']
+                                          .toString();
                                     });
                                     alert(
                                         'Are you sure you  need to remove this job from  your favorite list ?',
@@ -358,10 +436,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       InkWell(
                         onTap: () async {
                           if (item) {
-                            var res = await sqlDb.deleteData(
-                                'delete from favorite  where addId = $id ');
                             setState(() {
-                              favoritesData();
+                              removeFavoriteJobs();
+                              // getFavouriteJobs();
                             });
                           } else {
                             Share.share(

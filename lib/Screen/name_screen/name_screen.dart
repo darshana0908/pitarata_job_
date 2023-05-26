@@ -32,6 +32,7 @@ class _NameScreenState extends State<NameScreen> {
   bool isLoading = false;
   var resp;
   var msg;
+  String verification = '';
 
   resetPassword() async {
     setState(() {
@@ -62,7 +63,7 @@ class _NameScreenState extends State<NameScreen> {
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => NameScreen()));
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
@@ -91,15 +92,18 @@ class _NameScreenState extends State<NameScreen> {
     log(res.toString());
     var resp = res['status'];
     var msg = res['msg'];
-
+    log(res['status']);
+    // log(res['data']['customer_id'].toString());
+    // log(res['data']['verification'].toString());
     isLoading = false;
     Navigator.pop(context);
 
     if (resp.toString().isNotEmpty) {
-
-      
       if (resp == '1') {
+        var y = res['data']['customer_id'].toString();
+        verification = res['data']['verification'].toString();
         userLoginCheq(true);
+        userDetails(y, verification);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
@@ -119,7 +123,14 @@ class _NameScreenState extends State<NameScreen> {
 
   userLoginCheq(bool x) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     await prefs.setBool('userLoging', x);
+  }
+
+  userDetails(String y, String z) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('customer_id', y);
+    await prefs.setString('verification', z);
   }
 
   userloginstatus() async {
@@ -153,6 +164,9 @@ class _NameScreenState extends State<NameScreen> {
                         child: TextButton(
                             onPressed: () async {
                               userLoginCheq(false);
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString('verification', '0');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

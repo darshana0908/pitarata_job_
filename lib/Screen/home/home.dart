@@ -21,7 +21,9 @@ import '../notification/notification.dart';
 import 'profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -31,22 +33,33 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String title = '';
   bool userLoging = false;
-  bool x = false;
+  // bool x = false;
+  String customerId = '';
+  String verification = '';
+  bool customerLogin = false;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var res = sharedPreferences.setBool("user", true);
     setState(() {
       var userLogin = sharedPreferences.getBool('userLoging');
+      var y = sharedPreferences.getString('customer_id');
+      var z = sharedPreferences.getString('verification');
+      customerId = y.toString();
+      verification = z.toString();
+
+      log(y.toString());
+      log(z.toString());
+      authenticateCustomer(customerId, verification);
       if (userLogin == true) {
         setState(() {
           userLoging = true;
-          x = false;
+          // x = false;
         });
       } else {
         setState(() {
           userLoging = false;
-          x = false;
+          // x = false;
         });
         log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
       }
@@ -138,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         title = '';
       });
-      authenticateCustomer();
     }
     if (_selectedIndex == 1) {
       setState(() {
@@ -162,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  authenticateCustomer() async {
+  authenticateCustomer(String cid, String ver) async {
     setState(() {
       // isLoading = true;customer_id: 535, user_type: 1, verification: 74668
     });
@@ -175,20 +187,33 @@ class _HomeScreenState extends State<HomeScreen> {
             'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/authenticateCustomer'),
         headers: headers,
         body: json.encode({
-          "verification": "24955",
+          "verification": ver,
           "app_id": "nzone_4457Was555@qsd_job",
-          "customer_id": "534",
+          "customer_id": cid,
           "api_key": "448755456"
         }));
     var res = jsonDecode(response.body.toString());
+    // log(res['status']);
+    if (res['status'] == '1') {
+      setState(() {
+        customerId = cid;
+        customerLogin = true;
+        log('customer ttttttttttt' + customerLogin.toString());
+      });
+    } else {
+      setState(() {
+        customerLogin = false;
+        log('customer false' + customerLogin.toString());
+      });
+    }
 
-    log("ddddddddddddddddddddddddddddddddddddddddddddd" + res.toString());
+    // log("ddddddddddddddddddddddddddddddddddddddddddddd" + res.toString());
   }
 
   @override
   void initState() {
     userLogin();
-    authenticateCustomer();
+
     // TODO: implement initState
     super.initState();
   }
@@ -196,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = <Widget>[
-      CustomHome(),
+      CustomHome(customerId: customerId, userStatus: customerLogin),
       FavoriteScreen(),
       NotificationScreen(),
       Blog(),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -12,13 +13,14 @@ import 'package:pitarata_job/widget/custom_text_two.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:pitarata_job/widget/report.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
 import '../../../widget/job_categories.dart';
 
 class SingleJob extends StatefulWidget {
-  const SingleJob(
+  SingleJob(
       {super.key,
       required this.img,
       required this.description,
@@ -28,8 +30,9 @@ class SingleJob extends StatefulWidget {
       required this.email,
       required this.mobile,
       required this.whatapp,
-      required this.similarJob,
-      required this.x});
+      required this.categoryId,
+      required this.x,
+      required this.update});
 
   final String img;
   final String description;
@@ -39,8 +42,10 @@ class SingleJob extends StatefulWidget {
   final String email;
   final String mobile;
   final String whatapp;
-  final List similarJob;
-  final bool x;
+  final String categoryId;
+  final Function update;
+
+  bool x;
 
   @override
   State<SingleJob> createState() => _SingleJobState();
@@ -50,7 +55,12 @@ class _SingleJobState extends State<SingleJob> {
   SqlDb sqlDb = SqlDb();
   String id = '';
   List favoritesList = [];
+  List getSimilarJobsList = [];
   bool selected = false;
+  bool loading = false;
+  String verification = '';
+  String customer_id = '';
+  bool seFavorites = false;
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
 
@@ -62,9 +72,12 @@ class _SingleJobState extends State<SingleJob> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     log(widget.x.toString());
     // favoritesData();
+    getSimilarJobs();
+    userLogin();
   }
 
   ifselected() {
@@ -75,9 +88,85 @@ class _SingleJobState extends State<SingleJob> {
         .toString());
   }
 
+  getSimilarJobs() async {
+    setState(() {
+      loading = true;
+    });
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSimilarJobs'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "job_category_id": widget.categoryId
+        }));
+    log(widget.categoryId);
+    var res = jsonDecode(response.body.toString());
+    log(res.toString());
+
+    setState(() {
+      loading = false;
+      getSimilarJobsList = res['data'];
+    });
+  }
+
+  reportThisJob() async {
+    setState(() {
+      // loading = true;
+    });
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/sendFeedbackForJob '),
+        headers: headers,
+        body: json.encode({
+          "verification": verification,
+          "app_id": "nzone_4457Was555@qsd_job",
+          "customer_id ": customer_id,
+          "job_id": widget.addId,
+          // "reason": "1",
+          // "message": "ffffffffffffff",
+          "feedback": "ddddddddddddddd"
+        }));
+    log(widget.categoryId +
+        "bbbbb" +
+        verification +
+        "ccccccc" +
+        widget.addId +
+        "kkkkkk" +
+        customer_id);
+    // var res = jsonDecode(response.body);
+    log(response.body.toString());
+
+    setState(() {
+      // loading = false;
+    });
+  }
+
+  userLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      var z = sharedPreferences.getString('verification');
+      var y = sharedPreferences.getString('customer_id');
+      setState(() {
+        verification = z.toString();
+        customer_id = y.toString();
+      });
+
+      log("verificatio" + verification);
+      if (verification != '0') {
+        setState(() {
+          log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
+        });
+      } else {
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List cat = [' All', 'Cat 1', 'Cat 2', 'Cat 3', 'Cat 4'];
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
@@ -124,21 +213,28 @@ class _SingleJobState extends State<SingleJob> {
                     Container(
                       child: Row(
                         children: [
-                          IconButton(
-                              onPressed: () {
-                                if (widget.x == true) {
-                                  alert('you already save this', true, true);
-                                } else {
-                                  alert('Are you sure you want to Save this? ',
-                                      true, false);
-                                }
-                              },
-                              icon: Icon(
-                                widget.x
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: widget.x ? red : white,
-                              )),
+                          seFavorites
+                              ? CircularProgressIndicator(
+                                  color: red,
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    if (widget.x == true) {
+                                      alert(
+                                          'you already save this', true, true);
+                                    } else {
+                                      alert(
+                                          'Are you sure you want to Save this? ',
+                                          true,
+                                          false);
+                                    }
+                                  },
+                                  icon: Icon(
+                                    widget.x
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: widget.x ? red : white,
+                                  )),
                           IconButton(
                               onPressed: () {
                                 alert(
@@ -237,11 +333,17 @@ class _SingleJobState extends State<SingleJob> {
                   ),
                 ),
                 SizedBox(
-                    child: CustomGrid(
-                  x: widget.x,
-                  gridList: widget.similarJob,
-                  row: false,
-                )),
+                    child: loading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                            color: Colors.grey,
+                          ))
+                        : CustomGrid(
+                            update: widget.update,
+                            x: widget.x,
+                            gridList: getSimilarJobsList,
+                            row: false,
+                          )),
                 InkWell(
                   onTap: () {
                     MotionToast.info(
@@ -256,7 +358,9 @@ class _SingleJobState extends State<SingleJob> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    reportThisJob();
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     height: 60,
@@ -328,6 +432,62 @@ class _SingleJobState extends State<SingleJob> {
     );
   }
 
+  setFavorite() async {
+    setState(() {
+      seFavorites = true;
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/setFavourite'),
+        headers: headers,
+        body: json.encode({
+          "verification": verification,
+          "app_id": "nzone_4457Was555@qsd_job",
+          "customer_id": customer_id,
+          "job_id": widget.addId
+        }));
+    var res = jsonDecode(response.body.toString());
+    log('v' + verification);
+    log("c" + customer_id);
+    log('kkkkkccccaca' + res.toString());
+
+    setState(() {
+      seFavorites = false;
+      widget.x = true;
+      widget.update();
+    });
+  }
+
+  getFavouriteJobs() async {
+    setState(() {});
+
+    var headers = {'Content-Type': 'application/json'};
+
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "verification": verification,
+          "customer_id": customer_id
+        }));
+    var res = jsonDecode(response.body.toString());
+
+    log(res['data'].toString());
+    if (res['data'].toString().isNotEmpty) {
+      setState(() {
+        if (res['data'].toString().isNotEmpty) {
+          favoritesList = res['data'];
+        }
+      });
+    }
+  }
+
   alert(String text, bool item, bool save) async {
     return await showDialog(
         context: context,
@@ -388,16 +548,8 @@ class _SingleJobState extends State<SingleJob> {
                             InkWell(
                               onTap: () async {
                                 if (item) {
-                                  var res = await sqlDb.insertData(
-                                      'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp") VALUES("${widget.img}","${widget.description}","${widget.addId}","${widget.categoryName}","${widget.salary}","${widget.email}","${widget.mobile}","${widget.whatapp}")');
-                                  setState(() {
-                                    favoritesData();
-                                    favoritesList;
-                                  });
-                                  var resp = await sqlDb
-                                      .readData("select * from favorite");
-                                  log(resp.toString());
-                                  Navigator.pop(context);
+                                  setFavorite();
+                                  setState(() {});
                                 } else {
                                   Share.share(
                                       'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');

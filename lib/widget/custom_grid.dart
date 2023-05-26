@@ -8,12 +8,18 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import '../Screen/home/single_job/single_job.dart';
 
 class CustomGrid extends StatefulWidget {
-  const CustomGrid(
-      {super.key, required this.row, required this.gridList, required this.x});
+  const CustomGrid({
+    super.key,
+    required this.row,
+    required this.gridList,
+    required this.x,
+    required this.update
+  });
 
   final bool row;
   final List gridList;
   final bool x;
+  final Function update;
 
   @override
   State<CustomGrid> createState() => _CustomGridState();
@@ -54,16 +60,17 @@ class _CustomGridState extends State<CustomGrid> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        log(widget.gridList[index]['main_image']);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SingleJob(
+                                builder: (context) => SingleJob(update: widget.update,
+                                      categoryId: widget.gridList[index]
+                                              ['biz_category_id']
+                                          .toString(),
                                       x: true,
                                       whatapp: widget.gridList[index]
                                               ['job_whatsapp']
                                           .toString(),
-                                      similarJob: widget.gridList,
                                       mobile: widget.gridList[index]
                                               ['job_mobile']
                                           .toString(),
@@ -237,6 +244,4 @@ class _CustomGridState extends State<CustomGrid> {
           );
         });
   }
-
-
 }

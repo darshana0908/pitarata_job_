@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import '../../widget/radius_button.dart';
 import '../name_screen/name_screen.dart';
 
@@ -20,6 +21,9 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   int x = 0;
+  String verification = '';
+  String customer_id = '';
+  List notificationsList = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -32,20 +36,73 @@ class _NotificationScreenState extends State<NotificationScreen> {
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      var userLogin = sharedPreferences.getBool('userLoging');
-      if (userLogin == true) {
+      var z = sharedPreferences.getString('verification');
+      var y = sharedPreferences.getString('customer_id');
+      setState(() {
+        verification = z.toString();
+        customer_id = y.toString();
+      });
+
+      log("verificatio" + verification);
+      if (verification != '0') {
         setState(() {
-          x = 10;
+          log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
+          getCustomerNotifications();
         });
       } else {
         setState(() {
-          x = 0;
+          userCheck();
+          log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
           userCheck();
         });
-        log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
       }
     });
   }
+
+  getCustomerNotifications() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+            child: CircularProgressIndicator(
+          color: Colors.grey,
+        ));
+      },
+    );
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getCustomerNotifications'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "verification": '111111',
+          "customer_id": customer_id,
+        }));
+
+    var res = jsonDecode(response.body.toString());
+    log(res.toString());
+    Navigator.pop(context);
+    setState(() {});
+  }
+
+  // userLogin() async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     var userLogin = sharedPreferences.getBool('userLoging');
+  //     if (userLogin == true) {
+  //       setState(() {
+  //         x = 10;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         x = 0;
+  //         userCheck();
+  //       });
+  //       log('kkkkkkkkkkkkkkkkkkddddddddddddddddddk');
+  //     }
+  //   });
+  // }
 
   userCheck() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
