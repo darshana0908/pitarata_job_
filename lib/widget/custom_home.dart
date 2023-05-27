@@ -49,15 +49,7 @@ class _CustomHomeState extends State<CustomHome> {
   bool _isLoadMoreRuning = false;
   late ScrollController mycontroller;
   SqlDb sqlDb = SqlDb();
-  var whatapp;
-  var similarJob;
-  var email;
-  var salary;
-  var categoryName;
-  var addId;
-  var description;
-  var img;
-  var mobile;
+  String addId = '';
   List favoritesList = [];
   bool x = false;
   String verification = '';
@@ -67,11 +59,11 @@ class _CustomHomeState extends State<CustomHome> {
   bool loadFavorites = false;
   @override
   void initState() {
+    getWallpaper();
+    userLogin();
     // TODO: implement initState
     super.initState();
 
-    getWallpaper();
-    userLogin();
     mycontroller = ScrollController()..addListener(_loadeMore);
   }
 
@@ -103,10 +95,7 @@ class _CustomHomeState extends State<CustomHome> {
     setState(() {
       isLoading = true;
     });
-
     var headers = {'Content-Type': 'application/json'};
-
-    // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
             'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getHomeWallpapers'),
@@ -129,7 +118,6 @@ class _CustomHomeState extends State<CustomHome> {
     setState(() {
       isLoading = true;
     });
-
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
@@ -161,11 +149,8 @@ class _CustomHomeState extends State<CustomHome> {
       setState(() {
         _isLoadMoreRuning = true;
       });
-
       _page += 1;
-
       var headers = {'Content-Type': 'application/json'};
-
       // request.headers.addAll(headers);
       var response = await http.post(
           Uri.parse(
@@ -188,7 +173,6 @@ class _CustomHomeState extends State<CustomHome> {
           _hasNextPage = false;
         });
       }
-
       // job.addAll(res['data']);
       setState(() {
         _isLoadMoreRuning = false;
@@ -200,9 +184,7 @@ class _CustomHomeState extends State<CustomHome> {
     setState(() {
       _isFirstLoadRunning = true;
     });
-
     var headers = {'Content-Type': 'application/json'};
-
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
@@ -224,12 +206,11 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   setFavorite() async {
+    log('bbbbbbbbbbbbbbbb');
     setState(() {
       loadFavorites = true;
     });
-
     var headers = {'Content-Type': 'application/json'};
-
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
@@ -242,10 +223,6 @@ class _CustomHomeState extends State<CustomHome> {
           "job_id": addId
         }));
     var res = jsonDecode(response.body.toString());
-    log('v' + verification);
-    log("c" + customer_id);
-    log('kkkkkccccaca' + res.toString());
-
     setState(() {
       loadFavorites = false;
       getFavouriteJobs();
@@ -253,12 +230,11 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   getFavouriteJobs() async {
+    log('bbbbbbbbbbbbbbbbssssssssssssssss');
     setState(() {
-      // _isFirstLoadRunning = true;
+      loadFavorites = true;
     });
-
     var headers = {'Content-Type': 'application/json'};
-
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
@@ -277,7 +253,7 @@ class _CustomHomeState extends State<CustomHome> {
         if (res['data'].toString().isNotEmpty) {
           favoritesList = res['data'];
         }
-
+        loadFavorites = false;
         // _isFirstLoadRunning = false;
       });
     }
@@ -297,20 +273,12 @@ class _CustomHomeState extends State<CustomHome> {
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
-          "verification": "0",
-          "customer_id": "0",
+          "customer_id": userStatus ? customer_id : "0",
           "job_id": addId,
         }));
     var res = jsonDecode(response.body.toString());
 
     log(res['data'].toString());
-    if (res['data'].toString().isNotEmpty) {
-      setState(() {
-        if (res['data'].toString().isNotEmpty) {}
-
-        // _isFirstLoadRunning = false;
-      });
-    }
   }
 
   updateFavorites() {
@@ -358,7 +326,7 @@ class _CustomHomeState extends State<CustomHome> {
                                           child: Image.network(
                                             "https://pitaratajobs.novasoft.lk/$img",
                                             // i[index]['image_path'],
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.fill,
                                           ),
                                         );
                                       },
@@ -441,7 +409,7 @@ class _CustomHomeState extends State<CustomHome> {
                                         ),
                                       ))
                                     : Container(
-                                        height: 100,
+                                        height: 70,
                                         child: ListView.builder(
                                             itemCount: jobCategoryName.length,
                                             scrollDirection: Axis.horizontal,
@@ -507,7 +475,10 @@ class _CustomHomeState extends State<CustomHome> {
                             // jub category all
 
                             _isFirstLoadRunning
-                                ? Center(child: CircularProgressIndicator())
+                                ? SizedBox(
+                                    height: 500,
+                                    child: Center(
+                                        child: CircularProgressIndicator()))
                                 : Container(
                                     // height: 800,
                                     child: ListView.builder(
@@ -518,7 +489,7 @@ class _CustomHomeState extends State<CustomHome> {
                                             (BuildContext context, int index) {
                                           return InkWell(
                                             onTap: () async {
-                                              // updateJobView();
+                                              updateJobView();
                                               if (userStatus == true) {
                                                 if (favoritesList.any(
                                                         (element) =>
@@ -686,71 +657,61 @@ class _CustomHomeState extends State<CustomHome> {
                                                         ),
                                                         Positioned(
                                                           right: 8,
-                                                          child: loadFavorites &&
-                                                                  jobCategory[
-                                                                          index]
-                                                                      ['ads_id']
-                                                              ? CircularProgressIndicator(
-                                                                  color: red,
-                                                                )
-                                                              : IconButton(
-                                                                  onPressed:
-                                                                      () {
+                                                          child: IconButton(
+                                                              onPressed: () {
+                                                                if (userStatus ==
+                                                                    true) {
+                                                                  setState(() {
                                                                     addId = jobCategory[index]
                                                                             [
-                                                                            "ads_id"]
+                                                                            'ads_id']
                                                                         .toString();
-
-                                                                    setState(
-                                                                        () {
-                                                                      addId = jobCategory[index]
-                                                                              [
-                                                                              'ads_id']
-                                                                          .toString();
-                                                                    });
-
-                                                                    if (userStatus ==
-                                                                        true) {
-                                                                      favoritesList.any((element) =>
-                                                                              element["ads_id"].toString() ==
-                                                                              jobCategory[index]["ads_id"].toString())
-                                                                          ? alert(
-                                                                              'You already Save this',
-                                                                              true,
-                                                                              true,
-                                                                            )
-                                                                          : alert(
-                                                                              'Are you sure you want to Save this?',
-                                                                              true,
-                                                                              false,
-                                                                            );
-                                                                    } else {
-                                                                      alert(
-                                                                        'Please login to your account to add this job to your favorite list!',
-                                                                        false,
-                                                                        false,
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  icon: Icon(
-                                                                    userStatus ==
-                                                                                true &&
-                                                                            favoritesList.any((element) =>
-                                                                                element["ads_id"].toString() ==
-                                                                                jobCategory[index]["ads_id"]
-                                                                                    .toString())
-                                                                        ? Icons
-                                                                            .favorite
-                                                                        : Icons
-                                                                            .favorite_border,
-                                                                    color: userStatus ==
-                                                                                true &&
-                                                                            favoritesList.any((element) =>
-                                                                                element["ads_id"].toString() ==
-                                                                                jobCategory[index]["ads_id"].toString())
-                                                                        ? red
-                                                                        : white,
-                                                                  )),
+                                                                    log(addId);
+                                                                  });
+                                                                  favoritesList.any((element) =>
+                                                                          element["ads_id"]
+                                                                              .toString() ==
+                                                                          jobCategory[index]["ads_id"]
+                                                                              .toString())
+                                                                      ? alert(
+                                                                          'You already Save this',
+                                                                          true,
+                                                                          true,
+                                                                        )
+                                                                      : alert(
+                                                                          'Are you sure you want to Save this?',
+                                                                          true,
+                                                                          false,
+                                                                        );
+                                                                } else {
+                                                                  alert(
+                                                                    'Please login to your account to add this job to your favorite list!',
+                                                                    false,
+                                                                    false,
+                                                                  );
+                                                                }
+                                                              },
+                                                              icon: loadFavorites ==
+                                                                          true &&
+                                                                      jobCategory[index]['ads_id']
+                                                                              .toString() ==
+                                                                          addId
+                                                                              .toString()
+                                                                  ? CircularProgressIndicator(
+                                                                      color:
+                                                                          red,
+                                                                    )
+                                                                  : Icon(
+                                                                      userStatus == true && favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString())
+                                                                          ? Icons
+                                                                              .favorite
+                                                                          : Icons
+                                                                              .favorite_border,
+                                                                      color: userStatus == true &&
+                                                                              favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString())
+                                                                          ? red
+                                                                          : white,
+                                                                    )),
                                                         ),
                                                       ]),
                                               ),

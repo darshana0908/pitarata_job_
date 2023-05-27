@@ -7,6 +7,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/favorite/favorite.dart';
+import 'package:pitarata_job/Screen/home/about_us/about_us.dart';
+import 'package:pitarata_job/Screen/home/contact_us/contact_us.dart';
 import 'package:pitarata_job/Screen/home/get_support/get_support.dart';
 import 'package:pitarata_job/Screen/home/logout/logout.dart';
 import 'package:pitarata_job/Screen/home/profile/profile.dart';
@@ -160,9 +162,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             }
                           }),
                       Divider(color: Colors.white38),
-                      // DrawerRow(text: 'Term and Conditions', on: () {}),
+                      DrawerRow(
+                          text: 'Contect us',
+                          on: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ContactUs()));
+                          }),
                       Divider(color: Colors.white38),
-                      DrawerRow(text: ' open about us screen.', on: () {}),
+                      DrawerRow(
+                          text: ' open about us screen.',
+                          on: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AboutUs()));
+                          }),
                       Divider(color: Colors.white38),
                     ],
                   ),

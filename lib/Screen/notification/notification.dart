@@ -157,7 +157,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             color: white,
                             height: 70,
                             width: 110,
-                            text: 'NO',
+                            text: 'Cancel',
                           ),
                         ),
                         InkWell(
@@ -173,7 +173,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             color: font_green,
                             height: 70,
                             width: 110,
-                            text: 'YES',
+                            text: 'Login',
                           ),
                         ),
                       ],

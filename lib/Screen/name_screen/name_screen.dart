@@ -65,7 +65,8 @@ class _NameScreenState extends State<NameScreen> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => NameScreen()));
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      MotionToast.info(title: Text("Info"), description: Text(msg))
+          .show(context);
     }
   }
 

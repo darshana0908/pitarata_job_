@@ -196,7 +196,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             color: white,
                             height: 70,
                             width: 110,
-                            text: 'NO',
+                            text: 'Cancel',
                           ),
                         ),
                         InkWell(
@@ -212,7 +212,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             color: font_green,
                             height: 70,
                             width: 110,
-                            text: 'YES',
+                            text: 'Login',
                           ),
                         ),
                       ],
@@ -313,15 +313,22 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CustomText(
-                                text: favoritesList[index]['biz_category_name']
-                                    .toString(),
-                                fontSize: 12,
-                                fontFamily: 'Comfortaa-VariableFont_wght',
-                                color: white,
-                                fontWeight: FontWeight.normal),
+                          SizedBox(
+                            width: 100,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CustomText(
+                                    text: favoritesList[index]
+                                            ['biz_category_name']
+                                        .toString(),
+                                    fontSize: 12,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ),
                           ),
                           Container(
                             alignment: Alignment.center,
