@@ -10,6 +10,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
 import 'name_screen.dart';
 
 class NameScreenTwo extends StatefulWidget {
@@ -161,7 +162,7 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                             fontWeight: FontWeight.normal,
                             color: white,
                             text: " You are almost there",
-                            fontSize: 25,
+                            fontSize: 20.sp,
                             fontFamily: 'Viga'),
                       ),
                     ),
@@ -173,7 +174,7 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                         fontWeight: FontWeight.normal,
                         color: white,
                         text: " We just sent an OTP to \n ${widget.email}.",
-                        fontSize: 20,
+                        fontSize: 17.sp,
                         fontFamily: 'Viga'),
                     SizedBox(
                       height: 10,
@@ -183,113 +184,101 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                         color: Colors.white54,
                         text:
                             " Check your emails get the verification \ncode of your account",
-                        fontSize: 18,
+                        fontSize: 14.sp,
                         fontFamily: 'Comfortaa-VariableFont_wght'),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 13,
+                      child: Form(
+                        child: CustomTextField(
+                          icon: Icons.verified_user_rounded,
+                          keyInput: TextInputType.number,
+                          controller: code,
+                          hintText: 'enter the verfication code',
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          resendOtp();
+                        },
+                        child: CustomText(
+                            text: 'Resend OTP',
+                            fontSize: 13.sp,
+                            fontFamily: 'Viga',
+                            color: Colors.white60,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (code.text.isNotEmpty) {
+                          enterOtp();
+                        } else {
+                          MotionToast.error(
+                                  title: Text("Error"),
+                                  description: Text(
+                                      ' You must enter OTP to create a new account '))
+                              .show(context);
+                        }
+                      },
+                      child: RadiusButton(
+                        color: font_green,
+                        colortext: white,
+                        text: 'VERIFY MY ACCOUNT',
+                        width: 230,
+                        height: 8.h,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                   ],
                 ),
                 Positioned(
                   bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CustomTextField(
-                        icon: Icons.verified_user_rounded,
-                        keyInput: TextInputType.number,
-                        controller: code,
-                        hintText: 'enter the verfication code',
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            resendOtp();
-                          },
-                          child: CustomText(
-                              text: 'Resend OTP',
-                              fontSize: 17,
-                              fontFamily: 'Viga',
-                              color: Colors.white60,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (code.text.isNotEmpty) {
-                            enterOtp();
-                          } else {
-                            MotionToast.error(
-                                    title: Text("Error"),
-                                    description: Text(
-                                        ' You must enter OTP to create a new account '))
-                                .show(context);
-                          }
-
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => Start()),
-                          // );
-                        },
-                        child: RadiusButton(
-                          color: font_green,
-                          colortext: white,
-                          text: 'VERIFY MY ACCOUNT',
-                          width: 230,
-                          height: 60,
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 14,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Container(
+                        alignment: Alignment.bottomCenter,
                         child: Container(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "I already have an account.",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: font_green,
-                                          fontFamily:
-                                              'Comfortaa-VariableFont_wght'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NameScreen()),
-                                        );
-                                      },
-                                      child: Text(
-                                        "Login to my account",
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            color: font_green,
-                                            fontFamily:
-                                                'Comfortaa-VariableFont_wght',
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                    )
-                                  ],
-                                ))),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      )
-                    ],
+                            alignment: Alignment.center,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "I already have an account.",
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: font_green,
+                                      fontFamily:
+                                          'Comfortaa-VariableFont_wght'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NameScreen()),
+                                    );
+                                  },
+                                  child: Text(
+                                    "Login to my account",
+                                    style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: font_green,
+                                        fontFamily:
+                                            'Comfortaa-VariableFont_wght',
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                )
+                              ],
+                            ))),
                   ),
                 ),
               ]),

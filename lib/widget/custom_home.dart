@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class _CustomHomeState extends State<CustomHome> {
   void initState() {
     getWallpaper();
     userLogin();
+
     // TODO: implement initState
     super.initState();
 
@@ -80,6 +82,7 @@ class _CustomHomeState extends State<CustomHome> {
 
       log("verificatio" + verification);
       if (verification != '0') {
+        getFavouriteJobs();
         setState(() {
           userStatus = true;
         });
@@ -107,7 +110,7 @@ class _CustomHomeState extends State<CustomHome> {
     if (img.isNotEmpty) {
       setState(() {
         wallPaper = img;
-
+        log('1');
         isLoading = false;
         getCategory();
       });
@@ -131,12 +134,12 @@ class _CustomHomeState extends State<CustomHome> {
     List cat = [
       {"category_id": "0", "category_name": "All"}
     ];
-
+    await getJobCategory();
     setState(() {
       cat.addAll(res['data']);
       jobCategoryName = cat;
-      getJobCategory();
-      getFavouriteJobs();
+
+      log('2');
       isLoading = false;
     });
   }
@@ -197,7 +200,7 @@ class _CustomHomeState extends State<CustomHome> {
           "to": "50"
         }));
     var res = jsonDecode(response.body.toString());
-    log(res.toString());
+
     setState(() {
       jobCategory = res['data'];
 
@@ -230,7 +233,6 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   getFavouriteJobs() async {
-    log('bbbbbbbbbbbbbbbbssssssssssssssss');
     setState(() {
       loadFavorites = true;
     });
@@ -247,11 +249,11 @@ class _CustomHomeState extends State<CustomHome> {
         }));
     var res = jsonDecode(response.body.toString());
 
-    log(res['data'].toString());
     if (res['data'].toString().isNotEmpty) {
       setState(() {
         if (res['data'].toString().isNotEmpty) {
           favoritesList = res['data'];
+          log('3');
         }
         loadFavorites = false;
         // _isFirstLoadRunning = false;
@@ -282,7 +284,6 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   updateFavorites() {
-    log('fffffffff');
     setState(() {
       getFavouriteJobs();
       log('fffffffffddddddddddddddddd');
@@ -647,11 +648,36 @@ class _CustomHomeState extends State<CustomHome> {
                                                                       .circular(
                                                                           20),
                                                               child:
-                                                                  Image.network(
-                                                                'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    "https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}",
+                                                                progressIndicatorBuilder:
+                                                                    (context,
+                                                                            url,
+                                                                            downloadProgress) =>
+                                                                        Center(
+                                                                  child:
+                                                                      SizedBox(
+                                                                    height: 50,
+                                                                    width: 50,
+                                                                    child: CircularProgressIndicator(
+                                                                        value: downloadProgress
+                                                                            .progress),
+                                                                  ),
+                                                                ),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
                                                                 fit: BoxFit
                                                                     .cover,
                                                               ),
+                                                              //     Image.network(
+                                                              //   'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
+                                                              //   fit: BoxFit
+                                                              //       .cover,
+                                                              // ),
                                                             ),
                                                           ),
                                                         ),

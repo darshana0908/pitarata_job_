@@ -6,6 +6,7 @@ import 'package:pitarata_job/Screen/intro/intro_1.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
@@ -72,7 +73,9 @@ class _SplashPageState extends State<SplashPage> {
               ),
               Text('PITA RATA JOBS',
                   style: TextStyle(
-                      color: Colors.green, fontFamily: 'Viga', fontSize: 39)),
+                      color: Colors.green,
+                      fontFamily: 'Viga',
+                      fontSize: 25.sp)),
               SizedBox(
                 height: 5,
               ),
@@ -80,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Comfortaa-VariableFont_wght',
-                      fontSize: 15)),
+                      fontSize: 11.sp)),
             ]),
             Align(
               alignment: Alignment.bottomCenter,

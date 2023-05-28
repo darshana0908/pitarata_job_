@@ -76,7 +76,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
-          "verification": '111111',
+          "verification": verification,
           "customer_id": customer_id,
         }));
 

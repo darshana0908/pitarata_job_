@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
+import 'package:sizer/sizer.dart';
 
 class ColorContainer extends StatelessWidget {
   const ColorContainer(
@@ -26,48 +27,50 @@ class ColorContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Container(
-          child: Column(children: [
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Icon(
-                    icon,
-                    size: 40,
-                    color: iconColor,
+      child: SingleChildScrollView(
+        child: Container(
+            child: Column(children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Icon(
+                      icon,
+                      size: 40,
+                      color: iconColor,
+                    ),
                   ),
-                ),
-                CustomText(
-                    text: text,
-                    fontSize: 19,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: textColor,
-                    fontWeight: FontWeight.normal)
-              ],
-            ),
-            CustomText(
-                text: text1,
-                fontSize: 25,
-                fontFamily: 'Comfortaa-VariableFont_wght',
-                color: white,
-                fontWeight: FontWeight.normal)
-          ]),
-          height: 100,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: new LinearGradient(
-              colors: [
-                color,
-                color1,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              stops: [0.1, 5.80],
-            ),
-          )),
+                  CustomText(
+                      text: text,
+                      fontSize: 19,
+                      fontFamily: 'Comfortaa-VariableFont_wght',
+                      color: textColor,
+                      fontWeight: FontWeight.normal)
+                ],
+              ),
+              CustomText(
+                  text: text1,
+                  fontSize: 20.sp,
+                  fontFamily: 'Comfortaa-VariableFont_wght',
+                  color: white,
+                  fontWeight: FontWeight.normal)
+            ]),
+            height: 100,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: new LinearGradient(
+                colors: [
+                  color,
+                  color1,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.1, 5.80],
+              ),
+            )),
+      ),
     );
   }
 }

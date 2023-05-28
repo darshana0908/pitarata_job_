@@ -7,6 +7,7 @@ import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:sizer/sizer.dart';
 
 class Logout extends StatefulWidget {
   const Logout({super.key});
@@ -49,7 +50,7 @@ class _LogoutState extends State<Logout> {
                       padding: const EdgeInsets.all(8.0),
                       child: CustomText(
                           text: 'Are you sure you want to Logout?',
-                          fontSize: 20,
+                          fontSize: 17.sp,
                           fontFamily: 'Comfortaa-VariableFont_wght',
                           color: white,
                           fontWeight: FontWeight.normal),
@@ -64,14 +65,14 @@ class _LogoutState extends State<Logout> {
                           colortext: black,
                           color: white,
                           height: 70,
-                          width: 110,
+                          width: 30.w,
                           text: 'NO',
                         ),
                         RadiusButton(
                           colortext: black,
                           color: font_green,
                           height: 70,
-                          width: 110,
+                          width: 30.w,
                           text: 'YES',
                         ),
                       ],

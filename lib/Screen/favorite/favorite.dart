@@ -132,10 +132,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           "app_id": "nzone_4457Was555@qsd_job",
           "verification": verification,
           "customer_id": customer_id,
-          " job_id": id
+          "job_id": id
         }));
 
-    log(verification + customer_id + id);
+    log(verification + "nvtv" + customer_id + "bhbhbh" + id);
     getFavouriteJobs();
     var res = jsonDecode(response.body.toString());
     log(res['data'].toString());

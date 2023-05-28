@@ -14,6 +14,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import '../../widget/fade_home.dart';
 import '../../widget/radius_button.dart';
 import '../name_screen/name_screen.dart';
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: CustomText(
                         text: 'Are you sure you want to Logout?',
-                        fontSize: 20,
+                        fontSize: 17.sp,
                         fontFamily: 'Comfortaa-VariableFont_wght',
                         color: white,
                         fontWeight: FontWeight.normal),
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           colortext: black,
                           color: white,
                           height: 70,
-                          width: 110,
+                          width: 30.w,
                           text: 'NO',
                         ),
                       ),
@@ -128,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           colortext: black,
                           color: font_green,
                           height: 70,
-                          width: 110,
+                          width: 30.w,
                           text: 'YES',
                         ),
                       ),
@@ -221,7 +222,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = <Widget>[
-      CustomHome(customerId: customerId, userStatus: customerLogin,),
+      CustomHome(
+        customerId: customerId,
+        userStatus: customerLogin,
+      ),
       FavoriteScreen(),
       NotificationScreen(),
       Blog(),

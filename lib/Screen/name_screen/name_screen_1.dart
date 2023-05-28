@@ -126,7 +126,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                         fontWeight: FontWeight.normal,
                         color: white,
                         text: " Let's create your\n brand new account",
-                        fontSize: 25,
+                        fontSize: 20.sp,
                         fontFamily: 'Viga'),
                   ),
                 ),
@@ -138,11 +138,16 @@ class _NameScreenOneState extends State<NameScreenOne> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: CustomTextField(
-                    icon: Icons.person,
-                    keyInput: TextInputType.text,
-                    controller: name,
-                    hintText: 'enter your name',
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 13,
+                    child: Form(
+                      child: CustomTextField(
+                        icon: Icons.person,
+                        keyInput: TextInputType.text,
+                        controller: name,
+                        hintText: 'enter your name',
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -150,11 +155,16 @@ class _NameScreenOneState extends State<NameScreenOne> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: CustomTextField(
-                    icon: Icons.phone,
-                    keyInput: TextInputType.number,
-                    controller: mobile,
-                    hintText: 'enter your mobile number',
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 13,
+                    child: Form(
+                      child: CustomTextField(
+                        icon: Icons.phone,
+                        keyInput: TextInputType.number,
+                        controller: mobile,
+                        hintText: 'enter your mobile number',
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -162,8 +172,8 @@ class _NameScreenOneState extends State<NameScreenOne> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Form(
-                    autovalidateMode: AutovalidateMode.always,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 13,
                     child: CustomTextField(
                       icon: Icons.email,
                       keyInput: TextInputType.emailAddress,
@@ -177,11 +187,16 @@ class _NameScreenOneState extends State<NameScreenOne> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: CustomTextField(
-                    icon: Icons.key,
-                    keyInput: TextInputType.visiblePassword,
-                    controller: password,
-                    hintText: 'password',
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 13,
+                    child: Form(
+                      child: CustomTextField(
+                        icon: Icons.key,
+                        keyInput: TextInputType.visiblePassword,
+                        controller: password,
+                        hintText: 'password',
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -189,15 +204,20 @@ class _NameScreenOneState extends State<NameScreenOne> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: CustomTextField(
-                    icon: Icons.key,
-                    keyInput: TextInputType.visiblePassword,
-                    controller: confirmPassword,
-                    hintText: 'confirm password',
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 13,
+                    child: Form(
+                      child: CustomTextField(
+                        icon: Icons.key,
+                        keyInput: TextInputType.visiblePassword,
+                        controller: confirmPassword,
+                        hintText: 'confirm password',
+                      ),
+                    ),
                   ),
                 ),
                 Container(
-                  height: 50,
+                  height: 8.h,
                   child: Row(
                     children: [
                       Checkbox(
@@ -224,7 +244,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                           Text(
                             "I agree ",
                             style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 10.sp,
                                 color: font_green,
                                 fontFamily: 'Comfortaa-VariableFont_wght'),
                           ),
@@ -232,14 +252,14 @@ class _NameScreenOneState extends State<NameScreenOne> {
                             "Terms & Condition ",
                             style: TextStyle(
                                 decoration: TextDecoration.underline,
-                                fontSize: 13,
+                                fontSize: 10.sp,
                                 color: font_green,
                                 fontFamily: 'Comfortaa-VariableFont_wght'),
                           ),
                           Text(
                             "and ",
                             style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 10.sp,
                                 color: font_green,
                                 fontFamily: 'Comfortaa-VariableFont_wght'),
                           ),
@@ -247,7 +267,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                             "Privacy Policy",
                             style: TextStyle(
                                 decoration: TextDecoration.underline,
-                                fontSize: 13,
+                                fontSize: 10.sp,
                                 color: font_green,
                                 fontFamily: 'Comfortaa-VariableFont_wght'),
                           ),
@@ -260,6 +280,14 @@ class _NameScreenOneState extends State<NameScreenOne> {
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
                     onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NameScreenTwo(
+                                    loading: loding,
+                                    phone: mobile.text,
+                                    email: email.text,
+                                  )));
                       if (name.text.isNotEmpty) {
                         if (mobile.text.isNotEmpty) {
                           if (email.text.contains("@") &&
@@ -320,7 +348,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                       colortext: white,
                       text: 'CREATE MY ACCOUNT',
                       width: 230,
-                      height: 60,
+                      height: 8.h,
                     ),
                   ),
                 ),
@@ -339,7 +367,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                                 Text(
                                   "I already have an account.",
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 10.sp,
                                       color: font_green,
                                       fontFamily:
                                           'Comfortaa-VariableFont_wght'),
@@ -355,7 +383,7 @@ class _NameScreenOneState extends State<NameScreenOne> {
                                   child: Text(
                                     "Login to my account",
                                     style: TextStyle(
-                                        fontSize: 13,
+                                        fontSize: 10.sp,
                                         color: font_green,
                                         fontFamily:
                                             'Comfortaa-VariableFont_wght',
