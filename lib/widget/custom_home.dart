@@ -60,6 +60,7 @@ class _CustomHomeState extends State<CustomHome> {
   bool loadFavorites = false;
   @override
   void initState() {
+    getFavouriteJobs();
     getWallpaper();
     userLogin();
 

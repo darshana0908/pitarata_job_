@@ -117,10 +117,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
-            child: CircularProgressIndicator(
-          color: Colors.grey,
-        ));
+        return Center(child: CircularProgressIndicator());
       },
     );
     var headers = {'Content-Type': 'application/json'};
@@ -427,8 +424,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      InkWell(
-                        onTap: () async {
+                      TextButton(
+                        onPressed: () async {
                           Navigator.pop(context);
                           log('ggggg');
                         },
@@ -440,8 +437,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           text: 'NO',
                         ),
                       ),
-                      InkWell(
-                        onTap: () async {
+                      TextButton(
+                        onPressed: () async {
                           if (item) {
                             setState(() {
                               removeFavoriteJobs();

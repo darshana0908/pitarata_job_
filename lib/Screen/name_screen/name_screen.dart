@@ -159,18 +159,9 @@ class _NameScreenState extends State<NameScreen> {
                 children: [
                   Column(
                     children: [
-                      Container(
-                        height: 5,
-                      )
-                    ],
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        SizedBox(
+                      SizedBox(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
                           child: Container(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -189,22 +180,31 @@ class _NameScreenState extends State<NameScreen> {
                                   'skip',
                                   style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 13.sp,
+                                      fontSize: 15,
                                       decoration: TextDecoration.underline),
                                 )),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: CustomText(
-                              fontWeight: FontWeight.normal,
-                              color: white,
-                              text: 'Login to your account',
-                              fontSize: 17.sp,
-                              fontFamily: 'Viga'),
-                        ),
-                        SizedBox(
-                          height: 42.h,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: CustomText(
+                            fontWeight: FontWeight.normal,
+                            color: white,
+                            text: 'Login to your account',
+                            fontSize: 20.sp,
+                            fontFamily: 'Viga'),
+                      )
+                    ],
+                  ),
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 45.h,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal:
@@ -216,27 +216,21 @@ class _NameScreenState extends State<NameScreen> {
                             )),
                           ),
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 13,
-                          child: CustomTextField(
-                            icon: Icons.email,
-                            keyInput: TextInputType.emailAddress,
-                            hintText: 'email',
-                            controller: email,
-                          ),
+                        CustomTextField(
+                          icon: Icons.email,
+                          keyInput: TextInputType.emailAddress,
+                          hintText: 'email',
+                          controller: email,
                         ),
                         SizedBox(
                           height: 2,
                         ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 13,
-                          child: Form(
-                            child: CustomTextField(
-                              icon: Icons.key,
-                              keyInput: TextInputType.text,
-                              controller: password,
-                              hintText: 'password',
-                            ),
+                        Form(
+                          child: CustomTextField(
+                            icon: Icons.key,
+                            keyInput: TextInputType.text,
+                            controller: password,
+                            hintText: 'password',
                           ),
                         ),
                         SizedBox(
@@ -293,7 +287,7 @@ class _NameScreenState extends State<NameScreen> {
                               }
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5),
+                              padding: EdgeInsets.symmetric(vertical: 10),
                               child: RadiusButton(
                                 color: font_green,
                                 colortext: white,

@@ -177,6 +177,21 @@ class _ProfileState extends State<Profile> {
         .show(context);
   }
 
+  Future<void> chooseImage() async {
+    final ImagePicker picker = ImagePicker();
+
+    String fileType;
+    String imgName;
+    var choosedimage = await picker.pickImage(source: ImageSource.gallery);
+    var uploadimage = File(choosedimage!.path);
+
+    List<int> imageBytes = uploadimage.readAsBytesSync();
+    String baseimage = base64Encode(imageBytes);
+
+    // Upload(baseimage);
+  }
+
+ 
   @override
   void initState() {
     userLogin();
@@ -700,37 +715,7 @@ class _ProfileState extends State<Profile> {
         ]),
       ),
     );
+    
   }
 
-  Future<void> chooseImage() async {
-    final ImagePicker picker = ImagePicker();
-
-    String fileType;
-    String imgName;
-    var choosedimage = await picker.pickImage(source: ImageSource.gallery);
-    var uploadimage = File(choosedimage!.path);
-
-    List<int> imageBytes = uploadimage.readAsBytesSync();
-    String baseimage = base64Encode(imageBytes);
-
-    // Upload(baseimage);
-  }
-
-  // Upload(String imageFile) async {
-   
-
-  //   var uri = Uri.parse(uploadURL);
-
-  //   var request = new http.MultipartRequest("POST", uri);
-  //   var multipartFile = new http.MultipartFile('file', stream, length,
-  //       filename: basename(imageFile.path));
-  //   //contentType: new MediaType('image', 'png'));
-
-  //   request.files.add(multipartFile);
-  //   var response = await request.send();
-  //   print(response.statusCode);
-  //   response.stream.transform(utf8.decoder).listen((value) {
-  //     print(value);
-  //   });
-  // }
 }

@@ -926,7 +926,7 @@ class _SingleJobState extends State<SingleJob> {
                 contentPadding: EdgeInsets.only(top: 10.0),
                 backgroundColor: white,
                 content: Container(
-                  height: 500,
+                  height: 600,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
