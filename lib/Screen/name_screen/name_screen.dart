@@ -159,9 +159,18 @@ class _NameScreenState extends State<NameScreen> {
                 children: [
                   Column(
                     children: [
-                      SizedBox(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0.2.h),
+                      Container(
+                        height: 5,
+                      )
+                    ],
+                  ),
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        SizedBox(
                           child: Container(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -180,31 +189,22 @@ class _NameScreenState extends State<NameScreen> {
                                   'skip',
                                   style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 15,
+                                      fontSize: 13.sp,
                                       decoration: TextDecoration.underline),
                                 )),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: CustomText(
-                            fontWeight: FontWeight.normal,
-                            color: white,
-                            text: 'Login to your account',
-                            fontSize: 20.sp,
-                            fontFamily: 'Viga'),
-                      )
-                    ],
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 45.h,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: CustomText(
+                              fontWeight: FontWeight.normal,
+                              color: white,
+                              text: 'Login to your account',
+                              fontSize: 17.sp,
+                              fontFamily: 'Viga'),
+                        ),
+                        SizedBox(
+                          height: 42.h,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal:
@@ -293,7 +293,7 @@ class _NameScreenState extends State<NameScreen> {
                               }
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.symmetric(vertical: 5),
                               child: RadiusButton(
                                 color: font_green,
                                 colortext: white,

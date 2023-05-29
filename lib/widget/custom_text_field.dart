@@ -40,6 +40,8 @@ class CustomTextField extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
+          contentPadding: EdgeInsets.all(0),
+          
           filled: true,
           hintStyle: TextStyle(color: Colors.grey[600]),
           hintText: hintText,

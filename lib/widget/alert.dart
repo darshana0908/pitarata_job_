@@ -1,76 +1,85 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
+import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:sizer/sizer.dart';
 
 import '../color/colors.dart';
 import 'custom_text.dart';
-import 'radius_button.dart';
 
-class AlertDiloag extends StatelessWidget {
-  const AlertDiloag({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-              height: 300,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: black, borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.white70,
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                        text:
-                            'Are you sure you you need to remove this job from  your favorite list ?',
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
+loading(BuildContext context, String text) async {
+  return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          contentPadding: EdgeInsets.only(top: 10.0),
+          backgroundColor: black,
+          content: Container(
+            height: 300,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: black, borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white70,
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomText(
+                      text: text,
+                      fontSize: 17.sp,
+                      fontFamily: 'Comfortaa-VariableFont_wght',
+                      color: white,
+                      fontWeight: FontWeight.normal),
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: RadiusButton(
+                        colortext: black,
                         color: white,
-                        fontWeight: FontWeight.normal),
-                  ),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 110,
-                          text: 'NO',
-                        ),
+                        height: 70,
+                        width: 30.w,
+                        text: 'Cancel',
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: RadiusButton(
-                          colortext: black,
-                          color: red,
-                          height: 70,
-                          width: 110,
-                          text: 'YES',
-                        ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                     Navigator.push(
+            context, MaterialPageRoute(builder: (context) => NameScreen()));
+                      },
+                      child: RadiusButton(
+                        colortext: black,
+                        color: font_green,
+                        height: 70,
+                        width: 30.w,
+                        text: 'Login',
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-  }
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      });
 }
