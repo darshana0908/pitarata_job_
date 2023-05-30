@@ -87,6 +87,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 15,
                       ),
                       DrawerRow(
+                          icon: Icons.book,
                           text: 'My CV',
                           on: () {
                             MotionToast.info(
@@ -95,8 +96,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                         "This option will be enabled soon!"))
                                 .show(context);
                           }),
-                      Divider(color: Colors.white38),
+                      SizedBox(
+                        height: 10,
+                      ),
                       DrawerRow(
+                          icon: Icons.support_agent_rounded,
                           text: 'Get Support',
                           on: () {
                             Navigator.push(
@@ -104,7 +108,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 MaterialPageRoute(
                                     builder: (context) => GetSupport()));
                           }),
-                      Divider(color: Colors.white38),
+                      SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -118,17 +124,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 15,
                       ),
                       DrawerRow(
+                          icon: Icons.share,
                           text: 'Share this app',
                           on: () {
                             Share.share(
                                 'Hey, I found this amazing Pita Rata Jobs App. Check this out.\n Download app now - https://shorturl.at/jwHPQ \n PitaRata Jobs App');
                           }),
-                      Divider(color: Colors.white38),
-                      DrawerRow(text: 'More by our team', on: () {}),
-                      Divider(color: Colors.white38),
-                      // DrawerRow(text: 'Donate us', on: () {}),
-                      Divider(color: Colors.white38),
+                      SizedBox(
+                        height: 10,
+                      ),
                       DrawerRow(
+                          icon: Icons.more,
+                          text: 'More by our team',
+                          on: () {}),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      DrawerRow(
+                          icon: Icons.reviews,
                           text: 'Leave us a Review',
                           on: () {
                             final InAppReview inAppReview =
@@ -137,7 +150,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             inAppReview.openStoreListing(
                                 appStoreId: '1111111', microsoftStoreId: '...');
                           }),
-                      Divider(color: Colors.white38),
                       SizedBox(
                         height: 15,
                       ),
@@ -151,37 +163,46 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 15,
                       ),
                       DrawerRow(
+                          icon: Icons.privacy_tip,
                           text: 'Privacy Policy',
                           on: () async {
                             var url = Uri.parse(
-                                "https://pitaratajobs.novasoft.lk/privacy_policy.php ");
+                                "https://pitaratajobs.novasoft.lk/privacy_policy.php");
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             } else {
                               throw 'Could not launch $url';
                             }
                           }),
-                      Divider(color: Colors.white38),
+                      SizedBox(
+                        height: 10,
+                      ),
                       DrawerRow(
-                          text: 'Contect us',
+                          icon: Icons.contact_phone_rounded,
+                          text: 'Contact us',
                           on: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ContactUs()));
                           }),
-                      Divider(color: Colors.white38),
+                      SizedBox(
+                        height: 10,
+                      ),
                       DrawerRow(
-                          text: ' open about us screen.',
+                          icon: Icons.accessibility_new_sharp,
+                          text: 'About Us',
                           on: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AboutUs()));
                           }),
-                      Divider(color: Colors.white38),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 InkWell(
                   onTap: () {

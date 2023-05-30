@@ -33,7 +33,7 @@ class _NameScreenState extends State<NameScreen> {
   var resp;
   var msg;
   String verification = '';
-
+  bool _pasword = true;
   resetPassword() async {
     setState(() {
       isLoading = true;
@@ -74,7 +74,7 @@ class _NameScreenState extends State<NameScreen> {
     setState(() {
       isLoading = true;
     });
-    isload();
+
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
@@ -93,11 +93,10 @@ class _NameScreenState extends State<NameScreen> {
     log(res.toString());
     var resp = res['status'];
     var msg = res['msg'];
-    log(res['status']);
-    // log(res['data']['customer_id'].toString());
-    // log(res['data']['verification'].toString());
-    isLoading = false;
-    Navigator.pop(context);
+
+    setState(() {
+      isLoading = false;
+    });
 
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
@@ -109,17 +108,8 @@ class _NameScreenState extends State<NameScreen> {
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
 
-      MotionToast.info(title: Text("Info"), description: Text(msg))
-          .show(context);
+      MotionToast.info(description: Text(msg)).show(context);
     }
-  }
-
-  isload() {
-    showDialog(
-        // barrierDismissible: false,
-        context: context,
-        builder: (context) => Center(
-            child: isLoading ? CircularProgressIndicator() : Container()));
   }
 
   userLoginCheq(bool x) async {
@@ -149,205 +139,257 @@ class _NameScreenState extends State<NameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                                onPressed: () async {
-                                  userLoginCheq(false);
-                                  SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  await prefs.setString('verification', '0');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()),
-                                  );
-                                },
-                                child: Text(
-                                  'skip',
-                                  style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 15,
-                                      decoration: TextDecoration.underline),
-                                )),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: CustomText(
-                            fontWeight: FontWeight.normal,
-                            color: white,
-                            text: 'Login to your account',
-                            fontSize: 20.sp,
-                            fontFamily: 'Viga'),
-                      )
-                    ],
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    child: Column(
+      body: AbsorbPointer(
+        absorbing: isLoading,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Stack(
                       children: [
-                        Container(
-                          height: 45.h,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width / 5.w),
-                            child: Container(
-                                child: Lottie.asset(
-                              'assets/login_screen.json',
-                              fit: BoxFit.fill,
-                            )),
-                          ),
-                        ),
-                        CustomTextField(
-                          icon: Icons.email,
-                          keyInput: TextInputType.emailAddress,
-                          hintText: 'email',
-                          controller: email,
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Form(
-                          child: CustomTextField(
-                            icon: Icons.key,
-                            keyInput: TextInputType.text,
-                            controller: password,
-                            hintText: 'password',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ResetPassword()),
-                                );
-                              },
-                              child: CustomText(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Comfortaa-VariableFont_wght',
-                                fontSize: 13,
-                                text: 'Reset my password',
-                              ),
-                            )),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: InkWell(
-                            onTap: () {
-                              log(email.text.toString());
-
-                              if (email.text.isNotEmpty) {
-                                if (email.text.contains("@") &&
-                                    email.text.contains(".")) {
-                                  if (password.text.isNotEmpty) {
-                                    login();
-                                  } else {
-                                    MotionToast.error(
-                                            title: Text("Error"),
-                                            description:
-                                                Text("Password required"))
-                                        .show(context);
-                                  }
-                                } else {
-                                  MotionToast.error(
-                                          title: Text("Error"),
-                                          description:
-                                              Text("Enter valid email"))
-                                      .show(context);
-                                }
-                              } else {
-                                MotionToast.error(
-                                        title: Text("Error"),
-                                        description: Text("email  required"))
-                                    .show(context);
-                              }
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: RadiusButton(
-                                color: font_green,
-                                colortext: white,
-                                text: 'LOGIN',
-                                width: 200,
-                                height: 7.h,
+                        Column(
+                          children: [
+                            SizedBox(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                      onPressed: () async {
+                                        userLoginCheq(false);
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        await prefs.setString(
+                                            'verification', '0');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomeScreen()),
+                                        );
+                                      },
+                                      child: Text(
+                                        'skip',
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 15,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      )),
+                                ),
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: CustomText(
+                                  fontWeight: FontWeight.normal,
+                                  color: white,
+                                  text: 'Login to your account',
+                                  fontSize: 20.sp,
+                                  fontFamily: 'Viga'),
+                            )
+                          ],
+                        ),
+                        Positioned(
+                          left: 0,
+                          bottom: 0,
+                          right: 0,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 45.h,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width /
+                                              5.w),
+                                  child: Container(
+                                      child: Lottie.asset(
+                                    'assets/login_screen.json',
+                                    fit: BoxFit.fill,
+                                  )),
+                                ),
+                              ),
+                              CustomTextField(
+                                icon: Icons.email,
+                                keyInput: TextInputType.emailAddress,
+                                hintText: 'email',
+                                controller: email,
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              TextFormField(
+                                obscureText: _pasword,
+                                style: TextStyle(color: white, fontSize: 13.sp),
+                                controller: password,
+                                keyboardType: TextInputType.visiblePassword,
+                                decoration: InputDecoration(
+                                    counterStyle:
+                                        TextStyle(color: Colors.white),
+                                    prefixIcon: Icon(
+                                      Icons.key,
+                                      color: background_green,
+                                    ),
+                                    suffixIcon: Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 4, 0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _pasword = !_pasword;
+                                          });
+                                        },
+                                        child: Icon(
+                                          _pasword
+                                              ? Icons.visibility_rounded
+                                              : Icons.visibility_off_rounded,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    contentPadding: EdgeInsets.all(2),
+                                    filled: true,
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[600]),
+                                    hintText: 'password',
+                                    fillColor: light_dark),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ResetPassword()),
+                                      );
+                                    },
+                                    child: CustomText(
+                                      color: Colors.white54,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Comfortaa-VariableFont_wght',
+                                      fontSize: 13,
+                                      text: 'Reset my password',
+                                    ),
+                                  )),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: InkWell(
+                                  onTap: () {
+                                    log(email.text.toString());
+
+                                    if (email.text.isNotEmpty) {
+                                      if (email.text.contains("@") &&
+                                          email.text.contains(".")) {
+                                        if (password.text.isNotEmpty) {
+                                          login();
+                                        } else {
+                                          MotionToast.error(
+                                                  description: Text(
+                                                      "Please enter your password"))
+                                              .show(context);
+                                        }
+                                      } else {
+                                        MotionToast.error(
+                                                description:
+                                                    Text("Enter valid email"))
+                                            .show(context);
+                                      }
+                                    } else {
+                                      MotionToast.error(
+                                              description: Text(
+                                                  "Please enter your email address"))
+                                          .show(context);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: RadiusButton(
+                                      color: font_green,
+                                      colortext: white,
+                                      text: 'LOGIN',
+                                      width: 200,
+                                      height: 7.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      child: SizedBox(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "I don't have an account.",
+                                              style: TextStyle(
+                                                  fontSize: 9.sp,
+                                                  color: font_green,
+                                                  fontFamily:
+                                                      'Comfortaa-VariableFont_wght'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          NameScreenOne()),
+                                                );
+                                              },
+                                              child: Text(
+                                                "Create a new account",
+                                                style: TextStyle(
+                                                    fontSize: 9.sp,
+                                                    color: font_green,
+                                                    fontFamily:
+                                                        'Comfortaa-VariableFont_wght',
+                                                    decoration: TextDecoration
+                                                        .underline),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ))),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
                           ),
                         ),
-                        Container(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "I don't have an account.",
-                                        style: TextStyle(
-                                            fontSize: 9.sp,
-                                            color: font_green,
-                                            fontFamily:
-                                                'Comfortaa-VariableFont_wght'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    NameScreenOne()),
-                                          );
-                                        },
-                                        child: Text(
-                                          "Create a new account",
-                                          style: TextStyle(
-                                              fontSize: 9.sp,
-                                              color: font_green,
-                                              fontFamily:
-                                                  'Comfortaa-VariableFont_wght',
-                                              decoration:
-                                                  TextDecoration.underline),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ))),
-                        SizedBox(
-                          height: 20,
-                        )
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+              isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                      color: red,
+                    ))
+                  : Container()
+            ],
           ),
         ),
       ),

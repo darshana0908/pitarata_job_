@@ -129,11 +129,9 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                     text:
                         " Your account created\n successfully! \n Now you can login to your\n account! .",
                   )));
-      MotionToast.info(title: Text("Info "), description: Text(msg))
-          .show(context);
+      MotionToast.info(description: Text(msg)).show(context);
     } else {
-      MotionToast.error(title: Text("Error"), description: Text(msg))
-          .show(context);
+      MotionToast.error(description: Text(msg)).show(context);
     }
   }
 
@@ -187,14 +185,11 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                         fontSize: 14.sp,
                         fontFamily: 'Comfortaa-VariableFont_wght'),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height / 13,
-                      child: Form(
-                        child: CustomTextField(
-                          icon: Icons.verified_user_rounded,
-                          keyInput: TextInputType.number,
-                          controller: code,
-                          hintText: 'enter the verfication code',
-                        ),
+                      child: CustomTextField(
+                        icon: Icons.verified_user_rounded,
+                        keyInput: TextInputType.number,
+                        controller: code,
+                        hintText: 'enter the verfication code',
                       ),
                     ),
                     Align(
@@ -214,13 +209,12 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                     SizedBox(
                       height: 10,
                     ),
-                    InkWell(
-                      onTap: () {
+                    TextButton(
+                      onPressed: () {
                         if (code.text.isNotEmpty) {
                           enterOtp();
                         } else {
                           MotionToast.error(
-                                  title: Text("Error"),
                                   description: Text(
                                       ' You must enter OTP to create a new account '))
                               .show(context);
@@ -240,7 +234,9 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                   ],
                 ),
                 Positioned(
-                  bottom: 0,
+                  bottom: 2,
+                  left: 0,
+                  right: 0,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Container(

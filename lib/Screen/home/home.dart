@@ -257,52 +257,55 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(4.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: BottomNavigationBar(
-              unselectedIconTheme: IconThemeData(
-                color: font_green,
+            child: SizedBox(
+              height: 70,
+              child: BottomNavigationBar(
+                unselectedIconTheme:
+                    IconThemeData(color: font_green, size: 15.sp),
+                unselectedItemColor: Colors.deepOrangeAccent,
+                selectedIconTheme:
+                    IconThemeData(color: font_green, size: 20.sp),
+                selectedItemColor: font_green,
+                elevation: 2,
+                onTap: _onItemTapped,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                backgroundColor: light_dark,
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.home_outlined,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.favorite_border,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.notifications_none,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.menu_book_sharp,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.person,
+                    ),
+                    label: '',
+                  ),
+                ],
               ),
-              unselectedItemColor: Colors.deepOrangeAccent,
-              selectedIconTheme: IconThemeData(color: font_green, size: 30.sp),
-              selectedItemColor: font_green,
-              elevation: 2,
-              onTap: _onItemTapped,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              backgroundColor: light_dark,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home_outlined,
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.favorite_border,
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.notifications_none,
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.menu_book_sharp,
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person,
-                  ),
-                  label: '',
-                ),
-              ],
             ),
           ),
         ),

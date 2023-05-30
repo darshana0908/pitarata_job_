@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:pitarata_job/Screen/home/home.dart';
 import 'package:pitarata_job/Screen/intro/intro_1.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -32,9 +33,13 @@ class _SplashPageState extends State<SplashPage> {
   userLogin() async {
     log('jjjjjjjjjjjjjjjj');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      var userLogin = sharedPreferences.getBool('user');
-      if (userLogin == true) {
+
+    var userLogin = await sharedPreferences.getBool('user');
+    log(userLogin.toString());
+    var z = await sharedPreferences.getString('verification');
+    log("sssssssssss" + z.toString());
+    if (userLogin == true) {
+      if (z == "0") {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const NameScreen()),
@@ -42,10 +47,15 @@ class _SplashPageState extends State<SplashPage> {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => IntroOnePage()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       }
-    });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const IntroOnePage()),
+      );
+    }
   }
 
   @override

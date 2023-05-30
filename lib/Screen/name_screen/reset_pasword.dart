@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/home.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -73,23 +74,26 @@ class _ResetPasswordState extends State<ResetPassword> {
     var resp = res['status'];
     var msg = res['msg'];
     log(resp);
-    log(res['data']['cid'].toString());
-    String cid = res['data']['cid'].toString();
+
     setState(() {
       isLoading = false;
     });
 
-    if (resp.toString().isNotEmpty) {
-      if (resp == '1') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NewPassword(
-                      cId: cid,
-                      loading: loading,
-                    )));
-      }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    if (resp == '1') {
+      log(res['data']['cid'].toString());
+      String cid = res['data']['cid'].toString();
+      Navigator.pop(context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NewPassword(
+                    email: email.text,
+                    cId: cid,
+                    loading: loading,
+                  )));
+    } else {
+      Navigator.pop(context);
+      MotionToast.error(description: Text(msg)).show(context);
     }
   }
 
@@ -180,14 +184,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 email.text.contains(".")) {
                               resetPassword();
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Enter valid email")),
-                              );
+                              MotionToast.error(
+                                      description: Text(
+                                          "Please enter valid email address"))
+                                  .show(context);
                             }
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(" Enter user email ")),
-                            );
+                            MotionToast.error(
+                                    description:
+                                        Text("Please enter your email address"))
+                                .show(context);
                           }
                         },
                         child: Padding(

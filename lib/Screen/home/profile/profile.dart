@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:pitarata_job/Screen/home/profile/update_profile.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -28,15 +30,8 @@ class _ProfileState extends State<Profile> {
   String customerId = '';
   String verification = '';
   bool customerLogin = false;
-  TextEditingController editmobile = TextEditingController();
-  TextEditingController editmobile2 = TextEditingController();
-  TextEditingController editGender = TextEditingController();
-  TextEditingController editBirthday = TextEditingController();
-  TextEditingController editAddress = TextEditingController();
-  TextEditingController editName = TextEditingController();
-  TextEditingController editEmail = TextEditingController();
-  TextEditingController editNic = TextEditingController();
 
+  List<String> encodedImages = [];
   List getMsgList = [];
   String name = '';
   String address = '';
@@ -57,39 +52,41 @@ class _ProfileState extends State<Profile> {
   bool image = false;
   String user_id = '';
   String urlimg = '';
+  int x = 0;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var res = sharedPreferences.setBool("user", true);
-    setState(() {
-      var userLogin = sharedPreferences.getBool('userLoging');
-      var y = sharedPreferences.getString('customer_id');
-      var z = sharedPreferences.getString('verification');
-      customerId = y.toString();
-      verification = z.toString();
 
-      log(y.toString());
-      log(z.toString());
+    var userLogin = sharedPreferences.getBool('userLoging');
+    var y = sharedPreferences.getString('customer_id');
+    var z = sharedPreferences.getString('verification');
+    customerId = y.toString();
+    verification = z.toString();
 
-      if (userLogin == true) {
-        setState(() {
-          getCustomerProfileDetails();
-          userLoging = true;
+    log(y.toString());
+    log(z.toString());
+
+    if (userLogin == true) {
+      await getCustomerProfileDetails();
+      setState(() {
+        userLoging = true;
+      });
+    } else {
+      setState(() {
+        userLoging = false;
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          loading(context,
+              'Please login to your account to access your profile setting');
         });
-      } else {
-        setState(() {
-          userLoging = false;
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            loading(context,
-                'Please login to your account to access your profile setting');
-          });
-        });
-      }
-    });
+      });
+    }
   }
 
   getCustomerProfileDetails() async {
-    setState(() {});
+    setState(() {
+      isloading = true;
+    });
 
     var headers = {'Content-Type': 'application/json'};
 
@@ -110,6 +107,7 @@ class _ProfileState extends State<Profile> {
       log('dddddddddddddddddddd' + res['data'][index]['name'].toString());
 
       setState(() {
+        isloading = false;
         name = res['data'][index]['name'].toString();
         address = res['data'][index]['address'].toString();
         mobile = res['data'][index]['mobile'].toString();
@@ -123,63 +121,15 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  updateCustomerProfile() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-            child: CircularProgressIndicator(
-          color: Colors.grey,
-        ));
-      },
-    );
-
-    var headers = {'Content-Type': 'application/json'};
-
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateCustomerProfile'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "verification": verification,
-          "customer_id": customerId,
-          "name": editName.text,
-          "mobile_1": editmobile.text,
-          "mobile_2": editmobile2.text,
-          "email": editEmail.text,
-          "gender": male == true ? "1" : "2",
-          "address": editAddress.text,
-          "birthday": editBirthday.text,
-          "nic": editNic.text
-        }));
-    log(customerId + verification);
-
-    var res = jsonDecode(response.body.toString());
-    if (res['status'] == '1') {
+  updateuser() {
+    setState(() {
       getCustomerProfileDetails();
-      log(res.toString());
-      setState(() {
-        editName.clear();
-        editmobile.clear();
-        editAddress.clear();
-        editBirthday.clear();
-        editNic.clear();
-        editmobile2.clear();
-        editEmail.clear();
-        male = false;
-        female = false;
-        update = false;
-      });
-    }
-    Navigator.pop(context);
-    MotionToast.info(title: Text("info"), description: Text(res['msg']))
-        .show(context);
+    });
   }
 
   Future<void> chooseImage() async {
     final ImagePicker picker = ImagePicker();
-
+    encodedImages = [];
     String fileType;
     String imgName;
     var choosedimage = await picker.pickImage(source: ImageSource.gallery);
@@ -187,11 +137,107 @@ class _ProfileState extends State<Profile> {
 
     List<int> imageBytes = uploadimage.readAsBytesSync();
     String baseimage = base64Encode(imageBytes);
-
-    // Upload(baseimage);
+    encodedImages.add(baseimage);
   }
 
- 
+  List<String> encodeImages(List<XFile> images) {
+    List<String> encodedImages = [];
+
+    for (var image in images) {
+      // List<int> imageBytes = image.readAsBytesSync();
+      // String base64Image = base64Encode(imageBytes);
+      // encodedImages.add(base64Image);
+    }
+
+    return encodedImages;
+  }
+
+  // Future<void> sendFormData(
+  //   String img,
+  // ) async {
+  //   var url = Uri.parse(
+  //       'https://pitaratajobs.novasoft.lk/uploader/upload_customer_profile_image.php'); // Replace with your actual endpoint URL
+
+  //   var response = await http.post(url, body: {
+  //     'my_field': 'name',
+  //     'action': 'multiple',
+  //   });
+  //   log(response.body.toString());
+  //   if (response.statusCode == 200) {
+  //     // Request successful, do something
+  //     print('Form data sent successfully!');
+  //   } else {
+  //     // Request failed, handle the error
+  //     print('Error sending form data. Status code: ${response.statusCode}');
+  //   }
+  // }
+
+  Future<void> uploadImages(List<String> encodedImages) async {
+    try {
+      // Replace 'YOUR_UPLOAD_URL' with the actual URL to upload the images
+      var url = Uri.parse('YOUR_UPLOAD_URL');
+
+      // Create a JSON object with the encoded images
+      var requestBody = jsonEncode({'images': encodedImages});
+
+      // Set the headers
+      var headers = {'Content-Type': 'application/json'};
+
+      // Make the POST request
+      var response = await http.post(url, headers: headers, body: requestBody);
+
+      if (response.statusCode == 200) {
+        // Images uploaded successfully
+        print('Images uploaded successfully');
+      } else {
+        // Failed to upload images
+        print('Failed to upload images. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Error occurred during the upload
+      print('Error uploading images: $e');
+    }
+  }
+
+  Future<void> uploadImage(File imageFile) async {
+    var url = Uri.parse(
+        'https://pitaratajobs.novasoft.lk/uploader/upload_customer_profile_image.php'); // Replace with your actual upload endpoint URL
+
+    // Read the file as bytes
+    List<int> imageBytes = await imageFile.readAsBytes();
+
+    // Encode the bytes as base64
+    String base64Image = base64Encode(imageBytes);
+
+    List s = [base64Image];
+
+    // log(base64Image.toString());
+    // Create the request body
+    var requestBody = json.encode({
+      'my_field': s,
+      'action': 'multiple',
+    });
+
+    // Set the request headers (if needed)
+    // var headers = <String, String>{
+    //   'Content-Type': 'application/json',
+    // };
+
+    // Send the HTTP POST request
+    var response = await http.post(
+      url,
+      body: requestBody,
+    );
+    log(response.body.toString());
+    if (response.statusCode == 200) {
+      // Request successful, do something
+      print('Image uploaded successfully!');
+    } else {
+      // Request failed, handle the error
+      print('Error uploading image. Status code: ${response.statusCode}');
+    }
+  }
+
   @override
   void initState() {
     userLogin();
@@ -202,520 +248,283 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: black,
-      body: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: MediaQuery.of(context).size.height / 3,
-            width: double.infinity,
-            child: Stack(
-              children: [
-                Positioned(
-                  child: Container(
-                      foregroundDecoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.black,
-                            Colors.transparent,
-                          ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          stops: [0, 0.9],
-                        ),
-                      ),
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: double.infinity,
-                      child: Image.asset(
-                        'assets/im.png',
-                        fit: BoxFit.fitWidth,
-                      )),
-                ),
-                Positioned(
-                  top: 8,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomText(
-                            text: 'My Profile',
-                            fontSize: 30,
-                            fontFamily: 'Comfortaa-VariableFont_wght',
-                            color: white,
-                            fontWeight: FontWeight.normal)
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: update
-                        ? Container()
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomText(
-                                  text: name,
-                                  fontSize: 30,
-                                  fontFamily: 'Comfortaa-VariableFont_wght',
-                                  color: white,
-                                  fontWeight: FontWeight.normal),
-                              CustomText(
-                                  text: 'Username:$username',
-                                  fontSize: 15,
-                                  fontFamily: 'Comfortaa-VariableFont_wght',
-                                  color: white,
-                                  fontWeight: FontWeight.normal),
-                            ],
-                          ),
-                  ),
-                ),
-                Positioned(
-                  top: 4,
-                  left: 4,
-                  child: TextButton(
-                    onPressed: () {
-                      chooseImage();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        children: [
-                          Icon(
-                            Icons.camera_alt_outlined,
-                            size: 30,
-                          ),
-                          Positioned(
-                            top: 10,
-                            left: 10,
-                            child: Icon(
-                              Icons.add,
-                              color: red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                update
-                    ? Column(
+        backgroundColor: black,
+        body: userLoging
+            ? Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomText(
-                              text: 'name',
-                              fontSize: 15,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: Colors.white70,
-                              fontWeight: FontWeight.normal),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          update
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height / 13,
-                                  child: Form(
-                                    child: CustomTextField(
-                                        hintText: name,
-                                        controller: editName,
-                                        keyInput: TextInputType.text,
-                                        icon: Icons.person),
+                          Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            width: double.infinity,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: Container(
+                                      foregroundDecoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.black,
+                                            Colors.transparent,
+                                          ],
+                                          begin: Alignment.bottomCenter,
+                                          end: Alignment.topCenter,
+                                          stops: [0, 0.9],
+                                        ),
+                                      ),
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              3,
+                                      width: double.infinity,
+                                      child: Image.asset(
+                                        'assets/im.png',
+                                        fit: BoxFit.fitWidth,
+                                      )),
+                                ),
+                                Positioned(
+                                  top: 8,
+                                  left: 0,
+                                  right: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        CustomText(
+                                            text: 'My Profile',
+                                            fontSize: 30,
+                                            fontFamily:
+                                                'Comfortaa-VariableFont_wght',
+                                            color: white,
+                                            fontWeight: FontWeight.normal)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                            text: name,
+                                            fontSize: 30,
+                                            fontFamily:
+                                                'Comfortaa-VariableFont_wght',
+                                            color: white,
+                                            fontWeight: FontWeight.normal),
+                                        CustomText(
+                                            text: 'Username:$username',
+                                            fontSize: 15,
+                                            fontFamily:
+                                                'Comfortaa-VariableFont_wght',
+                                            color: white,
+                                            fontWeight: FontWeight.normal),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 4,
+                                  left: 4,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      chooseImage();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Stack(
+                                        children: [
+                                          Icon(
+                                            Icons.camera_alt_outlined,
+                                            size: 30,
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            left: 10,
+                                            child: Icon(
+                                              Icons.add,
+                                              color: red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 )
-                              : Container(),
-                          SizedBox(
-                            height: 10,
+                              ],
+                            ),
                           ),
-                          CustomText(
-                              text: 'Email',
-                              fontSize: 15,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: Colors.white70,
-                              fontWeight: FontWeight.normal),
                           SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
-                          update
-                              ? Form(
-                                  autovalidateMode: AutovalidateMode.always,
-                                  child: SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height / 10,
-                                    child: CustomTextField(
-                                        hintText: email,
-                                        controller: editEmail,
-                                        keyInput: TextInputType.text,
-                                        icon: Icons.email),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                    text: 'Mobile Number',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                    text: mobile,
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomText(
+                                    text: 'Mobile Number 2',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                    text: mobile2 == 'null' ? '-' : '$mobile2',
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomText(
+                                    text: 'Gender',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                    text: gender == '1'
+                                        ? "male"
+                                        : gender == '2'
+                                            ? "female"
+                                            : "_",
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomText(
+                                    text: 'Birthday',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                    text: birtday == "null" ? "-" : birtday,
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomText(
+                                    text: 'Country',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                    text: 'Sri Lanka',
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomText(
+                                    text: 'Address',
+                                    fontSize: 15,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.normal),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  address.isEmpty ? "-" : address,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Comfortaa-VariableFont_wght',
+                                      color: white,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => UpdateProfile(
+                                                update: updateuser,
+                                                cId: customerId,
+                                                vId: verification,
+                                              )),
+                                    );
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 60,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        color: font_green,
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                    child: CustomText(
+                                        text: 'Update Profile',
+                                        fontSize: 20,
+                                        fontFamily:
+                                            'Comfortaa-VariableFont_wght',
+                                        color: white,
+                                        fontWeight: FontWeight.normal),
                                   ),
                                 )
-                              : Container(),
-                          SizedBox(
-                            height: 10,
+                              ],
+                            ),
                           ),
-                          CustomText(
-                              text: 'NIC',
-                              fontSize: 15,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: Colors.white70,
-                              fontWeight: FontWeight.normal),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          update
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height / 13,
-                                  child: CustomTextField(
-                                      hintText: "type hear",
-                                      controller: editNic,
-                                      keyInput: TextInputType.text,
-                                      icon: Icons.insert_drive_file),
-                                )
-                              : Container(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      )
-                    : Container(),
-                CustomText(
-                    text: 'Mobile Number',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                update
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height / 13,
-                        child: Form(
-                          child: CustomTextField(
-                              hintText: mobile,
-                              controller: editmobile,
-                              keyInput: TextInputType.number,
-                              icon: Icons.phone),
-                        ),
-                      )
-                    : CustomText(
-                        text: mobile,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomText(
-                    text: 'Mobile Number 2',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                update
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height / 13,
-                        child: Form(
-                          child: CustomTextField(
-                              hintText:
-                                  mobile2 == 'null' ? 'type hear' : '$mobile2',
-                              controller: editmobile2,
-                              keyInput: TextInputType.number,
-                              icon: Icons.mobile_friendly),
-                        ),
-                      )
-                    : CustomText(
-                        text: mobile2 == 'null' ? '-' : '$mobile2',
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomText(
-                    text: 'Gender',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                update
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height / 13,
-                        child: Row(
-                          children: [
-                            CustomText(
-                                text: 'male',
-                                fontSize: 13,
-                                fontFamily: 'Comfortaa-VariableFont_wght',
-                                color: Colors.white70,
-                                fontWeight: FontWeight.normal),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Checkbox(
-                              hoverColor: black,
-                              focusColor: font_green,
-                              checkColor: background_green,
-                              activeColor: black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(1.0),
-                              ),
-                              side: MaterialStateBorderSide.resolveWith(
-                                (states) =>
-                                    BorderSide(width: 2.0, color: font_green),
-                              ),
-                              value: male,
-                              onChanged: (value) {
-                                setState(() {
-                                  male = value!;
-                                  female = false;
-                                  log(male.toString());
-                                });
-                              },
-                            ),
-                            CustomText(
-                                text: 'female',
-                                fontSize: 13,
-                                fontFamily: 'Comfortaa-VariableFont_wght',
-                                color: Colors.white70,
-                                fontWeight: FontWeight.normal),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Checkbox(
-                              hoverColor: black,
-                              focusColor: font_green,
-                              checkColor: background_green,
-                              activeColor: black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(1.0),
-                              ),
-                              side: MaterialStateBorderSide.resolveWith(
-                                (states) =>
-                                    BorderSide(width: 2.0, color: font_green),
-                              ),
-                              value: female,
-                              onChanged: (value) {
-                                setState(() {
-                                  female = value!;
-                                  male = false;
-
-                                  log(male.toString());
-                                });
-                              },
-                            ),
-                          ],
+                        ]),
+                  ),
+                  isloading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.grey,
                         ))
-                    : CustomText(
-                        text: gender == '3' ? '-' : gender,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomText(
-                    text: 'Birthday',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                update
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height / 13,
-                        child: Form(
-                          child: CustomTextField(
-                              hintText:
-                                  birtday == "null" ? "type hear" : birtday,
-                              controller: editBirthday,
-                              keyInput: TextInputType.number,
-                              icon: Icons.card_giftcard),
-                        ),
-                      )
-                    : CustomText(
-                        text: birtday == "null" ? "-" : birtday,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomText(
-                    text: 'Country',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomText(
-                    text: 'Sri Lanka',
-                    fontSize: 20,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: white,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 15,
-                ),
-                CustomText(
-                    text: 'Address',
-                    fontSize: 15,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    color: Colors.white70,
-                    fontWeight: FontWeight.normal),
-                SizedBox(
-                  height: 10,
-                ),
-                update
-                    ? SizedBox(
-                        height: MediaQuery.of(context).size.height / 13,
-                        child: Form(
-                          child: CustomTextField(
-                              hintText: address.isEmpty ? "type hear" : address,
-                              controller: editAddress,
-                              keyInput: TextInputType.text,
-                              icon: Icons.place_sharp),
-                        ),
-                      )
-                    : Text(
-                        address.isEmpty ? "-" : address,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Comfortaa-VariableFont_wght',
-                            color: white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                SizedBox(
-                  height: 20,
-                ),
-                update
-                    ? InkWell(
-                        onTap: () {
-                          if (update) {
-                            if (editName.text.isNotEmpty) {
-                              if (editEmail.text.isNotEmpty &&
-                                  editmobile.text.length == 10) {
-                                if (editmobile2.text.isNotEmpty) {
-                                  if (male == true || female == true) {
-                                    if (editBirthday.text.isNotEmpty) {
-                                      if (editAddress.text.isNotEmpty) {
-                                        updateCustomerProfile();
-                                      } else {
-                                        MotionToast.error(
-                                                title: Text("info"),
-                                                description:
-                                                    Text('check your address'))
-                                            .show(context);
-                                      }
-                                    } else {
-                                      MotionToast.error(
-                                              title: Text("info"),
-                                              description:
-                                                  Text('check your birthday'))
-                                          .show(context);
-                                    }
-                                  } else {
-                                    MotionToast.error(
-                                            title: Text("info"),
-                                            description:
-                                                Text('check your gender '))
-                                        .show(context);
-                                  }
-                                } else {
-                                  MotionToast.error(
-                                          title: Text("info"),
-                                          description: Text(
-                                              'check your mobile number 2'))
-                                      .show(context);
-                                }
-                              } else {
-                                MotionToast.error(
-                                        title: Text("info"),
-                                        description: Text('check your email'))
-                                    .show(context);
-                              }
-                            } else {
-                              MotionToast.error(
-                                      title: Text("info"),
-                                      description: Text('check your name'))
-                                  .show(context);
-                            }
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 60,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: font_green,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: CustomText(
-                              text: "Save",
-                              fontSize: 20,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          setState(() {
-                            update = true;
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 60,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: font_green,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: CustomText(
-                              text: 'Update Profile',
-                              fontSize: 20,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      )
-              ],
-            ),
-          ),
-        ]),
-      ),
-    );
-    
+                      : Container()
+                ],
+              )
+            : Container());
   }
-
 }

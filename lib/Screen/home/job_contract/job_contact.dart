@@ -40,28 +40,29 @@ class _JobContactState extends State<JobContact> {
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      var z = sharedPreferences.getString('verification');
-      var y = sharedPreferences.getString('customer_id');
-      setState(() {
-        customer_id = y.toString();
-        log(customer_id);
-      });
 
-      log("verificatio" + verification);
-      if (verification != '0') {
-        setState(() {
-          userStatus = true;
-        });
-      } else {
-        setState(() {
-          userStatus = false;
-        });
-      }
+    var z = sharedPreferences.getString('verification');
+    var y = sharedPreferences.getString('customer_id');
+    setState(() {
+      customer_id = y.toString();
+      log(customer_id);
     });
+
+    log("verificatio" + verification);
+    if (verification != '0') {
+      await updateJobLead(widget.job_id);
+      setState(() {
+        userStatus = true;
+      });
+    } else {
+      await updateJobLead("0");
+      setState(() {
+        userStatus = false;
+      });
+    }
   }
 
-  updateJobLead() async {
+  updateJobLead(String cId) async {
     setState(() {
       // _isFirstLoadRunning = true;
     });
@@ -76,17 +77,17 @@ class _JobContactState extends State<JobContact> {
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
           "customer_id": userStatus ? customer_id : "0",
-          "job_id": widget.job_id,
+          "job_id": cId,
         }));
     var res = jsonDecode(response.body.toString());
 
-    log(res['data'].toString());
+    log("dddddddddd" + res['data'].toString());
   }
 
   @override
   void initState() {
     userLogin();
-    updateJobLead();
+
     // TODO: implement initState
     super.initState();
   }

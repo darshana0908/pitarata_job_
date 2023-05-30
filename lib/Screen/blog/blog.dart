@@ -161,8 +161,9 @@ class _BlogState extends State<Blog> {
                                 child: Container(
                                     alignment: Alignment.bottomRight,
                                     child: Text(
-                                      blogList[index]['date'] +
-                                          blogList[index]['time'],
+                                      blogList[index]['date'] == "null"
+                                          ? "${blogList[index]['date']}+ ${blogList[index]['time']}"
+                                          : "_________",
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontFamily:
@@ -187,7 +188,7 @@ class _BlogState extends State<Blog> {
                       ),
                       child: Center(
                           child: CircularProgressIndicator(
-                        color: Colors.grey,
+                        color: red,
                       )),
                     ),
                   ),

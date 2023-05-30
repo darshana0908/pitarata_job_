@@ -196,26 +196,49 @@ class _SingleJobState extends State<SingleJob> {
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      var z = sharedPreferences.getString('verification');
-      var y = sharedPreferences.getString('customer_id');
-      setState(() {
-        verification = z.toString();
-        customer_id = y.toString();
-      });
 
-      log("verificatio" + verification);
-      if (verification != '0') {
-        setState(() {
-          verified = true;
-          log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
-        });
-      } else {
-        setState(() {
-          verified = false;
-        });
-      }
+    var z = sharedPreferences.getString('verification');
+    var y = sharedPreferences.getString('customer_id');
+    setState(() {
+      verification = z.toString();
+      customer_id = y.toString();
     });
+
+    log("verificatio" + verification);
+    if (verification != '0') {
+      await updateJobView(customer_id);
+      setState(() {
+        verified = true;
+        log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
+      });
+    } else {
+      updateJobView("0");
+      setState(() {
+        verified = false;
+      });
+    }
+  }
+
+  updateJobView(String Cid) async {
+    setState(() {
+      // _isFirstLoadRunning = true;
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "customer_id": verified ? customer_id : "0",
+          "job_id": Cid,
+        }));
+    var res = jsonDecode(response.body.toString());
+
+    log(res['data'].toString());
   }
 
   @override
@@ -274,13 +297,12 @@ class _SingleJobState extends State<SingleJob> {
                                   onPressed: () {
                                     if (verified == true) {
                                       if (widget.x == true) {
-                                        alert('you already save this', true,
+                                        alert(
+                                            'You have already added this job to your favorite list!',
+                                            true,
                                             true);
                                       } else {
-                                        alert(
-                                            'Are you sure you want to Save this? ',
-                                            true,
-                                            false);
+                                        setFavorite();
                                       }
                                     } else {
                                       userCheck(
@@ -695,8 +717,6 @@ class _SingleJobState extends State<SingleJob> {
                             InkWell(
                               onTap: () async {
                                 if (item) {
-                                  setFavorite();
-                                  setState(() {});
                                 } else {
                                   Share.share(
                                       'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');

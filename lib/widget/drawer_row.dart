@@ -6,9 +6,10 @@ import '../color/colors.dart';
 import 'custom_text.dart';
 
 class DrawerRow extends StatelessWidget {
-  const DrawerRow({super.key, required this.text, required this.on});
+  const DrawerRow({super.key, required this.text, required this.on,required this.icon});
   final String text;
   final VoidCallback on;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class DrawerRow extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.check_circle_rounded,
+                    icon,
                     color: font_green,
                     size: 15,
                   ),

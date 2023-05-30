@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class Logout extends StatefulWidget {
@@ -19,6 +21,12 @@ class Logout extends StatefulWidget {
 class _LogoutState extends State<Logout> {
   @override
   void initState() {
+    logoutDialog();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  logoutDialog() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       return await showDialog(
           context: context,
@@ -39,6 +47,7 @@ class _LogoutState extends State<Logout> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                           onPressed: () {
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                           icon: Icon(
@@ -61,19 +70,38 @@ class _LogoutState extends State<Logout> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        RadiusButton(
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 30.w,
-                          text: 'NO',
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: white,
+                            height: 70,
+                            width: 30.w,
+                            text: 'NO',
+                          ),
                         ),
-                        RadiusButton(
-                          colortext: black,
-                          color: font_green,
-                          height: 70,
-                          width: 30.w,
-                          text: 'YES',
+                        TextButton(
+                          onPressed: () async {
+                            SharedPreferences sharedPreferences =
+                                await SharedPreferences.getInstance();
+                            var z = await sharedPreferences.setString(
+                                'verification', '0');
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const NameScreen()),
+                                (Route<dynamic> route) => false);
+                          },
+                          child: RadiusButton(
+                            colortext: black,
+                            color: font_green,
+                            height: 70,
+                            width: 30.w,
+                            text: 'YES',
+                          ),
                         ),
                       ],
                     ),
@@ -83,9 +111,6 @@ class _LogoutState extends State<Logout> {
             );
           });
     });
-
-    // TODO: implement initState
-    super.initState();
   }
 
   @override

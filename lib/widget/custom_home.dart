@@ -60,7 +60,6 @@ class _CustomHomeState extends State<CustomHome> {
   bool loadFavorites = false;
   @override
   void initState() {
-    getFavouriteJobs();
     getWallpaper();
     userLogin();
 
@@ -72,27 +71,26 @@ class _CustomHomeState extends State<CustomHome> {
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      var z = sharedPreferences.getString('verification');
-      var y = sharedPreferences.getString('customer_id');
-      setState(() {
-        verification = z.toString();
-        customer_id = y.toString();
-        log(customer_id);
-      });
 
-      log("verificatio" + verification);
-      if (verification != '0') {
-        getFavouriteJobs();
-        setState(() {
-          userStatus = true;
-        });
-      } else {
-        setState(() {
-          userStatus = false;
-        });
-      }
+    var z = sharedPreferences.getString('verification');
+    var y = sharedPreferences.getString('customer_id');
+    setState(() {
+      verification = z.toString();
+      customer_id = y.toString();
+      log(customer_id);
     });
+
+    log("verificatio" + verification);
+    if (verification != '0') {
+      await getFavouriteJobs();
+      setState(() {
+        userStatus = true;
+      });
+    } else {
+      setState(() {
+        userStatus = false;
+      });
+    }
   }
 
   getWallpaper() async {
@@ -262,28 +260,6 @@ class _CustomHomeState extends State<CustomHome> {
     }
   }
 
-  updateJobView() async {
-    setState(() {
-      // _isFirstLoadRunning = true;
-    });
-
-    var headers = {'Content-Type': 'application/json'};
-
-    // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "customer_id": userStatus ? customer_id : "0",
-          "job_id": addId,
-        }));
-    var res = jsonDecode(response.body.toString());
-
-    log(res['data'].toString());
-  }
-
   updateFavorites() {
     setState(() {
       getFavouriteJobs();
@@ -294,7 +270,7 @@ class _CustomHomeState extends State<CustomHome> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? FadeHome()
+        ? AbsorbPointer(absorbing: isLoading, child: FadeHome())
         : SingleChildScrollView(
             controller: mycontroller,
             child: Column(
@@ -328,7 +304,7 @@ class _CustomHomeState extends State<CustomHome> {
                                           child: Image.network(
                                             "https://pitaratajobs.novasoft.lk/$img",
                                             // i[index]['image_path'],
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.scaleDown,
                                           ),
                                         );
                                       },
@@ -491,7 +467,6 @@ class _CustomHomeState extends State<CustomHome> {
                                             (BuildContext context, int index) {
                                           return InkWell(
                                             onTap: () async {
-                                              updateJobView();
                                               if (userStatus == true) {
                                                 if (favoritesList.any(
                                                         (element) =>
@@ -674,11 +649,6 @@ class _CustomHomeState extends State<CustomHome> {
                                                                 fit: BoxFit
                                                                     .cover,
                                                               ),
-                                                              //     Image.network(
-                                                              //   'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
-                                                              //   fit: BoxFit
-                                                              //       .cover,
-                                                              // ),
                                                             ),
                                                           ),
                                                         ),
@@ -701,15 +671,15 @@ class _CustomHomeState extends State<CustomHome> {
                                                                           jobCategory[index]["ads_id"]
                                                                               .toString())
                                                                       ? alert(
-                                                                          'You already Save this',
+                                                                          'You have already added this job to your favorite list!',
                                                                           true,
                                                                           true,
                                                                         )
-                                                                      : alert(
-                                                                          'Are you sure you want to Save this?',
-                                                                          true,
-                                                                          false,
-                                                                        );
+                                                                      : setFavorite();
+
+                                                                  setState(() {
+                                                                    favoritesList;
+                                                                  });
                                                                 } else {
                                                                   alert(
                                                                     'Please login to your account to add this job to your favorite list!',
@@ -750,7 +720,7 @@ class _CustomHomeState extends State<CustomHome> {
                     ),
                     if (_isLoadMoreRuning == true)
                       Positioned(
-                        bottom: 20,
+                        bottom: 100,
                         left: 0,
                         right: 0,
                         child: Padding(
@@ -759,7 +729,7 @@ class _CustomHomeState extends State<CustomHome> {
                           ),
                           child: Center(
                               child: CircularProgressIndicator(
-                            color: Colors.grey,
+                            color: red,
                           )),
                         ),
                       ),
@@ -834,16 +804,6 @@ class _CustomHomeState extends State<CustomHome> {
                             InkWell(
                               onTap: () async {
                                 if (item == true) {
-                                  setFavorite();
-                                  log('hhhhhh');
-                                  // var res = await sqlDb.insertData(
-                                  //     'INSERT INTO favorite ("img","description","addId","categoryName", "salary", "email" ,"mobile", "whatapp") VALUES("$img","$description","$addId","$categoryName","$salary","$email","$mobile","$whatapp")');
-                                  setState(() {
-                                    favoritesList;
-                                  });
-                                  var resp = await sqlDb
-                                      .readData("select * from favorite");
-                                  log(resp.toString());
                                   Navigator.pop(context);
                                 } else {
                                   Navigator.push(

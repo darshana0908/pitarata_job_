@@ -33,6 +33,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   String verification = '';
   String customer_id = '';
   bool x = false;
+  bool isLoading = false;
 
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
@@ -79,15 +80,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   getFavouriteJobs() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-            child: CircularProgressIndicator(
-          color: Colors.grey,
-        ));
-      },
-    );
+    setState(() {
+      isLoading = true;
+    });
     var headers = {'Content-Type': 'application/json'};
     var response = await http.post(
         Uri.parse(
@@ -100,8 +95,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         }));
     var res = jsonDecode(response.body.toString());
     log(res['data'].toString());
-    Navigator.pop(context);
+
     setState(() {
+      isLoading = false;
       favoritesList = res['data'];
       log(favoritesList.toString());
     });
@@ -114,12 +110,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   removeFavoriteJobs() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+    setState(() {
+      isLoading = true;
+    });
     var headers = {'Content-Type': 'application/json'};
     var response = await http.post(
         Uri.parse(
@@ -137,7 +130,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     var res = jsonDecode(response.body.toString());
     log(res['data'].toString());
     Navigator.pop(context);
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   userCheck() {
@@ -226,155 +221,168 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: SingleChildScrollView(
-        child: GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            itemCount: favoritesList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Stack(children: [
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 5,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: light_dark,
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SingleJob(
-                                        update: updateFavorites,
-                                        categoryId: favoritesList[index]
-                                                ['biz_category_id']
-                                            .toString(),
-                                        x: userLoging,
-                                        whatapp: favoritesList[index]
-                                                ['job_whatsapp']
-                                            .toString(),
-                                        mobile: favoritesList[index]
-                                                ['job_mobile']
-                                            .toString(),
-                                        email: favoritesList[index]['job_email']
-                                            .toString(),
-                                        salary: favoritesList[index]
-                                                ['job_salary']
-                                            .toString(),
-                                        categoryName: favoritesList[index]
-                                                ['biz_category_name']
-                                            .toString(),
-                                        addId: favoritesList[index]['ads_id']
-                                            .toString(),
-                                        description: favoritesList[index]
-                                                ['description']
-                                            .toString(),
-                                        img:
-                                            'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}',
-                                      )));
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                          child: Image.network(
-                            'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}',
-                            fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: favoritesList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 5,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: light_dark,
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: light_dark,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15))),
-                      height: 40,
-                      width: 150,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 100,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CustomText(
-                                    text: favoritesList[index]
-                                            ['biz_category_name']
-                                        .toString(),
-                                    fontSize: 12,
-                                    fontFamily: 'Comfortaa-VariableFont_wght',
-                                    color: white,
-                                    fontWeight: FontWeight.normal),
+                          child: InkWell(
+                            onTap: () async {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SingleJob(
+                                            update: updateFavorites,
+                                            categoryId: favoritesList[index]
+                                                    ['biz_category_id']
+                                                .toString(),
+                                            x: userLoging,
+                                            whatapp: favoritesList[index]
+                                                    ['job_whatsapp']
+                                                .toString(),
+                                            mobile: favoritesList[index]
+                                                    ['job_mobile']
+                                                .toString(),
+                                            email: favoritesList[index]
+                                                    ['job_email']
+                                                .toString(),
+                                            salary: favoritesList[index]
+                                                    ['job_salary']
+                                                .toString(),
+                                            categoryName: favoritesList[index]
+                                                    ['biz_category_name']
+                                                .toString(),
+                                            addId: favoritesList[index]
+                                                    ['ads_id']
+                                                .toString(),
+                                            description: favoritesList[index]
+                                                    ['description']
+                                                .toString(),
+                                            img:
+                                                'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}',
+                                          )));
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
+                              child: Image.network(
+                                'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}',
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    alert(
-                                        'Are you sure you need to Share this record',
-                                        false);
-                                  },
-                                  child: Icon(
-                                    Icons.upload_sharp,
-                                    color: background_green,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: light_dark,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15))),
+                          height: 40,
+                          width: 150,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CustomText(
+                                        text: favoritesList[index]
+                                                ['biz_category_name']
+                                            .toString(),
+                                        fontSize: 12,
+                                        fontFamily:
+                                            'Comfortaa-VariableFont_wght',
+                                        color: white,
+                                        fontWeight: FontWeight.normal),
                                   ),
                                 ),
-                                InkWell(
-                                  splashColor: font_gold,
-                                  hoverColor: font_green,
-                                  onTap: () {
-                                    setState(() {
-                                      id = favoritesList[index]['ads_id']
-                                          .toString();
-                                    });
-                                    alert(
-                                        'Are you sure you  need to remove this job from  your favorite list ?',
-                                        true);
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        alert(
+                                            'Are you sure you need to Share this record',
+                                            false);
+                                      },
                                       child: Icon(
-                                        Icons.delete_sharp,
-                                        color: red,
+                                        Icons.upload_sharp,
+                                        color: background_green,
                                       ),
                                     ),
-                                  ),
+                                    InkWell(
+                                      splashColor: font_gold,
+                                      hoverColor: font_green,
+                                      onTap: () {
+                                        setState(() {
+                                          id = favoritesList[index]['ads_id']
+                                              .toString();
+                                        });
+                                        alert(
+                                            'Are you sure you  need to remove this job from  your favorite list ?',
+                                            true);
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.delete_sharp,
+                                            color: red,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ]),
-              );
-            }),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
+                }),
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.grey,
+                ))
+              : Container()
+        ],
       ),
     );
   }
@@ -441,6 +449,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         onPressed: () async {
                           if (item) {
                             setState(() {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                    color: Colors.grey,
+                                  ));
+                                },
+                              );
                               removeFavoriteJobs();
                               // getFavouriteJobs();
                             });
