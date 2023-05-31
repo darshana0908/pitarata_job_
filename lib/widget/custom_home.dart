@@ -65,7 +65,7 @@ class _CustomHomeState extends State<CustomHome> {
 
     // TODO: implement initState
     super.initState();
-
+    getFavouriteJobs();
     mycontroller = ScrollController()..addListener(_loadeMore);
   }
 

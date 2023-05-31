@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/job_contract/job_contact.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -16,6 +17,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
+import '../../../class/add.dart';
 import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
 import '../../../widget/job_categories.dart';
@@ -67,6 +69,9 @@ class _SingleJobState extends State<SingleJob> {
   String customer_id = '';
   bool seFavorites = false;
   String dropText = 'select a reasons';
+  BannerAd? _bannerAd;
+
+  bool _isLoaded = false;
   favoritesData() async {
     List resp = await sqlDb.readData("select * from favorite");
 
@@ -80,18 +85,21 @@ class _SingleJobState extends State<SingleJob> {
     // TODO: implement initState
 
     super.initState();
-    log(widget.x.toString());
+
     // favoritesData();
     getSimilarJobs();
     userLogin();
+    loadAd();
   }
+
+  // TODO: replace this test ad unit with your own ad unit.
+
+  final adUnitId = 'ca-app-pub-3940256099942544/6300978111';
+
+  /// Loads a banner ad.
 
   ifselected() {
     favoritesList.any((element) => element["addId"].toString() == widget.addId);
-
-    log(favoritesList
-        .any((element) => element["addId"].toString() == widget.addId)
-        .toString());
   }
 
   getSimilarJobs() async {
@@ -107,9 +115,8 @@ class _SingleJobState extends State<SingleJob> {
           "app_id": "nzone_4457Was555@qsd_job",
           "job_category_id": widget.categoryId
         }));
-    log(widget.categoryId);
+
     var res = jsonDecode(response.body.toString());
-    log(res.toString());
 
     setState(() {
       loading = false;
@@ -136,7 +143,7 @@ class _SingleJobState extends State<SingleJob> {
         }));
 
     var res = jsonDecode(response.body);
-    log(res.toString());
+
     String msg = res['msg'];
     if (res['status'].toString() == "1") {
       setState(() {
@@ -174,7 +181,7 @@ class _SingleJobState extends State<SingleJob> {
         }));
 
     var res = jsonDecode(response.body);
-    log(res.toString());
+
     String msg = res['msg'];
     if (res['status'].toString() == "1") {
       setState(() {
@@ -204,12 +211,10 @@ class _SingleJobState extends State<SingleJob> {
       customer_id = y.toString();
     });
 
-    log("verificatio" + verification);
     if (verification != '0') {
       await updateJobView(customer_id);
       setState(() {
         verified = true;
-        log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
       });
     } else {
       updateJobView("0");
@@ -237,12 +242,11 @@ class _SingleJobState extends State<SingleJob> {
           "job_id": Cid,
         }));
     var res = jsonDecode(response.body.toString());
-
-    log(res['data'].toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    final AdSize adSize = AdSize(height: 100, width: 100);
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
@@ -394,15 +398,13 @@ class _SingleJobState extends State<SingleJob> {
                     ),
                   ),
                 ),
-                InkWell(
-                    onTap: () {
-                      MotionToast.info(
-                              title: Text("Info"),
-                              description:
-                                  Text('"This option will be enabled soon!"'))
-                          .show(context);
-                    },
-                    child: AdArea()),
+                SizedBox(
+                  height: 20,
+                ),
+                AppAds.bannerAds(context),
+                SizedBox(
+                  height: 20,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: CustomTextTwo(
@@ -425,18 +427,12 @@ class _SingleJobState extends State<SingleJob> {
                             gridList: getSimilarJobsList,
                             row: false,
                           )),
-                InkWell(
-                  onTap: () {
-                    MotionToast.info(
-                            title: Text("Info"),
-                            description:
-                                Text('"This option will be enabled soon!"'))
-                        .show(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: AdArea(),
-                  ),
+                SizedBox(
+                  height: 20,
+                ),
+                AppAds.bannerAds(context),
+                SizedBox(
+                  height: 20,
                 ),
                 TextButton(
                   onPressed: () {
@@ -620,9 +616,6 @@ class _SingleJobState extends State<SingleJob> {
           "job_id": widget.addId
         }));
     var res = jsonDecode(response.body.toString());
-    log('v' + verification);
-    log("c" + customer_id);
-    log('kkkkkccccaca' + res.toString());
 
     setState(() {
       seFavorites = false;
@@ -647,7 +640,6 @@ class _SingleJobState extends State<SingleJob> {
         }));
     var res = jsonDecode(response.body.toString());
 
-    log(res['data'].toString());
     if (res['data'].toString().isNotEmpty) {
       setState(() {
         if (res['data'].toString().isNotEmpty) {
@@ -704,7 +696,6 @@ class _SingleJobState extends State<SingleJob> {
                             InkWell(
                               onTap: () async {
                                 Navigator.pop(context);
-                                log('ggggg');
                               },
                               child: RadiusButton(
                                 colortext: black,
@@ -719,9 +710,7 @@ class _SingleJobState extends State<SingleJob> {
                                 if (item) {
                                 } else {
                                   Share.share(
-                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
-                                  log('ggggggggggg');
-                                  log('ggggggggggg');
+                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\n \nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\n\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
                                 }
 
                                 Navigator.pop(context);
@@ -760,7 +749,7 @@ class _SingleJobState extends State<SingleJob> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
                             alignment: Alignment.topRight,
@@ -786,8 +775,7 @@ class _SingleJobState extends State<SingleJob> {
                           Text(
                             'Is there something wrong with this post?',
                             style: TextStyle(
-                              fontSize: 15.sp,
-                              fontFamily: 'Viga',
+                              fontSize: 13.sp,
                               color: Colors.black54,
                             ),
                           ),
@@ -797,8 +785,7 @@ class _SingleJobState extends State<SingleJob> {
                           Text(
                             'Were constantly working hard to assure that our job posts meet high standards and we are very grateful for any kind of feedback from our users. ',
                             style: TextStyle(
-                              fontSize: 15.sp,
-                              fontFamily: 'Viga',
+                              fontSize: 13.sp,
                               color: Colors.black54,
                             ),
                           ),
@@ -821,41 +808,37 @@ class _SingleJobState extends State<SingleJob> {
                               Container(
                                 alignment: Alignment.center,
                                 height: 60,
-                                width: 190,
+                                width: 240,
                                 decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black38),
                                     borderRadius: BorderRadius.circular(2)),
-                                child: SizedBox(
-                                  child: DropdownButton<String>(
-                                    alignment: Alignment.centerRight,
-                                    hint: Text(dropText),
-                                    style:
-                                        TextStyle(fontSize: 9.sp, color: black),
-                                    borderRadius: BorderRadius.circular(4),
-                                    items: <String>[
-                                      'item sold/unavailable',
-                                      'Fraud',
-                                      'Duplicate',
-                                      'Spam',
-                                      "Wrong Category",
-                                      "Offensive",
-                                      "Other"
-                                          ""
-                                    ].map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.topLeft,
-                                        value: value,
-                                        child: Text(value),
-                                        onTap: () {
-                                          setState(() {
-                                            dropText = value;
-                                            log('fffffffff');
-                                          });
-                                        },
-                                      );
-                                    }).toList(),
-                                    onChanged: (_) {},
-                                  ),
+                                child: DropdownButton<String>(
+                                  hint: Text(dropText),
+                                  style:
+                                      TextStyle(fontSize: 9.sp, color: black),
+                                  borderRadius: BorderRadius.circular(4),
+                                  items: <String>[
+                                    'item sold/unavailable',
+                                    'Fraud',
+                                    'Duplicate',
+                                    'Spam',
+                                    "Wrong Category",
+                                    "Offensive",
+                                    "Other"
+                                        ""
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      alignment: Alignment.topLeft,
+                                      value: value,
+                                      child: Text(value),
+                                      onTap: () {
+                                        setState(() {
+                                          dropText = value;
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                                  onChanged: (_) {},
                                 ),
                               ),
                             ],
@@ -910,14 +893,13 @@ class _SingleJobState extends State<SingleJob> {
                                 height: 50,
                                 width: 150,
                                 decoration: BoxDecoration(
-                                    color: red,
+                                    color: font_green,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Text(
-                                  'Send Report',
+                                  'Report this job',
                                   style: TextStyle(
                                     color: black,
-                                    fontSize: 17,
-                                    fontFamily: 'Viga',
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
@@ -977,47 +959,31 @@ class _SingleJobState extends State<SingleJob> {
                           'We are happy to hear your feedback about our services.',
                           style: TextStyle(
                             fontSize: 17.sp,
-                            fontFamily: 'Viga',
                             color: Colors.black54,
                           ),
                         ),
                         SizedBox(
                           height: 30,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Message',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'Viga',
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: TextField(
+                            controller: controller2,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 50.0),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.black38), //<-- SEE HERE
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Colors.black38), //<-- SEE HERE
                               ),
                             ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 2.5,
-                              child: TextField(
-                                controller: controller2,
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 40.0),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color: Colors.black38), //<-- SEE HERE
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color: Colors.black38), //<-- SEE HERE
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         SizedBox(
                           height: 30,
@@ -1032,14 +998,14 @@ class _SingleJobState extends State<SingleJob> {
                             child: Container(
                               alignment: Alignment.center,
                               height: 50,
-                              width: 250,
+                              width: 170,
                               decoration: BoxDecoration(
-                                  color: red,
+                                  color: font_green,
                                   borderRadius: BorderRadius.circular(5)),
                               child: Text(
                                 'Send My Feedback',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontFamily: 'Viga',
                                 ),
                               ),
@@ -1054,5 +1020,29 @@ class _SingleJobState extends State<SingleJob> {
             );
           });
         });
+  }
+
+  void loadAd() {
+    _bannerAd = BannerAd(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      size: AdSize.largeBanner,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+          setState(() {
+            _isLoaded = true;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('BannerAd failed to load: $err');
+          // Dispose the ad here to free resources.
+          ad.dispose();
+        },
+      ),
+    )..load();
+    log('adddddd');
   }
 }

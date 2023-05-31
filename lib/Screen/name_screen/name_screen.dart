@@ -11,12 +11,14 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/home.dart';
 import 'package:pitarata_job/Screen/name_screen/reset_pasword.dart';
 import 'package:pitarata_job/color/colors.dart';
+import 'package:pitarata_job/widget/alert.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import '../../widget/otp_alert.dart';
 import 'name_screen_1.dart';
 
 class NameScreen extends StatefulWidget {
@@ -100,15 +102,20 @@ class _NameScreenState extends State<NameScreen> {
 
     if (resp.toString().isNotEmpty) {
       if (resp == '1') {
+        // MotionToast.info(description: Text(msg)).show(context);
         var y = res['data']['customer_id'].toString();
         verification = res['data']['verification'].toString();
         userLoginCheq(true);
         userDetails(y, verification);
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
-
-      MotionToast.info(description: Text(msg)).show(context);
+      if (resp == "3") {
+        otp(context, msg, email.text);
+      } else {
+        MotionToast.info(description: Text(msg)).show(context);
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'name_screen.dart';
 
@@ -81,8 +82,6 @@ class _NameScreenOneState extends State<NameScreenOne> {
           context,
           MaterialPageRoute(
               builder: (context) => NameScreenTwo(
-                    loading: loding,
-                    phone: mobile.text,
                     email: email.text,
                   )));
 
@@ -303,14 +302,25 @@ class _NameScreenOneState extends State<NameScreenOne> {
                                         fontFamily:
                                             'Comfortaa-VariableFont_wght'),
                                   ),
-                                  Text(
-                                    "Terms & Condition ",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 9.sp,
-                                        color: font_green,
-                                        fontFamily:
-                                            'Comfortaa-VariableFont_wght'),
+                                  InkWell(
+                                    onTap: () async {
+                                      var url = Uri.parse(
+                                          "https://pitaratajobs.novasoft.lk/privacy_policy.php");
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    child: Text(
+                                      "Terms & Condition ",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 9.sp,
+                                          color: font_green,
+                                          fontFamily:
+                                              'Comfortaa-VariableFont_wght'),
+                                    ),
                                   ),
                                   Text(
                                     "and ",
@@ -320,14 +330,25 @@ class _NameScreenOneState extends State<NameScreenOne> {
                                         fontFamily:
                                             'Comfortaa-VariableFont_wght'),
                                   ),
-                                  Text(
-                                    "Privacy Policy",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 9.sp,
-                                        color: font_green,
-                                        fontFamily:
-                                            'Comfortaa-VariableFont_wght'),
+                                  InkWell(
+                                    onTap: () async {
+                                      var url = Uri.parse(
+                                          "https://pitaratajobs.novasoft.lk/privacy_policy.php");
+                                      if (await canLaunchUrl(url)) {
+                                        await launchUrl(url);
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    child: Text(
+                                      "Privacy Policy",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 9.sp,
+                                          color: font_green,
+                                          fontFamily:
+                                              'Comfortaa-VariableFont_wght'),
+                                    ),
                                   ),
                                 ],
                               )

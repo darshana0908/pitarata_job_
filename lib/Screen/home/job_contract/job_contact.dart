@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:pitarata_job/class/add.dart';
 import 'package:pitarata_job/widget/ad_area.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../color/colors.dart';
 import '../../../widget/arrow_button.dart';
 import '../../../widget/color_container.dart';
@@ -164,15 +163,7 @@ class _JobContactState extends State<JobContact> {
                 color: Color.fromARGB(255, 4, 22, 75),
               ),
             ),
-            InkWell(
-                onTap: () {
-                  MotionToast.info(
-                          title: Text("Info"),
-                          description:
-                              Text('"This option will be enabled soon!"'))
-                      .show(context);
-                },
-                child: AdArea()),
+            AppAds.bannerAds(context),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: CustomTextTwo(
@@ -204,21 +195,20 @@ class _JobContactState extends State<JobContact> {
   }
 
   makingPhoneCall() async {
-    var url = Uri.parse("tel:${widget.mobile}");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    return "https://wa.me/${94711602438}/?text=${Uri.parse('')}";
+    // var url = Uri.parse("tel:${widget.mobile}");
+    // if (await canLaunchUrl(url)) {
+    //   await launchUrl(url);
+    // } else {
+    //   throw 'Could not launch $url';
+    // }
   }
 
   makingWhatsappCall() async {
-    var url = Uri.parse("https://wa.me/${widget.whatapp}?text=Hello");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    launchUrl(
+      Uri.parse("https://api.whatsapp.com/send/?phone=${widget.whatapp}"),
+      mode: LaunchMode.externalNonBrowserApplication,
+    );
   }
 
   void _launchURL() async {

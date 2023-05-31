@@ -8,13 +8,12 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import '../Screen/home/single_job/single_job.dart';
 
 class CustomGrid extends StatefulWidget {
-  const CustomGrid({
-    super.key,
-    required this.row,
-    required this.gridList,
-    required this.x,
-    required this.update
-  });
+  const CustomGrid(
+      {super.key,
+      required this.row,
+      required this.gridList,
+      required this.x,
+      required this.update});
 
   final bool row;
   final List gridList;
@@ -63,7 +62,8 @@ class _CustomGridState extends State<CustomGrid> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SingleJob(update: widget.update,
+                                builder: (context) => SingleJob(
+                                      update: widget.update,
                                       categoryId: widget.gridList[index]
                                               ['biz_category_id']
                                           .toString(),
