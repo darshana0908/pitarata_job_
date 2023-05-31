@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -100,24 +101,26 @@ class _ProfileState extends State<Profile> {
           "verification": verification
         }));
     var res = jsonDecode(response.body.toString());
+    log(res.toString());
+    if (res.toString().isNotEmpty) {
+      for (var index = 0; index < res['data'].length; ++index) {
+        final value = res['data'][0];
 
-    for (var index = 0; index < res['data'].length; ++index) {
-      final value = res['data'][0];
+        log('dddddddddddddddddddd' + res['data'][index]['name'].toString());
 
-      log('dddddddddddddddddddd' + res['data'][index]['name'].toString());
-
-      setState(() {
-        isloading = false;
-        name = res['data'][index]['name'].toString();
-        address = res['data'][index]['address'].toString();
-        mobile = res['data'][index]['mobile'].toString();
-        mobile2 = res['data'][index]['mobile_2'].toString();
-        img = res['data'][index]['profile_image'].toString();
-        gender = res['data'][index]['gender'].toString();
-        birtday = res['data'][index]['birthday'].toString();
-        email = res['data'][index]['email'].toString();
-        username = res['data'][index]['username'].toString();
-      });
+        setState(() {
+          isloading = false;
+          name = res['data'][index]['name'].toString();
+          address = res['data'][index]['address'].toString();
+          mobile = res['data'][index]['mobile'].toString();
+          mobile2 = res['data'][index]['mobile_2'].toString();
+          img = res['data'][index]['profile_image'].toString();
+          gender = res['data'][index]['gender'].toString();
+          birtday = res['data'][index]['birthday'].toString();
+          email = res['data'][index]['email'].toString();
+          username = res['data'][index]['username'].toString();
+        });
+      }
     }
   }
 
@@ -137,104 +140,92 @@ class _ProfileState extends State<Profile> {
 
     List<int> imageBytes = uploadimage.readAsBytesSync();
     String baseimage = base64Encode(imageBytes);
-    encodedImages.add(baseimage);
+    // log(baseimage);
+    List<String> base64Images = [
+      baseimage,
+
+      // Add more base64-encoded image strings as needed
+    ];
+
+    main(baseimage);
   }
 
-  List<String> encodeImages(List<XFile> images) {
-    List<String> encodedImages = [];
-
-    for (var image in images) {
-      // List<int> imageBytes = image.readAsBytesSync();
-      // String base64Image = base64Encode(imageBytes);
-      // encodedImages.add(base64Image);
-    }
-
-    return encodedImages;
-  }
-
-  // Future<void> sendFormData(
-  //   String img,
-  // ) async {
-  //   var url = Uri.parse(
-  //       'https://pitaratajobs.novasoft.lk/uploader/upload_customer_profile_image.php'); // Replace with your actual endpoint URL
-
-  //   var response = await http.post(url, body: {
-  //     'my_field': 'name',
-  //     'action': 'multiple',
-  //   });
-  //   log(response.body.toString());
-  //   if (response.statusCode == 200) {
-  //     // Request successful, do something
-  //     print('Form data sent successfully!');
-  //   } else {
-  //     // Request failed, handle the error
-  //     print('Error sending form data. Status code: ${response.statusCode}');
-  //   }
-  // }
-
-  Future<void> uploadImages(List<String> encodedImages) async {
-    try {
-      // Replace 'YOUR_UPLOAD_URL' with the actual URL to upload the images
-      var url = Uri.parse('YOUR_UPLOAD_URL');
-
-      // Create a JSON object with the encoded images
-      var requestBody = jsonEncode({'images': encodedImages});
-
-      // Set the headers
-      var headers = {'Content-Type': 'application/json'};
-
-      // Make the POST request
-      var response = await http.post(url, headers: headers, body: requestBody);
-
-      if (response.statusCode == 200) {
-        // Images uploaded successfully
-        print('Images uploaded successfully');
-      } else {
-        // Failed to upload images
-        print('Failed to upload images. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Error occurred during the upload
-      print('Error uploading images: $e');
-    }
-  }
-
-  Future<void> uploadImage(File imageFile) async {
-    var url = Uri.parse(
-        'https://pitaratajobs.novasoft.lk/uploader/upload_customer_profile_image.php'); // Replace with your actual upload endpoint URL
-
-    // Read the file as bytes
-    List<int> imageBytes = await imageFile.readAsBytes();
-
-    // Encode the bytes as base64
-    String base64Image = base64Encode(imageBytes);
-
-    List s = [base64Image];
-
-    // log(base64Image.toString());
-    // Create the request body
-    var requestBody = json.encode({
-      'my_field': s,
-      'action': 'multiple',
-    });
-
-    // Set the request headers (if needed)
-    // var headers = <String, String>{
-    //   'Content-Type': 'application/json',
-    // };
-
-    // Send the HTTP POST request
+  Future<void> uploadImageToServer(String base64Image) async {
+    var url =
+        Uri.parse('https://example.com/upload'); // Replace with your server URL
     var response = await http.post(
       url,
-      body: requestBody,
+      body: {
+        'my_field': ["$base64Image"],
+        'action': 'multiple',
+      },
     );
     log(response.body.toString());
     if (response.statusCode == 200) {
+      print('Image uploaded successfully');
+    } else {
+      print('Image upload failed');
+    }
+  }
+
+  Future<void> uploadImages(List<String> base64Images) async {
+    var apiUrl =
+        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php';
+
+    for (var base64Image in base64Images) {
+      var headers = {'Content-Type': 'application/json'};
+      var body = jsonEncode({
+        'my_field': base64Image,
+        'action': 'multiple',
+      });
+      log('hhhhh');
+
+      var response = await http.post(Uri.parse(apiUrl), body: body);
+      log(response.body.toString());
+
+      if (response.statusCode == 200) {
+        print('Image uploaded successfully');
+      } else {
+        print('Failed to upload image. Error: ${response.reasonPhrase}');
+      }
+    }
+  }
+
+  //okkkkk this
+  
+
+  main(String img) async {
+    // This will be sent as form data in the post requst
+    var map = new Map<String, dynamic>();
+    map['my_field'] = img;
+    map['action'] = 'multiple';
+
+    final response = await http.post(
+      Uri.parse(
+          'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'),
+      body: map,
+    );
+
+    print(response.body);
+  }
+
+  Future<void> sendFormData(
+    String img,
+  ) async {
+    var url = Uri.parse(
+        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'); // Replace with your actual endpoint URL
+
+    var response = await http.post(url, body: {
+      'my_field': [img],
+      'action': 'multiple',
+    });
+    log(response.body.toString());
+    if (response.statusCode == 200) {
       // Request successful, do something
-      print('Image uploaded successfully!');
+      print('Form data sent successfully!');
     } else {
       // Request failed, handle the error
-      print('Error uploading image. Status code: ${response.statusCode}');
+      print('Error sending form data. Status code: ${response.statusCode}');
     }
   }
 
