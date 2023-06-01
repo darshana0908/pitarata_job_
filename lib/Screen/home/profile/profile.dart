@@ -138,8 +138,9 @@ class _ProfileState extends State<Profile> {
     var choosedimage = await picker.pickImage(source: ImageSource.gallery);
     var uploadimage = File(choosedimage!.path);
 
-    List<int> imageBytes = uploadimage.readAsBytesSync();
+    List<int> imageBytes = await uploadimage.readAsBytesSync();
     String baseimage = base64Encode(imageBytes);
+    String newb = baseimage;
     // log(baseimage);
     List<String> base64Images = [
       baseimage,
@@ -147,7 +148,7 @@ class _ProfileState extends State<Profile> {
       // Add more base64-encoded image strings as needed
     ];
 
-    main(baseimage);
+    main(newb);
   }
 
   Future<void> uploadImageToServer(String base64Image) async {
@@ -192,7 +193,6 @@ class _ProfileState extends State<Profile> {
   }
 
   //okkkkk this
-  
 
   main(String img) async {
     // This will be sent as form data in the post requst
@@ -203,7 +203,7 @@ class _ProfileState extends State<Profile> {
     final response = await http.post(
       Uri.parse(
           'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'),
-      body: map,
+      body: jsonEncode(map),
     );
 
     print(response.body);
