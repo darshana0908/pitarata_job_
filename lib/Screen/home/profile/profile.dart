@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/profile/update_profile.dart';
@@ -54,6 +55,7 @@ class _ProfileState extends State<Profile> {
   String user_id = '';
   String urlimg = '';
   int x = 0;
+  bool proimg = false;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -140,15 +142,29 @@ class _ProfileState extends State<Profile> {
 
     List<int> imageBytes = await uploadimage.readAsBytesSync();
     String baseimage = base64Encode(imageBytes);
-    String newb = baseimage;
+    // String newb = baseimage;
+
     // log(baseimage);
     List<String> base64Images = [
-      baseimage,
+      baseimage, baseimage
 
       // Add more base64-encoded image strings as needed
     ];
+    dioTest(base64Images);
+    // main(newb);
+  }
 
-    main(newb);
+  Future<void> dioTest(List<String> base64Image) async {
+    final dio = Dio();
+    var formData = FormData.fromMap({
+      'my_field': base64Image,
+      'action': 'multiple',
+    });
+    var response = await dio.post(
+        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php',
+        data: formData);
+    log(formData.toString());
+    log(response.data.toString());
   }
 
   Future<void> uploadImageToServer(String base64Image) async {
@@ -253,27 +269,29 @@ class _ProfileState extends State<Profile> {
                             child: Stack(
                               children: [
                                 Positioned(
-                                  child: Container(
-                                      foregroundDecoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.black,
-                                            Colors.transparent,
-                                          ],
-                                          begin: Alignment.bottomCenter,
-                                          end: Alignment.topCenter,
-                                          stops: [0, 0.9],
+                                    child: Container(
+                                        foregroundDecoration:
+                                            const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.black,
+                                              Colors.transparent,
+                                            ],
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                            stops: [0, 0.9],
+                                          ),
                                         ),
-                                      ),
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      width: double.infinity,
-                                      child: Image.asset(
-                                        'assets/im.png',
-                                        fit: BoxFit.fitWidth,
-                                      )),
-                                ),
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3,
+                                        width: double.infinity,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 100),
+                                          child: Lottie.asset(
+                                              'assets/default_user.json'),
+                                        ))),
                                 Positioned(
                                   top: 8,
                                   left: 0,
@@ -480,6 +498,13 @@ class _ProfileState extends State<Profile> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => UpdateProfile(
+                                                gender: gender,
+                                                name: name,
+                                                address: address,
+                                                email: username,
+                                                Birth: birtday,
+                                                mobile1: mobile,
+                                                mobile2: mobile2,
                                                 update: updateuser,
                                                 cId: customerId,
                                                 vId: verification,

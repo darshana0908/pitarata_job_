@@ -288,7 +288,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   topRight: Radius.circular(10)),
                               child: Image.network(
                                 'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}',
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),

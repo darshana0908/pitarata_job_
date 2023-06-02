@@ -262,6 +262,7 @@ class _CustomHomeState extends State<CustomHome> {
 
   updateFavorites() {
     setState(() {
+      FocusManager.instance.primaryFocus?.unfocus();
       getFavouriteJobs();
       log('fffffffffddddddddddddddddd');
     });
@@ -600,9 +601,9 @@ class _CustomHomeState extends State<CustomHome> {
                                                           ),
                                                         ),
                                                         Positioned(
-                                                          top: 0,
                                                           right: 0,
                                                           left: 0,
+                                                          top: 0,
                                                           child: Container(
                                                             height: MediaQuery.of(
                                                                         context)

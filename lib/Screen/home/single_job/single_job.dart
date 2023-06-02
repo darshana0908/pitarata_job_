@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -82,6 +83,7 @@ class _SingleJobState extends State<SingleJob> {
 
   @override
   void initState() {
+    FocusManager.instance.primaryFocus?.unfocus();
     // TODO: implement initState
 
     super.initState();
@@ -269,12 +271,23 @@ class _SingleJobState extends State<SingleJob> {
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(
-              width: double.infinity,
-              // height: MediaQuery.of(context).size.height / 3,
-              child: Image.network(
-                widget.img,
-                fit: BoxFit.contain,
-              )),
+            width: double.infinity,
+            // height: MediaQuery.of(context).size.height / 3,
+            child: CachedNetworkImage(
+              imageUrl: widget.img,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(
+                      value: downloadProgress.progress),
+                ),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -741,11 +754,13 @@ class _SingleJobState extends State<SingleJob> {
               child: AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                contentPadding: EdgeInsets.only(top: 10.0),
+                insetPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.zero,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 backgroundColor: white,
                 content: SingleChildScrollView(
                   child: Container(
-                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width - 50,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -792,62 +807,66 @@ class _SingleJobState extends State<SingleJob> {
                           SizedBox(
                             height: 30,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                'Reasons',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontFamily: 'Viga',
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Reasons',
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontFamily: 'Viga',
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: 60,
-                                width: 240,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black38),
-                                    borderRadius: BorderRadius.circular(2)),
-                                child: DropdownButton<String>(
-                                  hint: Text(dropText),
-                                  style:
-                                      TextStyle(fontSize: 9.sp, color: black),
-                                  borderRadius: BorderRadius.circular(4),
-                                  items: <String>[
-                                    'item sold/unavailable',
-                                    'Fraud',
-                                    'Duplicate',
-                                    'Spam',
-                                    "Wrong Category",
-                                    "Offensive",
-                                    "Other"
-                                        ""
-                                  ].map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      alignment: Alignment.topLeft,
-                                      value: value,
-                                      child: Text(value),
-                                      onTap: () {
-                                        setState(() {
-                                          dropText = value;
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
-                                  onChanged: (_) {},
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 60,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.8,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.black38),
+                                        borderRadius: BorderRadius.circular(2)),
+                                    child: DropdownButton<String>(
+                                      hint: Text(dropText),
+                                      style: TextStyle(
+                                          fontSize: 9.sp, color: black),
+                                      borderRadius: BorderRadius.circular(4),
+                                      items: <String>[
+                                        'item sold/unavailable',
+                                        'Fraud',
+                                        'Duplicate',
+                                        'Spam',
+                                        "Wrong Category",
+                                        "Offensive",
+                                        "Other"
+                                            ""
+                                      ].map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          alignment: Alignment.topLeft,
+                                          value: value,
+                                          child: Text(value),
+                                          onTap: () {
+                                            setState(() {
+                                              dropText = value;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                      onChanged: (_) {},
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 30,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Message',
@@ -859,22 +878,28 @@ class _SingleJobState extends State<SingleJob> {
                               SizedBox(
                                 width: 10,
                               ),
-                              SizedBox(
-                                width: 240,
-                                child: TextField(
-                                  controller: controller,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1,
-                                          color: Colors.black38), //<-- SEE HERE
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 40.0),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1,
-                                          color: Colors.black38), //<-- SEE HERE
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.8,
+                                  child: TextField(
+                                    controller: controller,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color:
+                                                Colors.black38), //<-- SEE HERE
+                                      ),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 40.0),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color:
+                                                Colors.black38), //<-- SEE HERE
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -886,20 +911,23 @@ class _SingleJobState extends State<SingleJob> {
                             onTap: () {
                               reportThisJob();
                             },
-                            child: Container(
-                              alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                alignment: Alignment.center,
-                                height: 50,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    color: font_green,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Text(
-                                  'Report this job',
-                                  style: TextStyle(
-                                    color: black,
-                                    fontSize: 15,
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 50,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      color: font_green,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Text(
+                                    'Report this job',
+                                    style: TextStyle(
+                                      color: black,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 ),
                               ),

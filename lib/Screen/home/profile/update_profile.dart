@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -18,10 +19,28 @@ import '../../../widget/alert.dart';
 
 class UpdateProfile extends StatefulWidget {
   const UpdateProfile(
-      {super.key, required this.vId, required this.cId, required this.update});
+      {super.key,
+      required this.vId,
+      required this.cId,
+      required this.update,
+      required this.mobile1,
+      required this.mobile2,
+      required this.Birth,
+      required this.email,
+      required this.address,
+      required this.name,
+      required this.gender});
   final String vId;
   final String cId;
   final Function update;
+  final String mobile1;
+  final String mobile2;
+  final String email;
+  final String address;
+  final String name;
+  final String gender;
+
+  final String Birth;
 
   @override
   State<UpdateProfile> createState() => _UpdateProfileState();
@@ -43,10 +62,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
   TextEditingController editNic = TextEditingController();
   DateTime date = DateTime.now();
   bool isLoading = false;
+  String birthday = '';
 
   bool update = false;
   bool male = false;
   bool female = false;
+  bool mybirth = false;
 
   updateCustomerProfile() async {
     setState(() {
@@ -68,8 +89,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           "email": editEmail.text,
           "gender": male == true ? "1" : "2",
           "address": editAddress.text,
-          "birthday": '${date.year}/${date.month}/${date.day}',
-          "nic": editNic.text
+          'birthday': birthday
         }));
     log(customerId + verification);
 
@@ -84,21 +104,29 @@ class _UpdateProfileState extends State<UpdateProfile> {
         isLoading = false;
         widget.update();
       });
+      back();
     }
 
     MotionToast.info(title: Text("info"), description: Text(res['msg']))
         .show(context);
-
-    back();
   }
 
   back() {
-    Navigator.pop(context);
     Navigator.pop(context);
   }
 
   @override
   void initState() {
+    if (widget.gender == "1") {
+      setState(() {
+        male = true;
+      });
+    }
+    if (widget.gender == "2") {
+      setState(() {
+        female = true;
+      });
+    }
     // TODO: implement initState
     super.initState();
   }
@@ -115,31 +143,36 @@ class _UpdateProfileState extends State<UpdateProfile> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: 30,
+                    ),
                     Container(
                       height: MediaQuery.of(context).size.height / 3,
                       width: double.infinity,
                       child: Stack(
                         children: [
                           Positioned(
-                            child: Container(
-                                foregroundDecoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black,
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                    stops: [0, 0.9],
+                              child: Container(
+                                  foregroundDecoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black,
+                                        Colors.transparent,
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      stops: [0, 0.9],
+                                    ),
                                   ),
-                                ),
-                                height: MediaQuery.of(context).size.height / 3,
-                                width: double.infinity,
-                                child: Image.asset(
-                                  'assets/im.png',
-                                  fit: BoxFit.fitWidth,
-                                )),
-                          ),
+                                  height:
+                                      MediaQuery.of(context).size.height / 3,
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 100),
+                                    child: Lottie.asset(
+                                        'assets/default_user.json'),
+                                  ))),
                           Positioned(
                             top: 8,
                             left: 0,
@@ -192,7 +225,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               SizedBox(
                                 child: Form(
                                   child: CustomTextField(
-                                      hintText: 'name',
+                                      hintText: widget.name,
                                       controller: editName,
                                       keyInput: TextInputType.text,
                                       icon: Icons.person),
@@ -214,7 +247,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 autovalidateMode: AutovalidateMode.always,
                                 child: SizedBox(
                                   child: CustomTextField(
-                                      hintText: 'email',
+                                      hintText: widget.email,
                                       controller: editEmail,
                                       keyInput: TextInputType.text,
                                       icon: Icons.email),
@@ -224,7 +257,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 height: 10,
                               ),
                               CustomText(
-                                  text: 'NIC',
+                                  text: 'address',
                                   fontSize: 15,
                                   fontFamily: 'Comfortaa-VariableFont_wght',
                                   color: Colors.white70,
@@ -234,8 +267,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               ),
                               SizedBox(
                                 child: CustomTextField(
-                                    hintText: "type hear",
-                                    controller: editNic,
+                                    hintText: widget.address,
+                                    controller: editAddress,
                                     keyInput: TextInputType.text,
                                     icon: Icons.insert_drive_file),
                               ),
@@ -256,7 +289,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           SizedBox(
                             child: Form(
                               child: CustomTextField(
-                                  hintText: 'mobile',
+                                  hintText: widget.mobile1,
                                   controller: editmobile,
                                   keyInput: TextInputType.number,
                                   icon: Icons.phone),
@@ -277,7 +310,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           SizedBox(
                             child: Form(
                               child: CustomTextField(
-                                  hintText: 'mobile number 2',
+                                  hintText: widget.mobile2,
                                   controller: editmobile2,
                                   keyInput: TextInputType.number,
                                   icon: Icons.mobile_friendly),
@@ -380,8 +413,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 width: 150,
                                 height: 40,
                                 child: CustomText(
-                                    text:
-                                        '${date.year}/${date.month}/${date.day}',
+                                    text: widget.Birth.isEmpty &&
+                                            mybirth == false
+                                        ? '${date.year}/${date.month}/${date.day}'
+                                        : widget.Birth.isNotEmpty &&
+                                                mybirth == true
+                                            ? '${date.year}/${date.month}/${date.day}'
+                                            : widget.Birth.isEmpty &&
+                                                    mybirth == true
+                                                ? "${date.year}/${date.month}/${date.day}"
+                                                : widget.Birth,
                                     fontSize: 20,
                                     fontFamily: 'Comfortaa-VariableFont_wght',
                                     color: Colors.white70,
@@ -398,7 +439,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                         firstDate: DateTime(1960),
                                         lastDate: DateTime(2100));
                                     setState(() {
+                                      mybirth = true;
                                       date = newDate!;
+                                      birthday =
+                                          '${date.year}/${date.month}/${date.day}';
                                       log(date.toString());
                                     });
                                   },
@@ -420,6 +464,26 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               if (editName.text.isNotEmpty) {
                                 if (editmobile.text.isNotEmpty &&
                                     editmobile.text.length == 10) {
+                                  if (editEmail.text.isEmpty) {
+                                    setState(() {
+                                      editEmail.text = widget.email;
+                                    });
+                                  }
+                                  if (editmobile2.text.isEmpty) {
+                                    setState(() {
+                                      editmobile2.text = widget.mobile2;
+                                    });
+                                  }
+                                  if (editAddress.text.isEmpty) {
+                                    setState(() {
+                                      editAddress.text = widget.address;
+                                    });
+                                  }
+                                  if (mybirth == false) {
+                                    setState(() {
+                                      birthday = widget.Birth;
+                                    });
+                                  }
                                   log('vgvgv ');
                                   updateCustomerProfile();
                                   setState(() {
