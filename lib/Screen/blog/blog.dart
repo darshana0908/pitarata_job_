@@ -25,7 +25,7 @@ class _BlogState extends State<Blog> {
   bool isFirstLoadRunning = false;
   bool hasNextPage = true;
   bool isLoadMoreRunning = false;
-  late ScrollController mycontroller;
+  // late ScrollController mycontroller;
   bool loading = false;
 
   loadeMore() async {
@@ -94,7 +94,7 @@ class _BlogState extends State<Blog> {
   @override
   void initState() {
     getJobBlog();
-    mycontroller = ScrollController()..addListener(loadeMore);
+    // mycontroller = ScrollController()..addListener(loadeMore);
     // TODO: implement initState
     super.initState();
   }
@@ -111,7 +111,7 @@ class _BlogState extends State<Blog> {
           : Stack(
               children: [
                 ListView.builder(
-                    controller: mycontroller,
+                    // controller: mycontroller,
                     itemCount: blogList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Link(

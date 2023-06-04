@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
   String urlimg = '';
   int x = 0;
   bool proimg = false;
-
+  bool imgLoad = false;
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var res = sharedPreferences.setBool("user", true);
@@ -112,6 +112,7 @@ class _ProfileState extends State<Profile> {
 
         setState(() {
           isloading = false;
+
           name = res['data'][index]['name'].toString();
           address = res['data'][index]['address'].toString();
           mobile = res['data'][index]['mobile'].toString();
@@ -121,6 +122,7 @@ class _ProfileState extends State<Profile> {
           birtday = res['data'][index]['birthday'].toString();
           email = res['data'][index]['email'].toString();
           username = res['data'][index]['username'].toString();
+          isloading = false;
         });
       }
     }
@@ -139,110 +141,62 @@ class _ProfileState extends State<Profile> {
     String imgName;
     var choosedimage = await picker.pickImage(source: ImageSource.gallery);
     var uploadimage = File(choosedimage!.path);
-
-    List<int> imageBytes = await uploadimage.readAsBytesSync();
-    String baseimage = base64Encode(imageBytes);
-    // String newb = baseimage;
-
-    // log(baseimage);
-    List<String> base64Images = [
-      baseimage, baseimage
-
-      // Add more base64-encoded image strings as needed
-    ];
-    dioTest(base64Images);
-    // main(newb);
+    uploadImage(choosedimage.path);
   }
 
-  Future<void> dioTest(List<String> base64Image) async {
-    final dio = Dio();
-    var formData = FormData.fromMap({
-      'my_field': base64Image,
-      'action': 'multiple',
+  Future<void> uploadImage(String imageFile) async {
+    setState(() {
+      imgLoad = true;
     });
-    var response = await dio.post(
-        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php',
-        data: formData);
-    log(formData.toString());
-    log(response.data.toString());
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'));
+    request.fields.addAll({'action': 'simple'});
+    request.files.add(await http.MultipartFile.fromPath('my_field', imageFile));
+
+    http.StreamedResponse response = await request.send();
+
+    var httpResponse = await http.Response.fromStream(response);
+
+    // log(httpResponse.body.toString());
+    // log(httpResponse.body);
+
+    String html = httpResponse.body.toString();
+    String urlPrefix = '<a href="';
+
+    int urlStart = html.indexOf(urlPrefix) + urlPrefix.length;
+    int urlEnd = html.indexOf('"', urlStart);
+    var data = html.substring(urlStart, urlEnd);
+    String result = data.substring(3);
+    updateCustomerProfileImage(result);
+    log(result);
   }
 
-  Future<void> uploadImageToServer(String base64Image) async {
-    var url =
-        Uri.parse('https://example.com/upload'); // Replace with your server URL
+  updateCustomerProfileImage(String path) async {
+    setState(() {
+      imgLoad = true;
+    });
+
+    var headers = {'Content-Type': 'application/json'};
+
     var response = await http.post(
-      url,
-      body: {
-        'my_field': ["$base64Image"],
-        'action': 'multiple',
-      },
-    );
-    log(response.body.toString());
-    if (response.statusCode == 200) {
-      print('Image uploaded successfully');
-    } else {
-      print('Image upload failed');
-    }
-  }
-
-  Future<void> uploadImages(List<String> base64Images) async {
-    var apiUrl =
-        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php';
-
-    for (var base64Image in base64Images) {
-      var headers = {'Content-Type': 'application/json'};
-      var body = jsonEncode({
-        'my_field': base64Image,
-        'action': 'multiple',
-      });
-      log('hhhhh');
-
-      var response = await http.post(Uri.parse(apiUrl), body: body);
-      log(response.body.toString());
-
-      if (response.statusCode == 200) {
-        print('Image uploaded successfully');
-      } else {
-        print('Failed to upload image. Error: ${response.reasonPhrase}');
-      }
-    }
-  }
-
-  //okkkkk this
-
-  main(String img) async {
-    // This will be sent as form data in the post requst
-    var map = new Map<String, dynamic>();
-    map['my_field'] = img;
-    map['action'] = 'multiple';
-
-    final response = await http.post(
-      Uri.parse(
-          'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'),
-      body: jsonEncode(map),
-    );
-
-    print(response.body);
-  }
-
-  Future<void> sendFormData(
-    String img,
-  ) async {
-    var url = Uri.parse(
-        'https://pitaratajobs.novasoft.lk/uploads/upload_customer_profile_image.php'); // Replace with your actual endpoint URL
-
-    var response = await http.post(url, body: {
-      'my_field': [img],
-      'action': 'multiple',
+        Uri.parse(
+            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateCustomerProfileImage'),
+        headers: headers,
+        body: json.encode({
+          "app_id": "nzone_4457Was555@qsd_job",
+          "customer_id": customerId,
+          "verification": verification,
+          "image_path": path
+        }));
+    var res = jsonDecode(response.body.toString());
+    log(res.toString());
+    setState(() {
+      isloading = true;
+      imgLoad = false;
+      getCustomerProfileDetails();
     });
-    log(response.body.toString());
-    if (response.statusCode == 200) {
-      // Request successful, do something
-      print('Form data sent successfully!');
-    } else {
-      // Request failed, handle the error
-      print('Error sending form data. Status code: ${response.statusCode}');
-    }
   }
 
   @override
@@ -269,7 +223,9 @@ class _ProfileState extends State<Profile> {
                             child: Stack(
                               children: [
                                 Positioned(
-                                    child: Container(
+                                    child: Stack(
+                                  children: [
+                                    Container(
                                         foregroundDecoration:
                                             const BoxDecoration(
                                           gradient: LinearGradient(
@@ -287,11 +243,24 @@ class _ProfileState extends State<Profile> {
                                                 3,
                                         width: double.infinity,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 100),
-                                          child: Lottie.asset(
-                                              'assets/default_user.json'),
-                                        ))),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    img == "null" ? 100 : 0),
+                                            child: img == "null"
+                                                ? Lottie.asset(
+                                                    'assets/default_user.json')
+                                                : Image.network(
+                                                    "https://pitaratajobs.novasoft.lk/$img",
+                                                    fit: BoxFit.cover,
+                                                  ))),
+                                    Positioned(
+                                        child: imgLoad
+                                            ? Center(
+                                                child:
+                                                    CircularProgressIndicator())
+                                            : Container())
+                                  ],
+                                )),
                                 Positioned(
                                   top: 8,
                                   left: 0,
@@ -346,23 +315,26 @@ class _ProfileState extends State<Profile> {
                                     onPressed: () {
                                       chooseImage();
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Stack(
-                                        children: [
-                                          Icon(
-                                            Icons.camera_alt_outlined,
-                                            size: 30,
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            left: 10,
-                                            child: Icon(
-                                              Icons.add,
-                                              color: red,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.camera_alt_outlined,
+                                              size: 30,
                                             ),
-                                          ),
-                                        ],
+                                            Positioned(
+                                              top: 10,
+                                              left: 10,
+                                              child: Icon(
+                                                Icons.add,
+                                                color: red,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -498,6 +470,7 @@ class _ProfileState extends State<Profile> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => UpdateProfile(
+                                                img: img,
                                                 gender: gender,
                                                 name: name,
                                                 address: address,

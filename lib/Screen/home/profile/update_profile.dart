@@ -29,7 +29,8 @@ class UpdateProfile extends StatefulWidget {
       required this.email,
       required this.address,
       required this.name,
-      required this.gender});
+      required this.gender,
+      required this.img});
   final String vId;
   final String cId;
   final Function update;
@@ -39,6 +40,7 @@ class UpdateProfile extends StatefulWidget {
   final String address;
   final String name;
   final String gender;
+  final String img;
 
   final String Birth;
 
@@ -168,11 +170,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                       MediaQuery.of(context).size.height / 3,
                                   width: double.infinity,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 100),
-                                    child: Lottie.asset(
-                                        'assets/default_user.json'),
-                                  ))),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              widget.img == "null" ? 100 : 0),
+                                      child: widget.img == "null"
+                                          ? Lottie.asset(
+                                              'assets/default_user.json')
+                                          : Image.network(
+                                              "https://pitaratajobs.novasoft.lk/${widget.img}",
+                                              fit: BoxFit.cover,
+                                            )))),
                           Positioned(
                             top: 8,
                             left: 0,

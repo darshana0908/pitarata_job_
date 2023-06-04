@@ -107,7 +107,7 @@ class _NameScreenState extends State<NameScreen> {
         verification = res['data']['verification'].toString();
         userLoginCheq(true);
         userDetails(y, verification);
-
+        FocusManager.instance.primaryFocus?.unfocus();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }

@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CustomText(
-                        text: 'Are you sure you want to Logout?',
+                        text: 'Are you sure you want to exit?',
                         fontSize: 17.sp,
                         fontFamily: 'Comfortaa-VariableFont_wght',
                         color: white,
