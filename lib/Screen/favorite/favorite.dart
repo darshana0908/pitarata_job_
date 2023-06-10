@@ -94,13 +94,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           "customer_id": customer_id
         }));
     var res = jsonDecode(response.body.toString());
-    log(res['data'].toString());
-
+    log("jjjj" + res.toString());
     setState(() {
       isLoading = false;
-      favoritesList = res['data'];
-      log(favoritesList.toString());
     });
+    if (res['data'].toString() != "null") {
+      setState(() {
+        log('kkkkkkkkkk');
+        isLoading = false;
+        log(isLoading.toString());
+        favoritesList = res['data'];
+        log(favoritesList.toString());
+      });
+    }
   }
 
   updateFavorites() {
@@ -287,6 +293,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   topLeft: Radius.circular(10),
                                   topRight: Radius.circular(10)),
                               child: Image.network(
+                                alignment: Alignment(-1, -1),
                                 'https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}',
                                 fit: BoxFit.cover,
                               ),
@@ -376,7 +383,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   );
                 }),
           ),
-          isLoading
+          isLoading == true
               ? Center(
                   child: CircularProgressIndicator(
                   color: Colors.grey,

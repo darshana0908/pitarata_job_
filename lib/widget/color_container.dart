@@ -25,6 +25,8 @@ class ColorContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: SingleChildScrollView(
@@ -41,22 +43,27 @@ class ColorContainer extends StatelessWidget {
                       color: iconColor,
                     ),
                   ),
-                  CustomText(
-                      text: text,
-                      fontSize: 19,
-                      fontFamily: 'Comfortaa-VariableFont_wght',
-                      color: textColor,
-                      fontWeight: FontWeight.normal)
+                  SingleChildScrollView(
+                    child: CustomText(
+                        text: text,
+                        fontSize: 15.sp,
+                        fontFamily: 'Comfortaa-VariableFont_wght',
+                        color: textColor,
+                        fontWeight: FontWeight.normal),
+                  )
                 ],
               ),
-              CustomText(
-                  text: text1,
-                  fontSize: 20.sp,
-                  fontFamily: 'Comfortaa-VariableFont_wght',
-                  color: white,
-                  fontWeight: FontWeight.normal)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: CustomText(
+                    text: text1,
+                    fontSize: 16.sp,
+                    fontFamily: 'Comfortaa-VariableFont_wght',
+                    color: white,
+                    fontWeight: FontWeight.normal),
+              )
             ]),
-            height: 100,
+            height: h / 8,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),

@@ -94,6 +94,7 @@ class _CustomGridState extends State<CustomGrid> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Image.network(
+                          alignment: Alignment(-1, -1),
                           'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
                           fit: BoxFit.cover,
                         ),

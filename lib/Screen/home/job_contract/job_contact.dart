@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/class/add.dart';
-import 'package:pitarata_job/widget/ad_area.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../color/colors.dart';
 import '../../../widget/arrow_button.dart';
@@ -121,14 +121,16 @@ class _JobContactState extends State<JobContact> {
               onTap: () {
                 _launchURL();
               },
-              child: ColorContainer(
-                iconColor: red,
-                textColor: red,
-                text: 'Email Address',
-                text1: widget.email,
-                icon: Icons.email_outlined,
-                color1: black,
-                color: Color.fromARGB(255, 93, 9, 3),
+              child: SingleChildScrollView(
+                child: ColorContainer(
+                  iconColor: red,
+                  textColor: red,
+                  text: 'Email Address',
+                  text1: widget.email,
+                  icon: Icons.email_outlined,
+                  color1: black,
+                  color: Color.fromARGB(255, 93, 9, 3),
+                ),
               ),
             ),
             InkWell(
@@ -158,7 +160,7 @@ class _JobContactState extends State<JobContact> {
                 textColor: Color.fromARGB(255, 12, 20, 168),
                 text: 'Whats app Number',
                 text1: widget.whatapp,
-                icon: Icons.whatsapp_rounded,
+                icon: Icons.whatshot,
                 color1: black,
                 color: Color.fromARGB(255, 4, 22, 75),
               ),

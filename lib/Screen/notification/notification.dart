@@ -74,11 +74,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     var res = jsonDecode(response.body.toString());
     log(res.toString());
-
     setState(() {
-      notificationsList = res['data'];
       isLoading = false;
     });
+    if (res['data'] != "null") {
+      setState(() {
+        notificationsList = res['data'];
+        isLoading = false;
+      });
+    }
   }
 
   userCheck() {
