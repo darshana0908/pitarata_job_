@@ -204,6 +204,8 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                     height: 10,
                   ),
                   TextButton(
+                    style: ButtonStyle(
+                        animationDuration: Duration(milliseconds: 1000)),
                     onPressed: () {
                       if (code.text.isNotEmpty) {
                         enterOtp();

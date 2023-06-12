@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/db/sqldb.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
@@ -385,9 +386,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           ),
           isLoading == true
               ? Center(
-                  child: CircularProgressIndicator(
-                  color: Colors.grey,
-                ))
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.grey,
+                      size: MediaQuery.of(context).size.width / 6))
               : Container()
         ],
       ),

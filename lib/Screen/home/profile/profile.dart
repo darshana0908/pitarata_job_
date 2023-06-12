@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -87,6 +88,7 @@ class _ProfileState extends State<Profile> {
   }
 
   getCustomerProfileDetails() async {
+    print('ffffffff');
     setState(() {
       isloading = true;
     });
@@ -508,9 +510,9 @@ class _ProfileState extends State<Profile> {
                   ),
                   isloading
                       ? Center(
-                          child: CircularProgressIndicator(
-                          color: Colors.grey,
-                        ))
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.grey,
+                              size: MediaQuery.of(context).size.width / 6))
                       : Container()
                 ],
               )

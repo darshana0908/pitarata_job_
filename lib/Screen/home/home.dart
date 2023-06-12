@@ -258,15 +258,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: SizedBox(
-              height: 70,
               child: BottomNavigationBar(
                 unselectedIconTheme:
                     IconThemeData(color: font_green, size: 15.sp),
                 unselectedItemColor: Colors.deepOrangeAccent,
-                selectedIconTheme:
-                    IconThemeData(color: font_green, size: 20.sp),
+                selectedIconTheme: IconThemeData(
+                  color: font_green,
+                ),
                 selectedItemColor: font_green,
-                elevation: 2,
+                elevation: 16,
                 onTap: _onItemTapped,
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
@@ -281,11 +281,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: '',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.favorite_border,
-                    ),
-                    label: '',
-                  ),
+                      icon: Icon(
+                        Icons.favorite_border,
+                      ),
+                      label: ''),
                   BottomNavigationBarItem(
                     icon: Icon(
                       Icons.notifications_none,

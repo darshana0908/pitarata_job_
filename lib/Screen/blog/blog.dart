@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
@@ -105,9 +106,9 @@ class _BlogState extends State<Blog> {
       backgroundColor: black,
       body: loading
           ? Center(
-              child: CircularProgressIndicator(
-              color: Colors.grey,
-            ))
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.grey,
+                  size: MediaQuery.of(context).size.width / 6))
           : Stack(
               children: [
                 ListView.builder(

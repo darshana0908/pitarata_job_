@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
@@ -230,9 +231,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
               }),
           isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                  color: Colors.grey,
-                ))
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.grey,
+                      size: MediaQuery.of(context).size.width / 6))
               : Container()
         ],
       ),

@@ -31,6 +31,7 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   bool isLoading = false;
+  bool tap = false;
   getWallpaper() async {
     setState(() {
       isLoading = true;
@@ -204,25 +205,38 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 SizedBox(
                   height: 10,
                 ),
-                InkWell(
-                  onTap: () {
-                    if (widget.loging == true) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Logout()));
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NameScreen()));
-                    }
-                  },
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      animationDuration: Duration(milliseconds: 2000),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                      ),
+                    ),
+                    onPressed: () {
+                      log('hhhh');
+                      if (widget.loging == true) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Logout()));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NameScreen()));
+                      }
+                    },
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
                       alignment: Alignment.center,
                       height: 30,
                       width: 150,
                       decoration: BoxDecoration(
+                          border: Border.all(
+                              color: tap ? black : Colors.transparent,
+                              width: 0),
                           color: widget.loging ? red : Colors.blue,
                           borderRadius: BorderRadius.circular(10)),
                       child: CustomText(
