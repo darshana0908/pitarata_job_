@@ -32,12 +32,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  String title = '';
+  String title = 'පිට රට Jobs';
   bool userLoging = false;
   // bool x = false;
   String customerId = '';
   String verification = '';
   bool customerLogin = false;
+  bool center = true;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: CustomText(
                         text: 'Are you sure you want to exit?',
-                        fontSize: 17.sp,
+                        fontSize: 15.sp,
                         fontFamily: 'Comfortaa-VariableFont_wght',
                         color: white,
                         fontWeight: FontWeight.normal),
@@ -150,27 +151,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     if (_selectedIndex == 0) {
       setState(() {
-        title = '';
+        title = 'පිට රට Jobs';
+        center = true;
       });
     }
     if (_selectedIndex == 1) {
       setState(() {
         title = 'Favorite';
+        center = false;
       });
     }
     if (_selectedIndex == 2) {
       setState(() {
         title = 'Notification';
+        center = false;
       });
     }
     if (_selectedIndex == 3) {
       setState(() {
         title = 'Blog';
+        center = false;
       });
     }
     if (_selectedIndex == 4) {
       setState(() {
         title = 'Setting';
+        center = false;
       });
     }
   }
@@ -242,16 +248,20 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: black,
         appBar: AppBar(
+          toolbarHeight: 37,
           backgroundColor: black,
-          title: Container(
-              alignment: Alignment.centerRight,
-              child: CustomText(
-                color: white,
-                fontFamily: 'Comfortaa-VariableFont_wght',
-                fontSize: 17,
-                fontWeight: FontWeight.w900,
-                text: title,
-              )),
+          centerTitle: true,
+          title: center == true
+              ? Text(title)
+              : Container(
+                  alignment: Alignment.centerRight,
+                  child: CustomText(
+                    color: white,
+                    fontFamily: 'Comfortaa',
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    text: title,
+                  )),
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(4.0),
