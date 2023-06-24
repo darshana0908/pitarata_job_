@@ -357,70 +357,67 @@ class _NameScreenOneState extends State<NameScreenOne> {
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
-                          child: InkWell(
-                            onTap: () {
-                              if (name.text.isNotEmpty) {
-                                if (email.text.contains("@") &&
-                                    email.text.contains(".")) {
-                                  if (email.text.isNotEmpty) {
-                                    if (password.text.isNotEmpty) {
-                                      if (confirmPassword.text.isNotEmpty) {
-                                        if (password.text ==
-                                            confirmPassword.text) {
-                                          if (checkBox == true) {
-                                            log('ddddd');
-                                            register();
-                                          } else {
-                                            MotionToast.error(
-                                                    description: Text(
-                                                        "You must read and agree to our Terms & Conditions before creating a new account!"))
-                                                .show(context);
-                                          }
+                          child: RadiusButton(onTap: () {
+                            if (name.text.isNotEmpty) {
+                              if (email.text.contains("@") &&
+                                  email.text.contains(".")) {
+                                if (email.text.isNotEmpty) {
+                                  if (password.text.isNotEmpty) {
+                                    if (confirmPassword.text.isNotEmpty) {
+                                      if (password.text ==
+                                          confirmPassword.text) {
+                                        if (checkBox == true) {
+                                          log('ddddd');
+                                          register();
                                         } else {
-                                          confirmPassword.clear();
                                           MotionToast.error(
                                                   description: Text(
-                                                      "Your passwords are not matching"))
+                                                      "You must read and agree to our Terms & Conditions before creating a new account!"))
                                               .show(context);
                                         }
                                       } else {
+                                        confirmPassword.clear();
                                         MotionToast.error(
                                                 description: Text(
-                                                    "Please confirm your password!"))
+                                                    "Your passwords are not matching"))
                                             .show(context);
                                       }
                                     } else {
                                       MotionToast.error(
                                               description: Text(
-                                                  "Please enter your new password!"))
+                                                  "Please confirm your password!"))
                                           .show(context);
                                     }
                                   } else {
                                     MotionToast.error(
                                             description: Text(
-                                                "Please enter your email address!"))
+                                                "Please enter your new password!"))
                                         .show(context);
                                   }
                                 } else {
                                   MotionToast.error(
                                           description: Text(
-                                              "Please enter the valid email!"))
+                                              "Please enter your email address!"))
                                       .show(context);
                                 }
                               } else {
                                 MotionToast.error(
-                                        description:
-                                            Text(" Please enter your name!"))
+                                        description: Text(
+                                            "Please enter the valid email!"))
                                     .show(context);
                               }
-                            },
-                            child: RadiusButton(
-                              color: font_green,
-                              colortext: white,
-                              text: 'CREATE MY ACCOUNT',
-                              width: 230,
-                              height: 8.h,
-                            ),
+                            } else {
+                              MotionToast.error(
+                                      description:
+                                          Text(" Please enter your name!"))
+                                  .show(context);
+                            }
+                          },
+                            color: font_green,
+                            colortext: white,
+                            text: 'CREATE MY ACCOUNT',
+                            width: 230,
+                            height: 8.h,
                           ),
                         ),
                         Align(

@@ -5,7 +5,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:lottie/lottie.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/home.dart';
@@ -162,7 +162,7 @@ class _NameScreenState extends State<NameScreen> {
                           children: [
                             SizedBox(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 5),
                                 child: Container(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
@@ -297,43 +297,41 @@ class _NameScreenState extends State<NameScreen> {
                                   )),
                               Align(
                                 alignment: Alignment.bottomCenter,
-                                child: InkWell(
-                                  onTap: () {
-                                    log(email.text.toString());
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: RadiusButton(
+                                    onTap: () {
+                                      log(email.text.toString());
 
-                                    if (email.text.isNotEmpty) {
-                                      if (email.text.contains("@") &&
-                                          email.text.contains(".")) {
-                                        if (password.text.isNotEmpty) {
-                                          login();
+                                      if (email.text.isNotEmpty) {
+                                        if (email.text.contains("@") &&
+                                            email.text.contains(".")) {
+                                          if (password.text.isNotEmpty) {
+                                            login();
+                                          } else {
+                                            MotionToast.error(
+                                                    description: Text(
+                                                        "Please enter your password"))
+                                                .show(context);
+                                          }
                                         } else {
                                           MotionToast.error(
-                                                  description: Text(
-                                                      "Please enter your password"))
+                                                  description:
+                                                      Text("Enter valid email"))
                                               .show(context);
                                         }
                                       } else {
                                         MotionToast.error(
-                                                description:
-                                                    Text("Enter valid email"))
+                                                description: Text(
+                                                    "Please enter your email address"))
                                             .show(context);
                                       }
-                                    } else {
-                                      MotionToast.error(
-                                              description: Text(
-                                                  "Please enter your email address"))
-                                          .show(context);
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: RadiusButton(
-                                      color: font_green,
-                                      colortext: white,
-                                      text: 'LOGIN',
-                                      width: 200,
-                                      height: 7.h,
-                                    ),
+                                    },
+                                    color: font_green,
+                                    colortext: white,
+                                    text: 'LOGIN',
+                                    width: 200,
+                                    height: 7.h,
                                   ),
                                 ),
                               ),

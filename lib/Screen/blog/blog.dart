@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_grid.dart';
@@ -109,118 +110,130 @@ class _BlogState extends State<Blog> {
               child: LoadingAnimationWidget.staggeredDotsWave(
                   color: Colors.grey,
                   size: MediaQuery.of(context).size.width / 6))
-          : Stack(
-              children: [
-                ListView.builder(
-                    // controller: mycontroller,
-                    itemCount: blogList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Link(
-                        uri: Uri.parse(blogList[index]['url']),
-                        builder: (context, followLink) => InkWell(
-                          onTap: followLink,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: light_dark,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: CustomText(
-                                        text: blogList[index]['title'],
-                                        fontSize: 17,
-                                        fontFamily:
-                                            'Comfortaa-VariableFont_wght',
-                                        color: white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Container(
-                                      padding: EdgeInsets.all(20),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(2),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              "https://pitaratajobs.novasoft.lk/${blogList[index]['post_image']}",
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              Center(
-                                            child: SizedBox(
-                                              height: 50,
-                                              width: 50,
-                                              child: CircularProgressIndicator(
-                                                  value: downloadProgress
-                                                      .progress),
+          : blogList.isEmpty
+              ? Center(
+                  child: SizedBox(
+                      height: 200,
+                      child: Lottie.asset('assets/nothing_found.json')))
+              : Stack(
+                  children: [
+                    ListView.builder(
+                        // controller: mycontroller,
+                        itemCount: blogList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Link(
+                            uri: Uri.parse(blogList[index]['url']),
+                            builder: (context, followLink) => InkWell(
+                              onTap: followLink,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: light_dark,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: CustomText(
+                                            text: blogList[index]['title'],
+                                            fontSize: 17,
+                                            fontFamily:
+                                                'Comfortaa-VariableFont_wght',
+                                            color: white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Container(
+                                          padding: EdgeInsets.all(20),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "https://pitaratajobs.novasoft.lk/${blogList[index]['post_image']}",
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      Center(
+                                                child: SizedBox(
+                                                  height: 50,
+                                                  width: 50,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                              fit: BoxFit.scaleDown,
                                             ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                          fit: BoxFit.scaleDown,
-                                        ),
-                                      )),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Container(
-                                        child: Text(
-                                      blogList[index]['summary'],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontFamily:
-                                              'Comfortaa-VariableFont_wght',
-                                          color: white,
-                                          fontWeight: FontWeight.normal),
-                                    )),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Container(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          blogList[index]['date'] == "null"
-                                              ? "_________"
-                                              : "${blogList[index]['date']}+ ${blogList[index]['time']}",
+                                          )),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Container(
+                                            child: Text(
+                                          blogList[index]['summary'],
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily:
                                                   'Comfortaa-VariableFont_wght',
-                                              color: Colors.white60,
+                                              color: white,
                                               fontWeight: FontWeight.normal),
                                         )),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Container(
+                                            alignment: Alignment.bottomRight,
+                                            child: Text(
+                                              blogList[index]['date'] == "null"
+                                                  ? "_________"
+                                                  : "${blogList[index]['date']}+ ${blogList[index]['time']}",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily:
+                                                      'Comfortaa-VariableFont_wght',
+                                                  color: Colors.white60,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            )),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
+                          );
+                        }),
+                    if (isLoadMoreRunning == true)
+                      Positioned(
+                        bottom: 20,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 0,
                           ),
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: red,
+                          )),
                         ),
-                      );
-                    }),
-                if (isLoadMoreRunning == true)
-                  Positioned(
-                    bottom: 20,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 0,
                       ),
-                      child: Center(
-                          child: CircularProgressIndicator(
-                        color: red,
-                      )),
-                    ),
-                  ),
-              ],
-            ),
+                  ],
+                ),
     );
   }
 }

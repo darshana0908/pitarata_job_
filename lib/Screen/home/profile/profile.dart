@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -58,6 +58,7 @@ class _ProfileState extends State<Profile> {
   int x = 0;
   bool proimg = false;
   bool imgLoad = false;
+  bool tap = false;
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var res = sharedPreferences.setBool("user", true);
@@ -467,6 +468,22 @@ class _ProfileState extends State<Profile> {
                                   height: 20,
                                 ),
                                 InkWell(
+                                  borderRadius: BorderRadius.circular(25),
+                                  onTapCancel: () {
+                                    setState(() {
+                                      tap = false;
+                                    });
+                                  },
+                                  onTapDown: (_) {
+                                    setState(() {
+                                      tap = true;
+                                    });
+                                  },
+                                  onTapUp: (_) {
+                                    setState(() {
+                                      tap = false;
+                                    });
+                                  },
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -486,21 +503,25 @@ class _ProfileState extends State<Profile> {
                                               )),
                                     );
                                   },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 60,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        color: font_green,
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: CustomText(
-                                        text: 'Update Profile',
-                                        fontSize: 20,
-                                        fontFamily:
-                                            'Comfortaa-VariableFont_wght',
-                                        color: white,
-                                        fontWeight: FontWeight.normal),
+                                  child: AnimatedOpacity(
+                                    duration: Duration(milliseconds: 50),
+                                    opacity: tap ? 0.3 : 1,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 60,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          color: font_green,
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
+                                      child: CustomText(
+                                          text: 'Update Profile',
+                                          fontSize: 20,
+                                          fontFamily:
+                                              'Comfortaa-VariableFont_wght',
+                                          color: white,
+                                          fontWeight: FontWeight.normal),
+                                    ),
                                   ),
                                 )
                               ],

@@ -24,12 +24,12 @@ class FadeHome extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                       color: white, borderRadius: BorderRadius.circular(20)),
-                  height: MediaQuery.of(context).size.height / 3.1,
+                  height: MediaQuery.of(context).size.height / 3.5,
                   width: MediaQuery.of(context).size.width,
                   child: Image.asset("assets/c1.PNG"),
                 ),
                 Container(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(8),
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -86,9 +86,9 @@ class FadeHome extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               color: white,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 100,
-                          width: 100,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 70,
+                          width: 150,
                           child: Image.asset("assets/c1.PNG"),
                         ),
                       ),
@@ -97,9 +97,9 @@ class FadeHome extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               color: white,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 100,
-                          width: 100,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 70,
+                          width: 150,
                           child: Image.asset("assets/c1.PNG"),
                         ),
                       ),
@@ -108,9 +108,9 @@ class FadeHome extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               color: white,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 100,
-                          width: 100,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 70,
+                          width: 150,
                           child: Image.asset("assets/c1.PNG"),
                         ),
                       ),
@@ -119,9 +119,9 @@ class FadeHome extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               color: white,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 100,
-                          width: 100,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 70,
+                          width: 150,
                           child: Image.asset("assets/c1.PNG"),
                         ),
                       ),
@@ -130,9 +130,9 @@ class FadeHome extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               color: white,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 100,
-                          width: 100,
+                              borderRadius: BorderRadius.circular(15)),
+                          height: 70,
+                          width: 150,
                           child: Image.asset("assets/c1.PNG"),
                         ),
                       ),

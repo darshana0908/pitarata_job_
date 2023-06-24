@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "206412319209",
+    "project_id": "pita-rata-job",
+    "storage_bucket": "pita-rata-job.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206412319209:android:053a70c47490cbd36d6378",
+        "android_client_info": {
+          "package_name": "com.novatechzone.pitarata_job"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206412319209-pti9nghj3p473kghlvqvp3umlnoripmc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.novatechzone.pitarata_job",
+            "certificate_hash": "1f36b3d95c6d4c623d1be055050f52ce24c2e9e7"
+          }
+        },
+        {
+          "client_id": "206412319209-d4iq3bkegn751jep6ivqjfn21gm928nq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_jB7BGgYzdA13-NEoxWhwQAAd_MUTRlw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206412319209-d4iq3bkegn751jep6ivqjfn21gm928nq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

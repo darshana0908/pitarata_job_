@@ -57,16 +57,14 @@ class _IntroThreePageState extends State<IntroThreePage> {
             Expanded(
               child: Container(
                 alignment: Alignment.bottomRight,
-                child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WelcomePage()),
-                      );
-                    },
-                    child: ArrowButton(
-                      icons: Icons.arrow_forward_ios_rounded,
-                    )),
+                child: ArrowButton(onTap:  () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomePage()),
+                  );
+                },
+                  icons: Icons.arrow_forward_ios_rounded,
+                ),
               ),
             )
           ]),

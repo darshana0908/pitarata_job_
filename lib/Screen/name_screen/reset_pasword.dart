@@ -175,36 +175,33 @@ class _ResetPasswordState extends State<ResetPassword> {
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
-                      child: InkWell(
-                        onTap: () {
-                          log(email.text.toString());
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: RadiusButton(onTap: () {
+                        log(email.text.toString());
 
-                          if (email.text.isNotEmpty) {
-                            if (email.text.contains("@") &&
-                                email.text.contains(".")) {
-                              resetPassword();
-                            } else {
-                              MotionToast.error(
-                                      description: Text(
-                                          "Please enter valid email address"))
-                                  .show(context);
-                            }
+                        if (email.text.isNotEmpty) {
+                          if (email.text.contains("@") &&
+                              email.text.contains(".")) {
+                            resetPassword();
                           } else {
                             MotionToast.error(
-                                    description:
-                                        Text("Please enter your email address"))
+                                    description: Text(
+                                        "Please enter valid email address"))
                                 .show(context);
                           }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: RadiusButton(
-                            color: font_green,
-                            colortext: white,
-                            text: 'Send OTP',
-                            width: 200,
-                            height: 60,
-                          ),
+                        } else {
+                          MotionToast.error(
+                                  description:
+                                      Text("Please enter your email address"))
+                              .show(context);
+                        }
+                      }, 
+                          color: font_green,
+                          colortext: white,
+                          text: 'Send OTP',
+                          width: 200,
+                          height: 60,
                         ),
                       ),
                     ),

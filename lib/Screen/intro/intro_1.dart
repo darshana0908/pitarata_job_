@@ -52,16 +52,14 @@ class _IntroOnePageState extends State<IntroOnePage> {
         Expanded(
           child: Container(
             alignment: Alignment.bottomRight,
-            child: InkWell(
-                onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => IntroTwoPage()),
-                  );
-                },
-                child: ArrowButton(
-                  icons: Icons.arrow_forward_ios_rounded,
-                )),
+            child: ArrowButton(onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => IntroTwoPage()),
+              );
+            },
+              icons: Icons.arrow_forward_ios_rounded,
+            ),
           ),
         )
       ]),

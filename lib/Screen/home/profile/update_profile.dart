@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
-import 'dart:io';
+
+
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,7 +65,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   DateTime date = DateTime.now();
   bool isLoading = false;
   String birthday = '';
-
+  bool tap = false;
   bool update = false;
   bool male = false;
   bool female = false;
@@ -190,12 +190,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextButton(
-                                      onPressed: () {
+                                  ArrowButton(
+                                      onTap: () {
                                         Navigator.pop(context);
                                       },
-                                      child:
-                                          ArrowButton(icons: Icons.arrow_back)),
+                                      icons: Icons.arrow_back),
                                   CustomText(
                                       text: 'My UpdateProfile',
                                       fontSize: 30,
@@ -317,7 +316,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           SizedBox(
                             child: Form(
                               child: CustomTextField(
-                                  hintText: widget.mobile2,
+                                  hintText: widget.mobile2 == "null"
+                                      ? ""
+                                      : widget.mobile2,
                                   controller: editmobile2,
                                   keyInput: TextInputType.number,
                                   icon: Icons.mobile_friendly),
@@ -420,10 +421,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                 width: 150,
                                 height: 40,
                                 child: CustomText(
-                                    text: widget.Birth.isEmpty &&
+                                    text: widget.Birth == "null" &&
                                             mybirth == false
                                         ? '${date.year}/${date.month}/${date.day}'
-                                        : widget.Birth.isNotEmpty &&
+                                        : widget.Birth != "null" &&
                                                 mybirth == true
                                             ? '${date.year}/${date.month}/${date.day}'
                                             : widget.Birth.isEmpty &&
@@ -467,6 +468,22 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             height: 20,
                           ),
                           InkWell(
+                            borderRadius: BorderRadius.circular(25),
+                            onTapCancel: () {
+                              setState(() {
+                                tap = false;
+                              });
+                            },
+                            onTapDown: (_) {
+                              setState(() {
+                                tap = true;
+                              });
+                            },
+                            onTapUp: (_) {
+                              setState(() {
+                                tap = false;
+                              });
+                            },
                             onTap: () {
                               if (editName.text.isNotEmpty) {
                                 if (editmobile.text.isNotEmpty &&
@@ -509,19 +526,23 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                     .show(context);
                               }
                             },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  color: font_green,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: CustomText(
-                                  text: 'Save',
-                                  fontSize: 20,
-                                  fontFamily: 'Comfortaa-VariableFont_wght',
-                                  color: white,
-                                  fontWeight: FontWeight.normal),
+                            child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 50),
+                              opacity: tap ? 0.3 : 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 60,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: font_green,
+                                    borderRadius: BorderRadius.circular(25)),
+                                child: CustomText(
+                                    text: 'Save',
+                                    fontSize: 20,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    color: white,
+                                    fontWeight: FontWeight.normal),
+                              ),
                             ),
                           )
                         ],

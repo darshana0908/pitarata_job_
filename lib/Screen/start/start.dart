@@ -49,18 +49,15 @@ class _StartState extends State<Start> {
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NameScreen()));
-                  },
-                  child: RadiusButton(
-                    colortext: white,
-                    color: font_green,
-                    text: 'Login to my account',
-                    width: 230,
-                    height: 60,
-                  ),
+                child: RadiusButton(onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NameScreen()));
+                },
+                  colortext: white,
+                  color: font_green,
+                  text: 'Login to my account',
+                  width: 230,
+                  height: 60,
                 ),
               ),
             ),

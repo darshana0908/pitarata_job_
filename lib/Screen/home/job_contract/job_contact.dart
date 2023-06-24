@@ -96,11 +96,10 @@ class _JobContactState extends State<JobContact> {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
-        leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: ArrowButton(icons: Icons.arrow_back_ios_new)),
+        leading: ArrowButton(onTap: () {
+          Navigator.pop(context);
+        },
+          icons: Icons.arrow_back_ios_new),
         backgroundColor: black,
         title: Container(
             alignment: Alignment.centerRight,

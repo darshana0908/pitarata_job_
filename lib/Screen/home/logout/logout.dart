@@ -70,21 +70,19 @@ class _LogoutState extends State<Logout> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        TextButton(
-                          onPressed: () {
+                        RadiusButton(
+                          onTap: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: white,
-                            height: 70,
-                            width: 30.w,
-                            text: 'NO',
-                          ),
+                          colortext: black,
+                          color: white,
+                          height: 70,
+                          width: 30.w,
+                          text: 'NO',
                         ),
-                        TextButton(
-                          onPressed: () async {
+                        RadiusButton(
+                          onTap: () async {
                             SharedPreferences sharedPreferences =
                                 await SharedPreferences.getInstance();
                             var z = await sharedPreferences.setString(
@@ -95,13 +93,11 @@ class _LogoutState extends State<Logout> {
                                     builder: (_) => const NameScreen()),
                                 (Route<dynamic> route) => false);
                           },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: font_green,
-                            height: 70,
-                            width: 30.w,
-                            text: 'YES',
-                          ),
+                          colortext: black,
+                          color: font_green,
+                          height: 70,
+                          width: 30.w,
+                          text: 'YES',
                         ),
                       ],
                     ),
@@ -119,16 +115,14 @@ class _LogoutState extends State<Logout> {
       child: Scaffold(
         backgroundColor: Colors.grey,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: ArrowButton(icons: Icons.arrow_back_ios_new)),
+          ArrowButton(onTap: () {
+          Navigator.pop(context);
+            },
+            icons: Icons.arrow_back_ios_new),
         ]),
       ),
     );
   }
 
 // --- Button Widget --- //
-
 }

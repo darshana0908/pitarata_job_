@@ -52,20 +52,17 @@ otp(BuildContext context, String text ,String email) async {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                   
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NameScreenTwo(email: email,)));
-                      },
-                      child: RadiusButton(
-                        colortext: black,
-                        color: font_green,
-                        height: 70,
-                        width: 30.w,
-                        text: 'OK',
-                      ),
+                    RadiusButton(onTap:  () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NameScreenTwo(email: email,)));
+                    },
+                      colortext: black,
+                      color: font_green,
+                      height: 70,
+                      width: 30.w,
+                      text: 'OK',
                     ),
                   ],
                 ),

@@ -110,29 +110,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 30.w,
-                          text: 'NO',
-                        ),
+                      RadiusButton(onTap: () {
+                           Navigator.pop(context);
+                      },
+                        colortext: black,
+                        color: white,
+                        height: 70,
+                        width: 30.w,
+                        text: 'NO',
                       ),
-                      TextButton(
-                        onPressed: () {
-                          exit(0);
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: font_green,
-                          height: 70,
-                          width: 30.w,
-                          text: 'YES',
-                        ),
+                      RadiusButton(onTap: () {
+                           exit(0);
+                      },
+                        colortext: black,
+                        color: font_green,
+                        height: 70,
+                        width: 30.w,
+                        text: 'YES',
                       ),
                     ],
                   ),
@@ -370,34 +364,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      InkWell(
-                        onTap: () async {
-                          Navigator.pop(context);
-                          log('ggggg');
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 110,
-                          text: "Cancel",
-                        ),
+                      RadiusButton(onTap: () {
+                            Navigator.pop(context);
+                        log('ggggg');
+                      },
+                        colortext: black,
+                        color: white,
+                        height: 70,
+                        width: 110,
+                        text: "Cancel",
                       ),
-                      InkWell(
-                        onTap: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NameScreen()),
-                          );
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: font_green,
-                          height: 70,
-                          width: 110,
-                          text: "Login",
-                        ),
+                      RadiusButton(onTap: () {
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NameScreen()),
+                        ); 
+                      },
+                        colortext: black,
+                        color: font_green,
+                        height: 70,
+                        width: 110,
+                        text: "Login",
                       ),
                     ],
                   )

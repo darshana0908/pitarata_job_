@@ -72,6 +72,7 @@ class _CustomHomeState extends State<CustomHome> {
     mycontroller.addListener(() {
       if (mycontroller.position.maxScrollExtent ==
           mycontroller.position.pixels) {
+        log('hhhhhhhh');
         _loadeMore();
       }
     });
@@ -177,8 +178,6 @@ class _CustomHomeState extends State<CustomHome> {
       if (job.isNotEmpty) {
         setState(() {
           jobCategory.addAll(job);
-          print(jobCategory.length.toString() +
-              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         });
       } else {
         setState(() {
@@ -209,7 +208,7 @@ class _CustomHomeState extends State<CustomHome> {
           "to": "50"
         }));
     var res = jsonDecode(response.body.toString());
-    print("ssssssss" + res['data'].toString());
+
     if (res['data'].toString() == "[]") {
       setState(() {
         noData = true;
@@ -221,8 +220,6 @@ class _CustomHomeState extends State<CustomHome> {
     }
     setState(() {
       jobCategory = res['data'];
-      print(jobCategory.length.toString() +
-          "22222222222222222222222222222222222222");
 
       _isFirstLoadRunning = false;
     });
@@ -268,7 +265,6 @@ class _CustomHomeState extends State<CustomHome> {
           "customer_id": customer_id
         }));
     var res = jsonDecode(response.body.toString());
-    log(res.toString());
 
     if (res['data'].toString() != "null") {
       setState(() {
@@ -299,453 +295,502 @@ class _CustomHomeState extends State<CustomHome> {
             child: Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height,
                   child: Stack(
                     children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              isLoading
-                                  ? Container(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Center(
-                                          child: CircularProgressIndicator()))
-                                  : Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 1.0),
-                                      decoration: BoxDecoration(color: black),
-                                      child: CarouselSlider.builder(
-                                        itemBuilder:
-                                            (context, index, realIndex) {
-                                          String img = wallPaper[index]
-                                                  ['image_path']
-                                              .toString();
-                                          return Container(
-                                            child: Image.network(
-                                              "https://pitaratajobs.novasoft.lk/$img",
-                                              // i[index]['image_path'],
-                                              fit: BoxFit.scaleDown,
-                                            ),
-                                          );
-                                        },
-                                        options: CarouselOptions(
-                                            padEnds: false,
-                                            viewportFraction: 1,
-                                            autoPlay: true,
-                                            enlargeCenterPage: true,
-                                            aspectRatio: 2.0,
-                                            autoPlayAnimationDuration:
-                                                const Duration(
-                                                    milliseconds: 2000),
-                                            onPageChanged: (index, reason) {
-                                              setState(() {
-                                                _current = index;
-                                              });
-                                            }),
-                                        itemCount: wallPaper.length,
-                                      ),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isLoading
+                                ? Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 3,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                        child: CircularProgressIndicator()))
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 1.0),
+                                    decoration: BoxDecoration(color: black),
+                                    child: CarouselSlider.builder(
+                                      itemBuilder: (context, index, realIndex) {
+                                        String img = wallPaper[index]
+                                                ['image_path']
+                                            .toString();
+                                        return Container(
+                                          child: Image.network(
+                                            "https://pitaratajobs.novasoft.lk/$img",
+                                            // i[index]['image_path'],
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        );
+                                      },
+                                      options: CarouselOptions(
+                                          padEnds: false,
+                                          viewportFraction: 1,
+                                          autoPlay: true,
+                                          enlargeCenterPage: true,
+                                          aspectRatio: 2.0,
+                                          autoPlayAnimationDuration:
+                                              const Duration(
+                                                  milliseconds: 2000),
+                                          onPageChanged: (index, reason) {
+                                            setState(() {
+                                              _current = index;
+                                            });
+                                          }),
+                                      itemCount: wallPaper.length,
                                     ),
+                                  ),
 
-                              // ),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children:
-                                      wallPaper.asMap().entries.map((entry) {
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          _controller.animateToPage(entry.key),
-                                      child: Container(
-                                        width: 12.0,
-                                        height: 12.0,
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: 8.0, horizontal: 4.0),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                (Theme.of(context).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.white)
-                                                    .withOpacity(
-                                                        _current == entry.key
-                                                            ? 0.9
-                                                            : 0.4)),
-                                      ),
-                                    );
-                                  }).toList()),
+                            // ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children:
+                                    wallPaper.asMap().entries.map((entry) {
+                                  return GestureDetector(
+                                    onTap: () =>
+                                        _controller.animateToPage(entry.key),
+                                    child: Container(
+                                      width: 12.0,
+                                      height: 12.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 4.0),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: (Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.white
+                                                  : Colors.white)
+                                              .withOpacity(_current == entry.key
+                                                  ? 0.9
+                                                  : 0.4)),
+                                    ),
+                                  );
+                                }).toList()),
 
-                              SizedBox(
-                                height: 10,
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
                               ),
-                              Padding(
+                              child: CustomText(
+                                  text: 'Job Categories',
+                                  fontSize: 17,
+                                  fontFamily: 'Comfortaa-VariableFont_wght',
+                                  color: white,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            // category name list
+                            Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
                                 ),
-                                child: CustomText(
-                                    text: 'Job Categories',
-                                    fontSize: 17,
-                                    fontFamily: 'Comfortaa-VariableFont_wght',
-                                    color: white,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                                child: isLoading
+                                    ? Center(
+                                        child: SizedBox(
+                                        height: 15,
+                                        width: 15,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white30,
+                                        ),
+                                      ))
+                                    : Container(
+                                        height: 70,
+                                        child: ListView.builder(
+                                            itemCount: jobCategoryName.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              String catName =
+                                                  jobCategoryName[index]
+                                                          ['category_name']
+                                                      .toString();
 
-                              // category name list
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  child: isLoading
-                                      ? Center(
-                                          child: SizedBox(
-                                          height: 15,
-                                          width: 15,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white30,
-                                          ),
-                                        ))
-                                      : Container(
-                                          height: 70,
-                                          child: ListView.builder(
-                                              itemCount: jobCategoryName.length,
-                                              scrollDirection: Axis.horizontal,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                String catName =
-                                                    jobCategoryName[index]
-                                                            ['category_name']
-                                                        .toString();
+                                              return InkWell(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                onTap: () {
+                                                  setState(() {
+                                                    selected =
+                                                        jobCategoryName[index]
+                                                            ['category_id'];
+                                                  });
+                                                  if (selected ==
+                                                      jobCategoryName[index]
+                                                          ['category_id']) {
+                                                    log(selected);
 
-                                                return InkWell(
+                                                    getJobCategory();
+
+                                                    setState(() {
+                                                      selected;
+                                                      color = true;
+                                                    });
+                                                  }
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(6.0),
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                              color: Colors
+                                                                  .white54,
+                                                              blurRadius: 3.0,
+                                                              offset: Offset(
+                                                                  0.7, 0.7))
+                                                        ],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        color: selected ==
+                                                                jobCategoryName[
+                                                                        index][
+                                                                    'category_id']
+                                                            ? background_green
+                                                            : light_dark),
+                                                    child: CustomText(
+                                                        text: catName,
+                                                        fontSize: 15,
+                                                        fontFamily: 'Viga',
+                                                        color: white,
+                                                        fontWeight:
+                                                            FontWeight.normal),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      )
+
+                                //  CustomList(cat: jobCategory),
+                                ),
+
+                            // jub category all
+
+                            _isFirstLoadRunning
+                                ? SizedBox(
+                                    height: 500,
+                                    child: Center(
+                                        child: LoadingAnimationWidget
+                                            .staggeredDotsWave(
+                                                color: Colors.grey,
+                                                size: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    6)),
+                                  )
+                                : jobCategory.length == 0
+                                    ? Container(
+                                        height: 500,
+                                      )
+                                    : ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: jobCategory.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          print(noData.toString());
+                                          return noData
+                                              ? Container(
+                                                  height: MediaQuery.of(context)
+                                                      .size
+                                                      .height)
+                                              : InkWell(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selected =
-                                                          jobCategoryName[index]
-                                                              ['category_id'];
-                                                    });
-                                                    if (selected ==
-                                                        jobCategoryName[index]
-                                                            ['category_id']) {
-                                                      log(selected);
-
-                                                      getJobCategory();
-
-                                                      setState(() {
-                                                        selected;
-                                                        color = true;
-                                                      });
+                                                  onTap: () async {
+                                                    if (userStatus == true) {
+                                                      if (favoritesList.any((element) =>
+                                                              element["ads_id"]
+                                                                  .toString() ==
+                                                              jobCategory[index]
+                                                                      ["ads_id"]
+                                                                  .toString()) ==
+                                                          true) {
+                                                        setState(() {
+                                                          x = true;
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          x = false;
+                                                        });
+                                                      }
                                                     }
+                                                    log(jobCategory[index]
+                                                            ['job_category_id']
+                                                        .toString());
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    SingleJob(
+                                                                      update:
+                                                                          updateFavorites,
+                                                                      x: x,
+                                                                      categoryId:
+                                                                          jobCategory[index]['job_category_id']
+                                                                              .toString(),
+                                                                      whatapp: jobCategory[index]
+                                                                              [
+                                                                              'job_whatsapp']
+                                                                          .toString(),
+                                                                      mobile: jobCategory[index]
+                                                                              [
+                                                                              'job_mobile']
+                                                                          .toString(),
+                                                                      email: jobCategory[index]
+                                                                              [
+                                                                              'job_email']
+                                                                          .toString(),
+                                                                      salary: jobCategory[index]
+                                                                              [
+                                                                              'job_salary']
+                                                                          .toString(),
+                                                                      categoryName:
+                                                                          jobCategory[index]['biz_category_name']
+                                                                              .toString(),
+                                                                      addId: jobCategory[index]
+                                                                              [
+                                                                              'ads_id']
+                                                                          .toString(),
+                                                                      description:
+                                                                          jobCategory[index]['description']
+                                                                              .toString(),
+                                                                      img:
+                                                                          'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
+                                                                    )));
                                                   },
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            6.0),
+                                                            8.0),
                                                     child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 100,
                                                       decoration: BoxDecoration(
-                                                          boxShadow: <BoxShadow>[
-                                                            BoxShadow(
-                                                                color: Colors
-                                                                    .white54,
-                                                                blurRadius: 3.0,
-                                                                offset: Offset(
-                                                                    0.7, 0.7))
-                                                          ],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: selected ==
-                                                                  jobCategoryName[
-                                                                          index]
-                                                                      [
-                                                                      'category_id']
-                                                              ? background_green
-                                                              : light_dark),
-                                                      child: CustomText(
-                                                          text: catName,
-                                                          fontSize: 15,
-                                                          fontFamily: 'Viga',
-                                                          color: white,
-                                                          fontWeight: FontWeight
-                                                              .normal),
+                                                        color: light_dark,
+                                                        border: Border.all(
+                                                            color: Colors.green,
+                                                            width: 0.8),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        20),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        15),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        15)),
+                                                      ),
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              2.8,
+                                                      child: joblist
+                                                          ? Center(
+                                                              child:
+                                                                  CircularProgressIndicator())
+                                                          : Stack(children: [
+                                                              Positioned(
+                                                                bottom: 0,
+                                                                left: 0,
+                                                                right: 0,
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomLeft,
+                                                                  decoration: BoxDecoration(
+                                                                      color:
+                                                                          light_dark,
+                                                                      borderRadius: BorderRadius.only(
+                                                                          bottomLeft: Radius.circular(
+                                                                              20),
+                                                                          bottomRight:
+                                                                              Radius.circular(20))),
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height /
+                                                                      4.2,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child: CustomText(
+                                                                            text: jobCategory[index][
+                                                                                'biz_category_name'],
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontFamily:
+                                                                                'Comfortaa-VariableFont_wght',
+                                                                            color:
+                                                                                white,
+                                                                            fontWeight:
+                                                                                FontWeight.w600),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child: CustomText(
+                                                                            text:
+                                                                                "#${jobCategory[index]['ads_id'].toString()}",
+                                                                            fontSize:
+                                                                                10,
+                                                                            fontFamily:
+                                                                                'Comfortaa-VariableFont_wght',
+                                                                            color:
+                                                                                white,
+                                                                            fontWeight:
+                                                                                FontWeight.w300),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: 0,
+                                                                left: 0,
+                                                                top: 0,
+                                                                child:
+                                                                    Container(
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height /
+                                                                      3.2,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  decoration: BoxDecoration(
+                                                                      color:
+                                                                          light_dark,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20)),
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20),
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      alignment:
+                                                                          Alignment(
+                                                                              -1,
+                                                                              -1),
+                                                                      imageUrl:
+                                                                          "https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}",
+                                                                      progressIndicatorBuilder: (context,
+                                                                              url,
+                                                                              downloadProgress) =>
+                                                                          Center(
+                                                                        child:
+                                                                            SizedBox(
+                                                                          height:
+                                                                              50,
+                                                                          width:
+                                                                              50,
+                                                                          child:
+                                                                              CircularProgressIndicator(value: downloadProgress.progress),
+                                                                        ),
+                                                                      ),
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Icon(Icons
+                                                                              .error),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: 8,
+                                                                child: IconButton(
+                                                                    onPressed: () {
+                                                                      if (userStatus ==
+                                                                          true) {
+                                                                        setState(
+                                                                            () {
+                                                                          addId =
+                                                                              jobCategory[index]['ads_id'].toString();
+                                                                          log(addId);
+                                                                        });
+                                                                        favoritesList.any((element) =>
+                                                                                element["ads_id"].toString() ==
+                                                                                jobCategory[index]["ads_id"].toString())
+                                                                            ? alert(
+                                                                                'You have already added this job to your favorite list!',
+                                                                                true,
+                                                                                true,
+                                                                              )
+                                                                            : setFavorite();
+
+                                                                        setState(
+                                                                            () {
+                                                                          favoritesList;
+                                                                        });
+                                                                      } else {
+                                                                        alert(
+                                                                          'Please login to your account to add this job to your favorite list!',
+                                                                          false,
+                                                                          false,
+                                                                        );
+                                                                      }
+                                                                    },
+                                                                    icon: loadFavorites == true && jobCategory[index]['ads_id'].toString() == addId.toString()
+                                                                        ? CircularProgressIndicator(
+                                                                            color:
+                                                                                red,
+                                                                          )
+                                                                        : ShaderMask(
+                                                                            shaderCallback:
+                                                                                (Rect bounds) {
+                                                                              return LinearGradient(
+                                                                                begin: Alignment.topCenter,
+                                                                                end: Alignment.bottomCenter,
+                                                                                colors: [
+                                                                                  Colors.red,
+                                                                                  Colors.orange
+                                                                                ],
+                                                                              ).createShader(bounds);
+                                                                            },
+                                                                            child:
+                                                                                Icon(
+                                                                              userStatus == true && favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString()) ? Icons.favorite : Icons.favorite_border,
+                                                                              color: userStatus == true && favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString()) ? red : white,
+                                                                            ),
+                                                                          )),
+                                                              ),
+                                                            ]),
                                                     ),
                                                   ),
                                                 );
-                                              }),
-                                        )
-
-                                  //  CustomList(cat: jobCategory),
-                                  ),
-
-                              // jub category all
-
-                              _isFirstLoadRunning
-                                  ? SizedBox(
-                                      height: 500,
-                                      child: Center(
-                                          child: LoadingAnimationWidget
-                                              .staggeredDotsWave(
-                                                  color: Colors.grey,
-                                                  size: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      6)),
-                                    )
-                                  : jobCategory.length == 0
-                                      ? Container(
-                                          height: 500,
-                                        )
-                                      : Container(
-                                          // height: 800,
-                                          child: ListView.builder(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: jobCategory.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                print(noData.toString());
-                                                return noData
-                                                    ? Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height)
-                                                    : InkWell(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        onTap: () async {
-                                                          if (userStatus ==
-                                                              true) {
-                                                            if (favoritesList.any((element) =>
-                                                                    element["ads_id"]
-                                                                        .toString() ==
-                                                                    jobCategory[index]
-                                                                            [
-                                                                            "ads_id"]
-                                                                        .toString()) ==
-                                                                true) {
-                                                              setState(() {
-                                                                x = true;
-                                                              });
-                                                            } else {
-                                                              setState(() {
-                                                                x = false;
-                                                              });
-                                                            }
-                                                          }
-                                                          log(jobCategory[index]
-                                                                  [
-                                                                  'job_category_id']
-                                                              .toString());
-                                                          await Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          SingleJob(
-                                                                            update:
-                                                                                updateFavorites,
-                                                                            x: x,
-                                                                            categoryId:
-                                                                                jobCategory[index]['job_category_id'].toString(),
-                                                                            whatapp:
-                                                                                jobCategory[index]['job_whatsapp'].toString(),
-                                                                            mobile:
-                                                                                jobCategory[index]['job_mobile'].toString(),
-                                                                            email:
-                                                                                jobCategory[index]['job_email'].toString(),
-                                                                            salary:
-                                                                                jobCategory[index]['job_salary'].toString(),
-                                                                            categoryName:
-                                                                                jobCategory[index]['biz_category_name'].toString(),
-                                                                            addId:
-                                                                                jobCategory[index]['ads_id'].toString(),
-                                                                            description:
-                                                                                jobCategory[index]['description'].toString(),
-                                                                            img:
-                                                                                'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
-                                                                          )));
-                                                        },
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: light_dark,
-                                                              border: Border.all(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  width: 0.8),
-                                                              borderRadius: BorderRadius.only(
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  bottomLeft: Radius
-                                                                      .circular(
-                                                                          15),
-                                                                  bottomRight: Radius
-                                                                      .circular(
-                                                                          15)),
-                                                            ),
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height /
-                                                                2.8,
-                                                            child: joblist
-                                                                ? Center(
-                                                                    child:
-                                                                        CircularProgressIndicator())
-                                                                : Stack(
-                                                                    children: [
-                                                                        Positioned(
-                                                                          bottom:
-                                                                              0,
-                                                                          left:
-                                                                              0,
-                                                                          right:
-                                                                              0,
-                                                                          child:
-                                                                              Container(
-                                                                            alignment:
-                                                                                Alignment.bottomLeft,
-                                                                            decoration:
-                                                                                BoxDecoration(color: light_dark, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
-                                                                            height:
-                                                                                MediaQuery.of(context).size.height / 4.2,
-                                                                            width:
-                                                                                double.infinity,
-                                                                            child:
-                                                                                Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              children: [
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.all(8.0),
-                                                                                  child: CustomText(text: jobCategory[index]['biz_category_name'], fontSize: 12, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.w600),
-                                                                                ),
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.all(8.0),
-                                                                                  child: CustomText(text: "#${jobCategory[index]['ads_id'].toString()}", fontSize: 10, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.w300),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Positioned(
-                                                                          right:
-                                                                              0,
-                                                                          left:
-                                                                              0,
-                                                                          top:
-                                                                              0,
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                MediaQuery.of(context).size.height / 3.2,
-                                                                            width:
-                                                                                double.infinity,
-                                                                            decoration:
-                                                                                BoxDecoration(color: light_dark, borderRadius: BorderRadius.circular(20)),
-                                                                            child:
-                                                                                ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(20),
-                                                                              child: CachedNetworkImage(
-                                                                                alignment: Alignment(-1, -1),
-                                                                                imageUrl: "https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}",
-                                                                                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                                                                  child: SizedBox(
-                                                                                    height: 50,
-                                                                                    width: 50,
-                                                                                    child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                                                  ),
-                                                                                ),
-                                                                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                                                                fit: BoxFit.cover,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Positioned(
-                                                                          right:
-                                                                              8,
-                                                                          child: IconButton(
-                                                                              onPressed: () {
-                                                                                if (userStatus == true) {
-                                                                                  setState(() {
-                                                                                    addId = jobCategory[index]['ads_id'].toString();
-                                                                                    log(addId);
-                                                                                  });
-                                                                                  favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString())
-                                                                                      ? alert(
-                                                                                          'You have already added this job to your favorite list!',
-                                                                                          true,
-                                                                                          true,
-                                                                                        )
-                                                                                      : setFavorite();
-
-                                                                                  setState(() {
-                                                                                    favoritesList;
-                                                                                  });
-                                                                                } else {
-                                                                                  alert(
-                                                                                    'Please login to your account to add this job to your favorite list!',
-                                                                                    false,
-                                                                                    false,
-                                                                                  );
-                                                                                }
-                                                                              },
-                                                                              icon: loadFavorites == true && jobCategory[index]['ads_id'].toString() == addId.toString()
-                                                                                  ? CircularProgressIndicator(
-                                                                                      color: red,
-                                                                                    )
-                                                                                  : ShaderMask(
-                                                                                      shaderCallback: (Rect bounds) {
-                                                                                        return LinearGradient(
-                                                                                          begin: Alignment.topCenter,
-                                                                                          end: Alignment.bottomCenter,
-                                                                                          colors: [
-                                                                                            Colors.red,
-                                                                                            Colors.orange
-                                                                                          ],
-                                                                                        ).createShader(bounds);
-                                                                                      },
-                                                                                      child: Icon(
-                                                                                        userStatus == true && favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString()) ? Icons.favorite : Icons.favorite_border,
-                                                                                        color: userStatus == true && favoritesList.any((element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString()) ? red : white,
-                                                                                      ),
-                                                                                    )),
-                                                                        ),
-                                                                      ]),
-                                                          ),
-                                                        ),
-                                                      );
-                                              }),
-                                        )
-                            ]),
-                      ),
+                                        })
+                          ]),
                       if (_isLoadMoreRuning == true)
                         Positioned(
                           bottom: 100,
@@ -817,20 +862,18 @@ class _CustomHomeState extends State<CustomHome> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            InkWell(
-                              onTap: () async {
+                            RadiusButton(
+                              onTap: () {
                                 Navigator.pop(context);
                                 log('ggggg');
                               },
-                              child: RadiusButton(
-                                colortext: black,
-                                color: white,
-                                height: 70,
-                                width: 110,
-                                text: item ? 'NO' : "Cancel",
-                              ),
+                              colortext: black,
+                              color: white,
+                              height: 70,
+                              width: 110,
+                              text: item ? 'NO' : "Cancel",
                             ),
-                            InkWell(
+                            RadiusButton(
                               onTap: () async {
                                 if (item == true) {
                                   Navigator.pop(context);
@@ -842,13 +885,11 @@ class _CustomHomeState extends State<CustomHome> {
                                   );
                                 }
                               },
-                              child: RadiusButton(
-                                colortext: black,
-                                color: font_green,
-                                height: 70,
-                                width: 110,
-                                text: item ? 'YES' : "Login",
-                              ),
+                              colortext: black,
+                              color: font_green,
+                              height: 70,
+                              width: 110,
+                              text: item ? 'YES' : "Login",
                             ),
                           ],
                         )

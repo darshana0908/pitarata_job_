@@ -130,33 +130,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: white,
-                            height: 70,
-                            width: 110,
-                            text: 'Cancel',
-                          ),
+                        RadiusButton(onTap: () {
+                          Navigator.pop(context);
+                        } ,
+                          colortext: black,
+                          color: white,
+                          height: 70,
+                          width: 110,
+                          text: 'Cancel',
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NameScreen()),
-                            );
-                          },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: font_green,
-                            height: 70,
-                            width: 110,
-                            text: 'Login',
-                          ),
+                        RadiusButton(onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NameScreen()),
+                          );
+                        },
+                          colortext: black,
+                          color: font_green,
+                          height: 70,
+                          width: 110,
+                          text: 'Login',
                         ),
                       ],
                     ),

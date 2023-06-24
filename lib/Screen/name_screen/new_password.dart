@@ -254,48 +254,45 @@ class _NewPasswordState extends State<NewPassword> {
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: InkWell(
-                        onTap: () {
-                          if (password.text.isNotEmpty) {
-                            if (confirmPassword.text.isNotEmpty) {
-                              if (password.text == confirmPassword.text) {
-                                if (otp.text.isNotEmpty) {
-                                  NewPassword();
-                                } else {
-                                  MotionToast.error(
-                                          description: Text(
-                                              'Please enter your verification code!'))
-                                      .show(context);
-                                }
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: RadiusButton(onTap: () {
+                        if (password.text.isNotEmpty) {
+                          if (confirmPassword.text.isNotEmpty) {
+                            if (password.text == confirmPassword.text) {
+                              if (otp.text.isNotEmpty) {
+                                NewPassword();
                               } else {
-                                confirmPassword.clear();
                                 MotionToast.error(
                                         description: Text(
-                                            ' Your passwords are not matching. Please enter the password again!'))
+                                            'Please enter your verification code!'))
                                     .show(context);
                               }
                             } else {
+                              confirmPassword.clear();
                               MotionToast.error(
-                                      description:
-                                          Text('Please confirm your password!'))
+                                      description: Text(
+                                          ' Your passwords are not matching. Please enter the password again!'))
                                   .show(context);
                             }
                           } else {
                             MotionToast.error(
                                     description:
-                                        Text('Please enter your new password!'))
+                                        Text('Please confirm your password!'))
                                 .show(context);
                           }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: RadiusButton(
-                            color: font_green,
-                            colortext: white,
-                            text: 'Change Password',
-                            width: 200,
-                            height: 60,
-                          ),
+                        } else {
+                          MotionToast.error(
+                                  description:
+                                      Text('Please enter your new password!'))
+                              .show(context);
+                        }
+                      },
+                          color: font_green,
+                          colortext: white,
+                          text: 'Change Password',
+                          width: 200,
+                          height: 60,
                         ),
                       ),
                     ),

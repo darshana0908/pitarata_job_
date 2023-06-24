@@ -4,6 +4,8 @@ import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:sizer/sizer.dart';
 
+import '../sign_up/sign_up.dart';
+
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -39,20 +41,19 @@ class WelcomePage extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NameScreen()),
-                      );
-                    },
-                    child: RadiusButton(
-                      color: font_green,
-                      colortext: white,
-                      height: 70,
-                      text: "Let's do this",
-                      width: 150,
-                    )),
+                child: RadiusButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                    );
+                  },
+                  color: font_green,
+                  colortext: white,
+                  height: 70,
+                  text: "Let's do this",
+                  width: 150,
+                ),
               ),
             ),
           ]),

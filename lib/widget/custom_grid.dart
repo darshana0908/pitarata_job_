@@ -215,27 +215,23 @@ class _CustomGridState extends State<CustomGrid> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: RadiusButton(
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 110,
-                          text: 'NO',
-                        ),
+                      RadiusButton(onTap:  () {
+                        Navigator.pop(context);
+                      },
+                        colortext: black,
+                        color: white,
+                        height: 70,
+                        width: 110,
+                        text: 'NO',
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: RadiusButton(
-                          colortext: black,
-                          color: red,
-                          height: 70,
-                          width: 110,
-                          text: 'YES',
-                        ),
+                      RadiusButton(onTap: () {
+                        
+                      },
+                        colortext: black,
+                        color: red,
+                        height: 70,
+                        width: 110,
+                        text: 'YES',
                       ),
                     ],
                   ),

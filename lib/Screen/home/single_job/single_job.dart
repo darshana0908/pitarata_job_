@@ -70,6 +70,7 @@ class _SingleJobState extends State<SingleJob> {
   String customer_id = '';
   bool seFavorites = false;
   String dropText = 'select a reasons';
+  bool tap = false;
   BannerAd? _bannerAd;
 
   bool _isLoaded = false;
@@ -252,11 +253,11 @@ class _SingleJobState extends State<SingleJob> {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
-        leading: InkWell(
+        leading: ArrowButton(
             onTap: () {
               Navigator.pop(context);
             },
-            child: ArrowButton(icons: Icons.arrow_back_ios_new)),
+            icons: Icons.arrow_back_ios_new),
         backgroundColor: black,
         title: Container(
             alignment: Alignment.centerRight,
@@ -389,26 +390,24 @@ class _SingleJobState extends State<SingleJob> {
                   padding: const EdgeInsets.all(16.0),
                   child: Container(
                     alignment: Alignment.center,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => JobContact(
-                                    job_id: widget.addId,
-                                    email: widget.email,
-                                    mobile: widget.mobile,
-                                    whatapp: widget.whatapp,
-                                  )),
-                        );
-                      },
-                      child: RadiusButton(
-                          text: 'Show Contact Details',
-                          width: 250,
-                          height: 70,
-                          color: font_green,
-                          colortext: white),
-                    ),
+                    child: RadiusButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => JobContact(
+                                      job_id: widget.addId,
+                                      email: widget.email,
+                                      mobile: widget.mobile,
+                                      whatapp: widget.whatapp,
+                                    )),
+                          );
+                        },
+                        text: 'Show Contact Details',
+                        width: 250,
+                        height: 70,
+                        color: font_green,
+                        colortext: white),
                   ),
                 ),
                 SizedBox(
@@ -447,8 +446,24 @@ class _SingleJobState extends State<SingleJob> {
                 SizedBox(
                   height: 20,
                 ),
-                TextButton(
-                  onPressed: () {
+                InkWell(
+                  borderRadius: BorderRadius.circular(15),
+                  onTapCancel: () {
+                    setState(() {
+                      tap = false;
+                    });
+                  },
+                  onTapDown: (_) {
+                    setState(() {
+                      tap = true;
+                    });
+                  },
+                  onTapUp: (_) {
+                    setState(() {
+                      tap = false;
+                    });
+                  },
+                  onTap: () {
                     // reportThisJob();
 
                     if (verified) {
@@ -458,43 +473,47 @@ class _SingleJobState extends State<SingleJob> {
                           'Please login to your account to access your report this post!');
                     }
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 60,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: red, borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Icon(
-                              Icons.warning_amber_rounded,
-                              color: white,
-                              size: 50,
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: 50),
+                    opacity: tap ? 0.3 : 1,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: red, borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Icon(
+                                Icons.warning_amber_rounded,
+                                color: white,
+                                size: 50,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: CustomText(
-                            color: white,
-                            fontFamily: 'Comfortaa-VariableFont_wght',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            text: 'Report this post',
+                          Container(
+                            alignment: Alignment.center,
+                            child: CustomText(
+                              color: white,
+                              fontFamily: 'Comfortaa-VariableFont_wght',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              text: 'Report this post',
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            width: 40,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              width: 40,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -572,19 +591,17 @@ class _SingleJobState extends State<SingleJob> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        InkWell(
+                        RadiusButton(
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: white,
-                            height: 70,
-                            width: 110,
-                            text: 'Cancel',
-                          ),
+                          colortext: black,
+                          color: white,
+                          height: 70,
+                          width: 110,
+                          text: 'Cancel',
                         ),
-                        InkWell(
+                        RadiusButton(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -592,13 +609,11 @@ class _SingleJobState extends State<SingleJob> {
                                   builder: (context) => NameScreen()),
                             );
                           },
-                          child: RadiusButton(
-                            colortext: black,
-                            color: font_green,
-                            height: 70,
-                            width: 110,
-                            text: 'Login',
-                          ),
+                          colortext: black,
+                          color: font_green,
+                          height: 70,
+                          width: 110,
+                          text: 'Login',
                         ),
                       ],
                     ),
@@ -706,19 +721,17 @@ class _SingleJobState extends State<SingleJob> {
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            InkWell(
+                            RadiusButton(
                               onTap: () async {
                                 Navigator.pop(context);
                               },
-                              child: RadiusButton(
-                                colortext: black,
-                                color: white,
-                                height: 70,
-                                width: 110,
-                                text: 'NO',
-                              ),
+                              colortext: black,
+                              color: white,
+                              height: 70,
+                              width: 110,
+                              text: 'NO',
                             ),
-                            InkWell(
+                            RadiusButton(
                               onTap: () async {
                                 if (item) {
                                 } else {
@@ -728,13 +741,11 @@ class _SingleJobState extends State<SingleJob> {
 
                                 Navigator.pop(context);
                               },
-                              child: RadiusButton(
-                                colortext: black,
-                                color: font_green,
-                                height: 70,
-                                width: 110,
-                                text: 'YES',
-                              ),
+                              colortext: black,
+                              color: font_green,
+                              height: 70,
+                              width: 110,
+                              text: 'YES',
                             ),
                           ],
                         )

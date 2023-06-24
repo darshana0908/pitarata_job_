@@ -203,26 +203,21 @@ class _NameScreenTwoState extends State<NameScreenTwo> {
                   SizedBox(
                     height: 10,
                   ),
-                  TextButton(
-                    style: ButtonStyle(
-                        animationDuration: Duration(milliseconds: 1000)),
-                    onPressed: () {
-                      if (code.text.isNotEmpty) {
-                        enterOtp();
-                      } else {
-                        MotionToast.error(
-                                description: Text(
-                                    ' You must enter OTP to create a new account '))
-                            .show(context);
-                      }
-                    },
-                    child: RadiusButton(
-                      color: font_green,
-                      colortext: white,
-                      text: 'VERIFY MY ACCOUNT',
-                      width: 230,
-                      height: 8.h,
-                    ),
+                  RadiusButton(onTap: () {
+                    if (code.text.isNotEmpty) {
+                      enterOtp();
+                    } else {
+                      MotionToast.error(
+                              description: Text(
+                                  ' You must enter OTP to create a new account '))
+                          .show(context);
+                    }
+                  },
+                    color: font_green,
+                    colortext: white,
+                    text: 'VERIFY MY ACCOUNT',
+                    width: 230,
+                    height: 8.h,
                   ),
                   SizedBox(
                     height: 30,

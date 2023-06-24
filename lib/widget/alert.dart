@@ -50,30 +50,24 @@ loading(BuildContext context, String text) async {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: RadiusButton(
-                        colortext: black,
-                        color: white,
-                        height: 70,
-                        width: 30.w,
-                        text: 'Cancel',
-                      ),
+                    RadiusButton(onTap: () {
+                      Navigator.pop(context);
+                    },
+                      colortext: black,
+                      color: white,
+                      height: 70,
+                      width: 30.w,
+                      text: 'Cancel',
                     ),
-                    TextButton(
-                      onPressed: () {
+                    RadiusButton(onTap:() {
                      Navigator.push(
             context, MaterialPageRoute(builder: (context) => NameScreen()));
-                      },
-                      child: RadiusButton(
-                        colortext: black,
-                        color: font_green,
-                        height: 70,
-                        width: 30.w,
-                        text: 'Login',
-                      ),
+                    } ,
+                      colortext: black,
+                      color: font_green,
+                      height: 70,
+                      width: 30.w,
+                      text: 'Login',
                     ),
                   ],
                 ),

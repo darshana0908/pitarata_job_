@@ -62,11 +62,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: ArrowButton(icons: Icons.arrow_back_ios)),
+                ArrowButton(onTap: () {
+                  Navigator.pop(context);
+                } ,
+                  icons: Icons.arrow_back_ios),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(

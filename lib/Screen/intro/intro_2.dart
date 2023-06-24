@@ -48,17 +48,15 @@ class _IntroTwoPageState extends State<IntroTwoPage> {
             Expanded(
               child: Container(
                 alignment: Alignment.bottomRight,
-                child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => IntroThreePage()),
-                      );
-                    },
-                    child: ArrowButton(
-                      icons: Icons.arrow_forward_ios_rounded,
-                    )),
+                child: ArrowButton(onTap:  () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => IntroThreePage()),
+                  );
+                },
+                  icons: Icons.arrow_forward_ios_rounded,
+                ),
               ),
             )
           ]),
