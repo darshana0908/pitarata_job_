@@ -27,16 +27,10 @@ class SqlDb {
 
   _onCreate(Database db, int version) async {
     await db.execute('''
-  CREATE TABLE "favorite" (
+  CREATE TABLE "notification" (
     "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
-      "img" TEXT NOT NULL,
-      "description" TEXT NOT NULL,
-      "addId" TEXT  NOT NULL,
-       "categoryName" TEXT NOT NULL,
-      "salary" TEXT NOT NULL,
-      "email" TEXT  NOT NULL,
-       "mobile" TEXT NOT NULL,
-      "whatapp" TEXT NOT NULL
+      "key" TEXT NOT NULL
+     
      
  
  
@@ -100,5 +94,4 @@ class SqlDb {
 // DELETE
 // UPDATE
 // INSERT
-
 }

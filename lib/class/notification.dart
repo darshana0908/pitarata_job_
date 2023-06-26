@@ -60,8 +60,9 @@ class notify {
       print(message.notification?.android?.imageUrl);
 
       var url = message.notification?.android?.imageUrl;
-      String imgurl = url.toString();
-      final bigimg = await Utils.downloadFile(imgurl, "icon");
+      String imgurl = await url.toString();
+      // https://via.placeholder.com/150/FF0000/FFFFFF?Text=yttags.com
+      final bigimg = await Utils.downloadFile(imgurl, "icon1");
       final styleimg = BigPictureStyleInformation(
         FilePathAndroidBitmap(bigimg),
         largeIcon: FilePathAndroidBitmap(bigimg),
@@ -72,14 +73,15 @@ class notify {
             notification.title,
             notification.body,
             NotificationDetails(
-                android: AndroidNotificationDetails(channel.id, channel.name,
-                    channelDescription: channel.description,
-                    icon: "appicon",
-                    playSound: true,
-                    styleInformation: styleimg
+                android: AndroidNotificationDetails(
+              channel.id, channel.name,
+              channelDescription: channel.description,
+              icon: "appicon",
+              playSound: true,
+              styleInformation: styleimg,
 
-                    // other properties...
-                    )),
+              // other properties...
+            )),
             payload: jsonEncode(message.notification?.android?.imageUrl));
       }
     });
@@ -89,10 +91,15 @@ class notify {
 class Utils {
   static Future<String> downloadFile(String url, String filename) async {
     final directory = await getApplicationSupportDirectory();
+
     final filepath = "${directory.path}/$filename";
+
     final responce = await http.get(Uri.parse(url));
+
     final file = File(filepath);
     await file.writeAsBytes(responce.bodyBytes);
+
+    print(filepath);
     return filepath;
   }
 }
