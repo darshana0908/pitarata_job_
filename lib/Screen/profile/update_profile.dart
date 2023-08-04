@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../widget/alert.dart';
+import '../../widget/alert.dart';
 
 class UpdateProfile extends StatefulWidget {
   const UpdateProfile(

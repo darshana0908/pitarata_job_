@@ -6,8 +6,8 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import '../color/colors.dart';
 
-class RadiusButton extends StatefulWidget {
-  const RadiusButton({
+class SignOutButton extends StatefulWidget {
+  const SignOutButton({
     super.key,
     required this.text,
     required this.width,
@@ -24,10 +24,10 @@ class RadiusButton extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<RadiusButton> createState() => _RadiusButtonState();
+  State<SignOutButton> createState() => _SignOutButtonState();
 }
 
-class _RadiusButtonState extends State<RadiusButton> {
+class _SignOutButtonState extends State<SignOutButton> {
   bool tap = false;
   @override
   Widget build(BuildContext context) {

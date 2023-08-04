@@ -17,9 +17,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import '../../widget/fade_home.dart';
 import '../../widget/radius_button.dart';
+import '../../widget/sign_out_buttn.dart';
 import '../name_screen/name_screen.dart';
 import '../notification/notification.dart';
-import 'profile/profile.dart';
+import '../profile/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -72,13 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return await showDialog(
         context: context,
         builder: (context) {
+          var h = MediaQuery.of(context).size.height;
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15.0))),
             contentPadding: EdgeInsets.only(top: 10.0),
             backgroundColor: black,
             content: Container(
-              height: 300,
+              height: 270,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: black, borderRadius: BorderRadius.circular(15)),
@@ -96,37 +98,44 @@ class _HomeScreenState extends State<HomeScreen> {
                         )),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                        text: 'Are you sure you want to exit?',
-                        fontSize: 15.sp,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
-                  ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Are you sure you want to Sign Out?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 15.sp,
+                            fontFamily: 'Comfortaa-VariableFont_wght',
+                            color: white,
+                            fontWeight: FontWeight.normal),
+                      )),
                   SizedBox(
                     height: 35,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RadiusButton(onTap: () {
-                           Navigator.pop(context);
-                      },
-                        colortext: black,
-                        color: white,
-                        height: 70,
-                        width: 30.w,
-                        text: 'NO',
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SignOutButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          colortext: black,
+                          color: Colors.white60,
+                          height: h / 15,
+                          width: 32.w,
+                          text: 'Cancel',
+                        ),
                       ),
-                      RadiusButton(onTap: () {
-                           exit(0);
-                      },
+                      SignOutButton(
+                        onTap: () {
+                          exit(0);
+                        },
                         colortext: black,
                         color: font_green,
-                        height: 70,
-                        width: 30.w,
-                        text: 'YES',
+                        height: h / 15,
+                        width: 32.w,
+                        text: 'Sign Out',
                       ),
                     ],
                   ),
@@ -364,23 +373,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RadiusButton(onTap: () {
-                            Navigator.pop(context);
-                        log('ggggg');
-                      },
+                      RadiusButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                          log('ggggg');
+                        },
                         colortext: black,
                         color: white,
                         height: 70,
                         width: 110,
                         text: "Cancel",
                       ),
-                      RadiusButton(onTap: () {
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NameScreen()),
-                        ); 
-                      },
+                      RadiusButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NameScreen()),
+                          );
+                        },
                         colortext: black,
                         color: font_green,
                         height: 70,

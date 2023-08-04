@@ -15,6 +15,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../class/main_dialog.dart';
 import '../../widget/radius_button.dart';
 import '../home/single_job/single_job.dart';
 import '../name_screen/name_screen.dart';
@@ -75,8 +76,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         });
       } else {
         setState(() {
-          userCheck();
-          log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            showCustomDialog(context,
+                'Please login to your account to access your favorite jobs !');
+            log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
+          });
+          Future.delayed(Duration(milliseconds: 20));
           userLoging = false;
         });
       }
@@ -153,84 +158,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     });
   }
 
-  userCheck() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      return await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0))),
-              contentPadding: EdgeInsets.only(top: 10.0),
-              backgroundColor: black,
-              content: Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: black, borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.white70,
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomText(
-                          text:
-                              'Please login to your account to access your favorite jobs!',
-                          fontSize: 20,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          color: white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RadiusButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 110,
-                          text: 'Cancel',
-                        ),
-                        RadiusButton(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NameScreen()),
-                            );
-                          },
-                          colortext: black,
-                          color: font_green,
-                          height: 70,
-                          width: 110,
-                          text: 'Login',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,7 +167,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: LoadingAnimationWidget.staggeredDotsWave(
                   color: Colors.grey,
                   size: MediaQuery.of(context).size.width / 6))
-          : favoritesList.isEmpty
+          : favoritesList.isEmpty && userLoging == true
               ? Center(
                   child: SizedBox(
                       height: 200,

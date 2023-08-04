@@ -141,8 +141,14 @@ class _SignUpState extends State<SignUp> {
                                 height: 5,
                               ),
                               SignUpButton(
+                                  name: Text("Continue with Google",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: white,
+                                          fontFamily:
+                                              'Comfortaa-VariableFont_wght',
+                                          fontSize: 14.sp)),
                                   icon: 'assets/icons8-google-48.png',
-                                  text: "Continue with Google",
                                   color: font_green,
                                   colortext: white,
                                   height: 6.h,
@@ -164,8 +170,25 @@ class _SignUpState extends State<SignUp> {
                                   },
                                   width: w),
                               SignUpButton(
+                                  name: Row(
+                                    children: [
+                                      Text("Continue with Email",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: white,
+                                              fontFamily:
+                                                  'Comfortaa-VariableFont_wght',
+                                              fontSize: 14.sp)),
+                                      Text("4",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: font_green,
+                                              fontFamily:
+                                                  'Comfortaa-VariableFont_wght',
+                                              fontSize: 14.sp)),
+                                    ],
+                                  ),
                                   icon: 'assets/icons8-email-48.png',
-                                  text: "Continue with Email",
                                   color: font_green,
                                   colortext: white,
                                   height: 6.h,
@@ -238,7 +261,7 @@ class _SignUpState extends State<SignUp> {
                                     ],
                                   )),
                               SizedBox(
-                                height: 20,
+                                height: 30,
                               )
                             ],
                           ),

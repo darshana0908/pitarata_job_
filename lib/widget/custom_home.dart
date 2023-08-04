@@ -16,6 +16,7 @@ import 'package:pitarata_job/db/sqldb.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sizer/sizer.dart';
 import '../color/colors.dart';
 import 'custom_list.dart';
 import 'custom_text.dart';
@@ -46,7 +47,7 @@ class _CustomHomeState extends State<CustomHome> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
   int _page = 0;
-  final int _limit = 20;
+
   bool _isFirstLoadRunning = false;
   bool _hasNextPage = true;
   bool _isLoadMoreRuning = false;
@@ -822,6 +823,7 @@ class _CustomHomeState extends State<CustomHome> {
     return await showDialog(
         context: context,
         builder: (context) {
+          var h = MediaQuery.of(context).size.height;
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -868,9 +870,9 @@ class _CustomHomeState extends State<CustomHome> {
                                 log('ggggg');
                               },
                               colortext: black,
-                              color: white,
-                              height: 70,
-                              width: 110,
+                              color: Colors.white60,
+                              height: h / 15,
+                              width: 32.w,
                               text: item ? 'NO' : "Cancel",
                             ),
                             RadiusButton(
@@ -887,8 +889,8 @@ class _CustomHomeState extends State<CustomHome> {
                               },
                               colortext: black,
                               color: font_green,
-                              height: 70,
-                              width: 110,
+                              height: h / 15,
+                              width: 32.w,
                               text: item ? 'YES' : "Login",
                             ),
                           ],

@@ -11,7 +11,7 @@ import 'package:pitarata_job/Screen/home/about_us/about_us.dart';
 import 'package:pitarata_job/Screen/home/contact_us/contact_us.dart';
 import 'package:pitarata_job/Screen/home/get_support/get_support.dart';
 import 'package:pitarata_job/Screen/home/logout/logout.dart';
-import 'package:pitarata_job/Screen/home/profile/profile.dart';
+import 'package:pitarata_job/Screen/profile/profile.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';

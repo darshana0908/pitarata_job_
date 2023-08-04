@@ -6,8 +6,8 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import '../color/colors.dart';
 
-class RadiusButton extends StatefulWidget {
-  const RadiusButton({
+class FeedbackButton extends StatefulWidget {
+  const FeedbackButton({
     super.key,
     required this.text,
     required this.width,
@@ -24,10 +24,10 @@ class RadiusButton extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<RadiusButton> createState() => _RadiusButtonState();
+  State<FeedbackButton> createState() => _FeedbackButtonState();
 }
 
-class _RadiusButtonState extends State<RadiusButton> {
+class _FeedbackButtonState extends State<FeedbackButton> {
   bool tap = false;
   @override
   Widget build(BuildContext context) {
@@ -61,9 +61,7 @@ class _RadiusButtonState extends State<RadiusButton> {
           child: Text(widget.text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: widget.colortext,
-                  fontFamily: 'Comfortaa-VariableFont_wght',
-                  fontSize: 17)),
+                  color: widget.colortext, fontFamily: 'Viga', fontSize: 17)),
         ),
       ),
     );

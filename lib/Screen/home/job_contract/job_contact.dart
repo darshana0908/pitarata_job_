@@ -36,6 +36,7 @@ class _JobContactState extends State<JobContact> {
   String customer_id = "";
   String verification = "";
   bool userStatus = false;
+  bool tap = false;
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -96,10 +97,11 @@ class _JobContactState extends State<JobContact> {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
-        leading: ArrowButton(onTap: () {
-          Navigator.pop(context);
-        },
-          icons: Icons.arrow_back_ios_new),
+        leading: ArrowButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            icons: Icons.arrow_back_ios_new),
         backgroundColor: black,
         title: Container(
             alignment: Alignment.centerRight,
@@ -116,53 +118,47 @@ class _JobContactState extends State<JobContact> {
           padding: const EdgeInsets.all(8.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            InkWell(
-              onTap: () {
-                _launchURL();
-              },
-              child: SingleChildScrollView(
-                child: ColorContainer(
-                  iconColor: red,
-                  textColor: red,
-                  text: 'Email Address',
-                  text1: widget.email,
-                  icon: Icons.email_outlined,
-                  color1: black,
-                  color: Color.fromARGB(255, 93, 9, 3),
-                ),
+            SingleChildScrollView(
+              child: ColorContainer(
+                onTap: () {
+                  _launchURL();
+                },
+                iconColor: red,
+                textColor: red,
+                text: 'Email Address',
+                text1: widget.email,
+                icon: Icons.email_outlined,
+                color1: black,
+                color: Color.fromARGB(255, 93, 9, 3),
               ),
             ),
-            InkWell(
+            ColorContainer(
               onTap: () async {
                 if (widget.mobile.isNotEmpty) {
                   makingPhoneCall();
                 }
               },
-              child: ColorContainer(
-                iconColor: background_green,
-                textColor: background_green,
-                text: 'Contact Number',
-                text1: widget.mobile,
-                icon: Icons.add_call,
-                color1: black,
-                color: Color.fromARGB(43, 4, 115, 45),
-              ),
+              iconColor: background_green,
+              textColor: background_green,
+              text: 'Contact Number',
+              text1: widget.mobile,
+              icon: Icons.add_call,
+              color1: black,
+              color: Color.fromARGB(43, 4, 115, 45),
             ),
-            InkWell(
+            ColorContainer(
               onTap: () async {
                 if (widget.whatapp.isNotEmpty) {
                   makingWhatsappCall();
                 }
               },
-              child: ColorContainer(
-                iconColor: Color.fromARGB(255, 12, 20, 168),
-                textColor: Color.fromARGB(255, 12, 20, 168),
-                text: 'Whats app Number',
-                text1: widget.whatapp,
-                icon: Icons.whatshot,
-                color1: black,
-                color: Color.fromARGB(255, 4, 22, 75),
-              ),
+              iconColor: Color.fromARGB(255, 12, 20, 168),
+              textColor: Color.fromARGB(255, 12, 20, 168),
+              text: 'Whats app Number',
+              text1: widget.whatapp,
+              icon: Icons.whatshot,
+              color1: black,
+              color: Color.fromARGB(255, 4, 22, 75),
             ),
             AppAds.bannerAds(context),
             Padding(
@@ -176,6 +172,22 @@ class _JobContactState extends State<JobContact> {
               ),
             ),
             InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTapCancel: () {
+                setState(() {
+                  tap = false;
+                });
+              },
+              onTapDown: (_) {
+                setState(() {
+                  tap = true;
+                });
+              },
+              onTapUp: (_) {
+                setState(() {
+                  tap = false;
+                });
+              },
               onTap: () {
                 MotionToast.info(
                         title: Text("Info"),
@@ -183,11 +195,15 @@ class _JobContactState extends State<JobContact> {
                             Text('"This option will be enabled soon!"'))
                     .show(context);
               },
-              child: CustomContainer(
-                  icon: 'assets/send.svg',
-                  text1: 'Send My CV to this Job',
-                  text2: 'Easily apply for the job',
-                  colorText: font_green),
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 50),
+                opacity: tap ? 0.3 : 1,
+                child: CustomContainer(
+                    icon: 'assets/send.svg',
+                    text1: 'Send My CV to this Job',
+                    text2: 'Easily apply for the job',
+                    colorText: font_green),
+              ),
             ),
           ]),
         ),

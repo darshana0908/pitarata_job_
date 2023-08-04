@@ -10,7 +10,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:pitarata_job/Screen/home/profile/update_profile.dart';
+import 'package:pitarata_job/Screen/profile/update_profile.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -18,7 +18,8 @@ import 'package:http/http.dart' as http;
 import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../widget/alert.dart';
+import '../../class/main_dialog.dart';
+import '../../widget/alert.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -80,10 +81,9 @@ class _ProfileState extends State<Profile> {
     } else {
       setState(() {
         userLoging = false;
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          loading(context,
-              'Please login to your account to access your profile setting');
-        });
+        showCustomDialog(context,
+            'Please login to your account to access your profile setting !');
+       
       });
     }
   }

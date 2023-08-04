@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../class/main_dialog.dart';
 import '../../../color/colors.dart';
 import '../../../widget/alert.dart';
 import '../../../widget/arrow_button.dart';
@@ -52,7 +53,7 @@ class _GetSupportState extends State<GetSupport> {
         setState(() {
           userLoging = false;
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-            loading(context,
+            showCustomDialog(context,
                 'Please login to your account to access your Get Support!');
           });
         });
@@ -128,10 +129,11 @@ class _GetSupportState extends State<GetSupport> {
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
-        leading: ArrowButton(onTap: () {
-          Navigator.pop(context);
-        },
-          icons: Icons.arrow_back_ios_new),
+        leading: ArrowButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            icons: Icons.arrow_back_ios_new),
         backgroundColor: black,
         title: Container(
             alignment: Alignment.centerRight,

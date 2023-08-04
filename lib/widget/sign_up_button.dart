@@ -10,20 +10,21 @@ import '../color/colors.dart';
 class SignUpButton extends StatefulWidget {
   const SignUpButton(
       {super.key,
-      required this.text,
       required this.width,
       required this.height,
       required this.color,
       required this.colortext,
       required this.onTap,
-      required this.icon});
-  final String text;
+      required this.icon,
+      required this.name});
+
   final double width;
   final double height;
   final Color color;
   final Color colortext;
   final VoidCallback onTap;
   final String icon;
+  final Widget name;
 
   @override
   State<SignUpButton> createState() => _SignUpButtonState();
@@ -33,6 +34,7 @@ class _SignUpButtonState extends State<SignUpButton> {
   bool tap = false;
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: widget.onTap,
@@ -61,21 +63,21 @@ class _SignUpButtonState extends State<SignUpButton> {
             height: widget.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20), color: widget.color),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: SizedBox(width: 70, child: Image.asset(widget.icon)),
-                ),
-                Text(widget.text,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: widget.colortext,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        fontSize: 14.sp)),
-              ],
+            child: SizedBox(
+              width: w / 1.4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Image.asset(
+                      widget.icon,
+                    ),
+                  ),
+                  widget.name
+                ],
+              ),
             ),
           ),
         ),

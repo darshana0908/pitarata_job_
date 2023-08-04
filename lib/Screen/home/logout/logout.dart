@@ -31,6 +31,7 @@ class _LogoutState extends State<Logout> {
       return await showDialog(
           context: context,
           builder: (context) {
+            var h = MediaQuery.of(context).size.height;
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -76,8 +77,8 @@ class _LogoutState extends State<Logout> {
                             Navigator.pop(context);
                           },
                           colortext: black,
-                          color: white,
-                          height: 70,
+                          color: Colors.white60,
+                          height: h / 15,
                           width: 30.w,
                           text: 'NO',
                         ),
@@ -95,7 +96,7 @@ class _LogoutState extends State<Logout> {
                           },
                           colortext: black,
                           color: font_green,
-                          height: 70,
+                          height: h / 15,
                           width: 30.w,
                           text: 'YES',
                         ),
@@ -115,10 +116,11 @@ class _LogoutState extends State<Logout> {
       child: Scaffold(
         backgroundColor: Colors.grey,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          ArrowButton(onTap: () {
-          Navigator.pop(context);
-            },
-            icons: Icons.arrow_back_ios_new),
+          ArrowButton(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              icons: Icons.arrow_back_ios_new),
         ]),
       ),
     );

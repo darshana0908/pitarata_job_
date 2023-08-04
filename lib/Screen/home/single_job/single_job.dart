@@ -19,8 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import '../../../class/add.dart';
+import '../../../class/main_dialog.dart';
 import '../../../widget/custom_container.dart';
 import '../../../widget/custom_text.dart';
+import '../../../widget/feedback_button.dart';
 import '../../../widget/job_categories.dart';
 import '../../name_screen/name_screen.dart';
 
@@ -323,7 +325,7 @@ class _SingleJobState extends State<SingleJob> {
                                         setFavorite();
                                       }
                                     } else {
-                                      userCheck(
+                                      showCustomDialog(context,
                                           'Please login to your account to access your favorite jobs!');
                                     }
                                   },
@@ -360,11 +362,14 @@ class _SingleJobState extends State<SingleJob> {
                   ),
                 ),
                 //bhbhbhbhbhggggg
-                CustomContainer(
-                    icon: 'assets/briefcase.svg',
-                    text1: widget.categoryName,
-                    text2: 'Job Category',
-                    colorText: font_green),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: CustomContainer(
+                      icon: 'assets/briefcase.svg',
+                      text1: widget.categoryName,
+                      text2: 'Job Category',
+                      colorText: font_green),
+                ),
                 CustomContainer(
                     icon: 'assets/doller.svg',
                     text1: widget.salary,
@@ -469,7 +474,7 @@ class _SingleJobState extends State<SingleJob> {
                     if (verified) {
                       reportDialog();
                     } else {
-                      userCheck(
+                      showCustomDialog(context,
                           'Please login to your account to access your report this post!');
                     }
                   },
@@ -524,7 +529,7 @@ class _SingleJobState extends State<SingleJob> {
                       if (verified) {
                         feedback();
                       } else {
-                        userCheck(
+                        showCustomDialog(context,
                             ' Please login to your account to access your send feedback!');
                       }
                     },
@@ -546,83 +551,6 @@ class _SingleJobState extends State<SingleJob> {
         ]),
       ),
     );
-  }
-
-  userCheck(String text) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      return await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0))),
-              contentPadding: EdgeInsets.only(top: 10.0),
-              backgroundColor: black,
-              content: Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: black, borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.white70,
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomText(
-                          text: text,
-                          fontSize: 20,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          color: white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RadiusButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          colortext: black,
-                          color: white,
-                          height: 70,
-                          width: 110,
-                          text: 'Cancel',
-                        ),
-                        RadiusButton(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NameScreen()),
-                            );
-                          },
-                          colortext: black,
-                          color: font_green,
-                          height: 70,
-                          width: 110,
-                          text: 'Login',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    });
   }
 
   setFavorite() async {
@@ -681,6 +609,7 @@ class _SingleJobState extends State<SingleJob> {
     return await showDialog(
         context: context,
         builder: (context) {
+          var h = MediaQuery.of(context).size.height;
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -726,9 +655,9 @@ class _SingleJobState extends State<SingleJob> {
                                 Navigator.pop(context);
                               },
                               colortext: black,
-                              color: white,
-                              height: 70,
-                              width: 110,
+                              color: Colors.white60,
+                              height: h / 15,
+                              width: 32.w,
                               text: 'NO',
                             ),
                             RadiusButton(
@@ -743,8 +672,8 @@ class _SingleJobState extends State<SingleJob> {
                               },
                               colortext: black,
                               color: font_green,
-                              height: 70,
-                              width: 110,
+                              height: h / 15,
+                              width: 32.w,
                               text: 'YES',
                             ),
                           ],
@@ -773,7 +702,7 @@ class _SingleJobState extends State<SingleJob> {
                   child: Container(
                     width: MediaQuery.of(context).size.width - 50,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -918,30 +847,17 @@ class _SingleJobState extends State<SingleJob> {
                             ],
                           ),
                           Divider(),
-                          InkWell(
-                            onTap: () {
-                              reportThisJob();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 50,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                      color: font_green,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Text(
-                                    'Report this job',
-                                    style: TextStyle(
-                                      color: black,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                          Container(
+                            alignment: Alignment.bottomRight,
+                            child: FeedbackButton(
+                              text: 'Report this job',
+                              width: 170,
+                              height: 50,
+                              color: font_green,
+                              colortext: black,
+                              onTap: () {
+                                reportThisJob();
+                              },
                             ),
                           ),
                         ],
@@ -959,100 +875,94 @@ class _SingleJobState extends State<SingleJob> {
     return await showDialog(
         context: context,
         builder: (context) {
+          var w = MediaQuery.of(context).size.width;
           return StatefulBuilder(builder: (context, setState) {
             return SingleChildScrollView(
               child: AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.0))),
-                contentPadding: EdgeInsets.only(top: 10.0),
                 backgroundColor: white,
+                contentPadding: EdgeInsets.all(0),
                 content: Container(
-                  height: 600,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                Icons.close,
-                                color: black,
-                              )),
-                        ),
-                        CustomText(
-                            text: 'Your Feedback',
-                            fontSize: 20.sp,
-                            fontFamily: 'Viga',
-                            color: red,
-                            fontWeight: FontWeight.w400),
-                        Divider(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          'We are happy to hear your feedback about our services.',
-                          style: TextStyle(
-                            fontSize: 17.sp,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: TextField(
-                            controller: controller2,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 50.0),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Colors.black38), //<-- SEE HERE
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Colors.black38), //<-- SEE HERE
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: black,
+                            )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(
+                                text: 'Your Feedback',
+                                fontSize: 20.sp,
+                                fontFamily: 'Viga',
+                                color: red,
+                                fontWeight: FontWeight.w400),
+                            Divider(),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Text(
+                              'We are happy to hear your feedback about our services.',
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                color: Colors.black54,
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Divider(),
-                        InkWell(
-                          onTap: () {
-                            sendFeedbackForJob();
-                          },
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 50,
-                              width: 170,
-                              decoration: BoxDecoration(
-                                  color: font_green,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                'Send My Feedback',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Viga',
+                            SizedBox(
+                              height: 30,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: TextField(
+                                controller: controller2,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 50.0),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.black38), //<-- SEE HERE
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1,
+                                        color: Colors.black38), //<-- SEE HERE
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Divider(),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: FeedbackButton(
+                                text: 'Send My Feedback',
+                                width: 170,
+                                height: 50,
+                                color: font_green,
+                                colortext: black,
+                                onTap: () {
+                                  sendFeedbackForJob();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
