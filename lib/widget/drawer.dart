@@ -19,6 +19,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import '../Screen/home/whatApp_community/whatsApp_community.dart';
 import 'drawer_row.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -40,11 +41,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
-        headers: headers,
-        body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
+        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
     var res = jsonDecode(response.body.toString());
     List img = res['data'];
 
@@ -62,27 +60,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ArrowButton(onTap: () {
-                  Navigator.pop(context);
-                } ,
-                  icons: Icons.arrow_back_ios),
+                ArrowButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    icons: Icons.arrow_back_ios),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset('assets/menu_icon.png')),
+                      ClipRRect(borderRadius: BorderRadius.circular(10), child: Image.asset('assets/menu_icon.png')),
                       SizedBox(
                         height: 20,
                       ),
                       CustomText(
-                          text: 'SETTINGS',
-                          fontSize: 12,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          color: white,
-                          fontWeight: FontWeight.normal),
+                          text: 'SETTINGS', fontSize: 12, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                       SizedBox(
                         height: 15,
                       ),
@@ -90,11 +83,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.book,
                           text: 'My CV',
                           on: () {
-                            MotionToast.info(
-                                    title: Text("Info"),
-                                    description: Text(
-                                        "This option will be enabled soon!"))
-                                .show(context);
+                            MotionToast.info(title: Text("Info"), description: Text("This option will be enabled soon!")).show(context);
                           }),
                       SizedBox(
                         height: 10,
@@ -103,10 +92,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.support_agent_rounded,
                           text: 'Get Support',
                           on: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => GetSupport()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => GetSupport()));
                           }),
                       SizedBox(
                         height: 10,
@@ -115,11 +101,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         height: 15,
                       ),
                       CustomText(
-                          text: 'SUPPORT US',
-                          fontSize: 12,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          color: white,
-                          fontWeight: FontWeight.normal),
+                          text: 'SUPPORT US', fontSize: 12, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                       SizedBox(
                         height: 15,
                       ),
@@ -133,10 +115,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       SizedBox(
                         height: 10,
                       ),
-                      DrawerRow(
-                          icon: Icons.more,
-                          text: 'More by our team',
-                          on: () {}),
+                      DrawerRow(icon: Icons.more, text: 'More by our team', on: () {}),
                       SizedBox(
                         height: 10,
                       ),
@@ -144,30 +123,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.reviews,
                           text: 'Leave us a Review',
                           on: () {
-                            final InAppReview inAppReview =
-                                InAppReview.instance;
+                            final InAppReview inAppReview = InAppReview.instance;
 
-                            inAppReview.openStoreListing(
-                                appStoreId: '1111111', microsoftStoreId: '...');
+                            inAppReview.openStoreListing(appStoreId: '1111111', microsoftStoreId: '...');
                           }),
                       SizedBox(
                         height: 15,
                       ),
-                      CustomText(
-                          text: 'OTHER',
-                          fontSize: 12,
-                          fontFamily: 'Comfortaa-VariableFont_wght',
-                          color: white,
-                          fontWeight: FontWeight.normal),
+                      CustomText(text: 'OTHER', fontSize: 12, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                       SizedBox(
                         height: 15,
+                      ),
+                      DrawerRow(
+                          icon: Icons.messenger,
+                          text: 'Join Community',
+                          on: () async {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => WhatsAppCommunity()));
+                          }),
+                      SizedBox(
+                        height: 10,
                       ),
                       DrawerRow(
                           icon: Icons.privacy_tip,
                           text: 'Privacy Policy',
                           on: () async {
-                            var url = Uri.parse(
-                                "https://pitaratajobs.novasoft.lk/privacy_policy.php");
+                            var url = Uri.parse("https://pitaratajobs.novasoft.lk/privacy_policy.php");
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             } else {
@@ -181,10 +161,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.contact_phone_rounded,
                           text: 'Contact us',
                           on: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ContactUs()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactUs()));
                           }),
                       SizedBox(
                         height: 10,
@@ -193,10 +170,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.accessibility_new_sharp,
                           text: 'About Us',
                           on: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AboutUs()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUs()));
                           }),
                     ],
                   ),
@@ -211,20 +185,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       animationDuration: Duration(milliseconds: 2000),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0)),
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
                       ),
                     ),
                     onPressed: () {
                       log('hhhh');
                       if (widget.loging == true) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Logout()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Logout()));
                       } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NameScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NameScreen()));
                       }
                     },
                     child: AnimatedContainer(
@@ -233,9 +202,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       height: 30,
                       width: 150,
                       decoration: BoxDecoration(
-                          border: Border.all(
-                              color: tap ? black : Colors.transparent,
-                              width: 0),
+                          border: Border.all(color: tap ? black : Colors.transparent, width: 0),
                           color: widget.loging ? red : Colors.blue,
                           borderRadius: BorderRadius.circular(10)),
                       child: CustomText(
