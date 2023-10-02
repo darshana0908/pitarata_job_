@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/home/job_contract/job_contact.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -29,27 +30,27 @@ import '../../name_screen/name_screen.dart';
 class SingleJob extends StatefulWidget {
   SingleJob(
       {super.key,
-      required this.img,
-      required this.description,
+      // required this.img,
+      // required this.description,
       required this.addId,
-      required this.categoryName,
-      required this.salary,
-      required this.email,
-      required this.mobile,
-      required this.whatapp,
-      required this.categoryId,
+      // required this.categoryName,
+      // required this.salary,
+      // required this.email,
+      // required this.mobile,
+      // required this.whatapp,
+      // required this.categoryId,
       required this.x,
       required this.update});
 
-  final String img;
-  final String description;
+  // final String img;
+  // final String description;
   final String addId;
-  final String categoryName;
-  final String salary;
-  final String email;
-  final String mobile;
-  final String whatapp;
-  final String categoryId;
+  // final String categoryName;
+  // final String salary;
+  // final String email;
+  // final String mobile;
+  // final String whatapp;
+  // final String categoryId;
   final Function update;
 
   bool x;
@@ -62,7 +63,7 @@ class _SingleJobState extends State<SingleJob> {
   TextEditingController controller = TextEditingController();
   TextEditingController controller2 = TextEditingController();
   bool verified = false;
-  SqlDb sqlDb = SqlDb();
+  // SqlDb sqlDb = SqlDb();
   String id = '';
   List favoritesList = [];
   List getSimilarJobsList = [];
@@ -74,18 +75,31 @@ class _SingleJobState extends State<SingleJob> {
   String dropText = 'select a reasons';
   bool tap = false;
   BannerAd? _bannerAd;
+  bool isLoading = false;
 
   bool _isLoaded = false;
-  favoritesData() async {
-    List resp = await sqlDb.readData("select * from favorite");
 
-    setState(() {
-      favoritesList = resp;
-    });
-  }
+  String img = '';
+  String description = '';
+  String addId = '';
+  String categoryName = '';
+  String salary = '';
+  String email = '';
+  String mobile = '';
+  String whatapp = '';
+  String categoryId = '';
+  // favoritesData() async {
+  //   List resp = await sqlDb.readData("select * from favorite");
+
+  //   setState(() {
+  //     favoritesList = resp;
+  //   });
+  // }
 
   @override
   void initState() {
+    print(widget.addId);
+    getSingleJobDetails();
     FocusManager.instance.primaryFocus?.unfocus();
     // TODO: implement initState
 
@@ -103,23 +117,17 @@ class _SingleJobState extends State<SingleJob> {
 
   /// Loads a banner ad.
 
-  ifselected() {
-    favoritesList.any((element) => element["addId"].toString() == widget.addId);
-  }
+  // ifselected() {
+  //   favoritesList.any((element) => element["addId"].toString() == addId);
+  // }
 
   getSimilarJobs() async {
     setState(() {
       loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSimilarJobs'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "job_category_id": widget.categoryId
-        }));
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSimilarJobs'),
+        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "job_category_id": categoryId}));
 
     var res = jsonDecode(response.body.toString());
 
@@ -134,15 +142,13 @@ class _SingleJobState extends State<SingleJob> {
       // loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
         headers: headers,
         body: json.encode({
           "verification": verification,
           "app_id": "nzone_4457Was555@qsd_job",
           "customer_id": customer_id,
-          "job_id": widget.addId,
+          "job_id": addId,
           "reason": dropText,
           "message": controller.text
         }));
@@ -158,11 +164,9 @@ class _SingleJobState extends State<SingleJob> {
 
       Navigator.pop(context);
 
-      MotionToast.info(title: Text("Info"), description: Text(msg))
-          .show(context);
+      MotionToast.info(title: Text("Info"), description: Text(msg)).show(context);
     } else {
-      MotionToast.error(title: Text("error"), description: Text(msg))
-          .show(context);
+      MotionToast.error(title: Text("error"), description: Text(msg)).show(context);
     }
 
     setState(() {});
@@ -173,15 +177,13 @@ class _SingleJobState extends State<SingleJob> {
       // loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/sendFeedbackForJob'),
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/sendFeedbackForJob'),
         headers: headers,
         body: json.encode({
           "verification": verification,
           "app_id": "nzone_4457Was555@qsd_job",
           "customer_id": customer_id,
-          "job_id": widget.addId,
+          "job_id": addId,
           "feedback": controller2.text,
         }));
 
@@ -196,11 +198,9 @@ class _SingleJobState extends State<SingleJob> {
 
       Navigator.pop(context);
 
-      MotionToast.info(title: Text("Info"), description: Text(msg))
-          .show(context);
+      MotionToast.info(title: Text("Info"), description: Text(msg)).show(context);
     } else {
-      MotionToast.error(title: Text("error"), description: Text(msg))
-          .show(context);
+      MotionToast.error(title: Text("error"), description: Text(msg)).show(context);
     }
 
     setState(() {});
@@ -211,6 +211,7 @@ class _SingleJobState extends State<SingleJob> {
 
     var z = sharedPreferences.getString('verification');
     var y = sharedPreferences.getString('customer_id');
+    getSingleJobDetails();
     setState(() {
       verification = z.toString();
       customer_id = y.toString();
@@ -237,9 +238,7 @@ class _SingleJobState extends State<SingleJob> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
@@ -247,6 +246,37 @@ class _SingleJobState extends State<SingleJob> {
           "job_id": Cid,
         }));
     var res = jsonDecode(response.body.toString());
+  }
+
+  getSingleJobDetails() async {
+    setState(() {
+      isLoading = true;
+    });
+    var headers = {'Content-Type': 'application/json'};
+
+    // request.headers.addAll(headers);
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSingleJobDetails'),
+        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "job_id": "${widget.addId}"}));
+    var data = jsonDecode(response.body.toString());
+    var res = data['data'];
+    print('111111111111111111111111111111111111111111111111111111111111111111111111');
+    print(data);
+
+    setState(() {
+      img = "https://pitaratajobs.novasoft.lk/reso/post_2023_06_20/NovaTechZone_5098205120230620044959am.jpeg";
+      print(img);
+      description = res[0]['description'].toString();
+      addId = res[0]['ads_id'].toString();
+      categoryName = res[0]['biz_category_name'].toString();
+      salary = res[0]['job_salary'].toString();
+      email = res[0]['job_email'].toString();
+      mobile = res[0]['job_mobile'].toString();
+      whatapp = res[0]['job_whatsapp'].toString();
+      categoryId = res[0]['job_category_id'].toString();
+      // Function update;
+      print(img);
+      isLoading = false;
+    });
   }
 
   @override
@@ -268,287 +298,275 @@ class _SingleJobState extends State<SingleJob> {
               fontFamily: 'Comfortaa-VariableFont_wght',
               fontSize: 17,
               fontWeight: FontWeight.w900,
-              text: widget.categoryName,
+              text: categoryName,
             )),
       ),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          SizedBox(
-            width: double.infinity,
-            // height: MediaQuery.of(context).size.height / 3,
-            child: CachedNetworkImage(
-              imageUrl: widget.img,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(
-                      value: downloadProgress.progress),
-                ),
-              ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      color: Colors.white60,
-                      fontFamily: 'Comfortaa-VariableFont_wght',
-                      fontSize: 13,
-                      fontWeight: FontWeight.normal,
-                      text: 'Job id #${widget.addId}',
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          seFavorites
-                              ? CircularProgressIndicator(
-                                  color: red,
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    if (verified == true) {
-                                      if (widget.x == true) {
-                                        alert(
-                                            'You have already added this job to your favorite list!',
-                                            true,
-                                            true);
-                                      } else {
-                                        setFavorite();
-                                      }
-                                    } else {
-                                      showCustomDialog(context,
-                                          'Please login to your account to access your favorite jobs!');
-                                    }
-                                  },
-                                  icon: Icon(
-                                    widget.x
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: widget.x ? red : white,
-                                  )),
-                          IconButton(
-                              onPressed: () {
-                                alert(
-                                    'Are you sure you need to Share this record ?',
-                                    false,
-                                    false);
-                              },
-                              icon: Icon(
-                                Icons.share,
-                                color: font_green,
-                              ))
-                        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Column(children: [
+                SizedBox(
+                  width: double.infinity,
+                  // height: MediaQuery.of(context).size.height / 3,
+                  child: CachedNetworkImage(
+                    imageUrl: img,
+                    progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(value: downloadProgress.progress),
                       ),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: CustomTextTwo(
-                    color: font_gold,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    fontSize: 17,
-                    fontWeight: FontWeight.normal,
-                    text: widget.description,
-                  ),
-                ),
-                //bhbhbhbhbhggggg
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: CustomContainer(
-                      icon: 'assets/briefcase.svg',
-                      text1: widget.categoryName,
-                      text2: 'Job Category',
-                      colorText: font_green),
-                ),
-                CustomContainer(
-                    icon: 'assets/doller.svg',
-                    text1: widget.salary,
-                    text2: 'salary',
-                    colorText: Colors.blue),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Divider(
-                    color: white,
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: CustomTextTwo(
-                    color: white,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    text: 'Love this job ?',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: RadiusButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => JobContact(
-                                      job_id: widget.addId,
-                                      email: widget.email,
-                                      mobile: widget.mobile,
-                                      whatapp: widget.whatapp,
-                                    )),
-                          );
-                        },
-                        text: 'Show Contact Details',
-                        width: 250,
-                        height: 70,
-                        color: font_green,
-                        colortext: white),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                AppAds.bannerAds(context),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: CustomTextTwo(
-                    color: white,
-                    fontFamily: 'Comfortaa-VariableFont_wght',
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    text: 'Other similar jobs you may love',
-                  ),
-                ),
-                SizedBox(
-                    child: loading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                            color: Colors.grey,
-                          ))
-                        : CustomGrid(
-                            update: widget.update,
-                            x: widget.x,
-                            gridList: getSimilarJobsList,
-                            row: false,
-                          )),
-                SizedBox(
-                  height: 20,
-                ),
-                AppAds.bannerAds(context),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(15),
-                  onTapCancel: () {
-                    setState(() {
-                      tap = false;
-                    });
-                  },
-                  onTapDown: (_) {
-                    setState(() {
-                      tap = true;
-                    });
-                  },
-                  onTapUp: (_) {
-                    setState(() {
-                      tap = false;
-                    });
-                  },
-                  onTap: () {
-                    // reportThisJob();
-
-                    if (verified) {
-                      reportDialog();
-                    } else {
-                      showCustomDialog(context,
-                          'Please login to your account to access your report this post!');
-                    }
-                  },
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 50),
-                    opacity: tap ? 0.3 : 1,
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: red, borderRadius: BorderRadius.circular(15)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.warning_amber_rounded,
-                                color: white,
-                                size: 50,
-                              ),
-                            ),
+                          CustomText(
+                            color: Colors.white60,
+                            fontFamily: 'Comfortaa-VariableFont_wght',
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            text: 'Job id #${addId}',
                           ),
                           Container(
+                            child: Row(
+                              children: [
+                                seFavorites
+                                    ? CircularProgressIndicator(
+                                        color: red,
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          if (verified == true) {
+                                            if (widget.x == true) {
+                                              alert('You have already added this job to your favorite list!', true, true);
+                                            } else {
+                                              setFavorite();
+                                            }
+                                          } else {
+                                            showCustomDialog(context, 'Please login to your account to access your favorite jobs!');
+                                          }
+                                        },
+                                        icon: Icon(
+                                          widget.x ? Icons.favorite : Icons.favorite_border,
+                                          color: widget.x ? red : white,
+                                        )),
+                                IconButton(
+                                    onPressed: () {
+                                      alert('Are you sure you need to Share this record ?', false, false);
+                                    },
+                                    icon: Icon(
+                                      Icons.share,
+                                      color: font_green,
+                                    ))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: CustomTextTwo(
+                          color: font_gold,
+                          fontFamily: 'Comfortaa-VariableFont_wght',
+                          fontSize: 17,
+                          fontWeight: FontWeight.normal,
+                          text: description,
+                        ),
+                      ),
+                      //bhbhbhbhbhggggg
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: CustomContainer(icon: 'assets/briefcase.svg', text1: categoryName, text2: 'Job Category', colorText: font_green),
+                      ),
+                      CustomContainer(icon: 'assets/doller.svg', text1: salary, text2: 'salary', colorText: Colors.blue),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
+                        child: Divider(
+                          color: white,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: CustomTextTwo(
+                          color: white,
+                          fontFamily: 'Comfortaa-VariableFont_wght',
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          text: 'Love this job ?',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: RadiusButton(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => JobContact(
+                                            job_id: addId,
+                                            email: email,
+                                            mobile: mobile,
+                                            whatapp: whatapp,
+                                          )),
+                                );
+                              },
+                              text: 'Show Contact Details',
+                              width: 250,
+                              height: 70,
+                              color: font_green,
+                              colortext: white),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      AppAds.bannerAds(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: CustomTextTwo(
+                          color: white,
+                          fontFamily: 'Comfortaa-VariableFont_wght',
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          text: 'Other similar jobs you may love',
+                        ),
+                      ),
+                      SizedBox(
+                          child: loading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                ))
+                              : CustomGrid(
+                                  update: widget.update,
+                                  x: widget.x,
+                                  gridList: getSimilarJobsList,
+                                  row: false,
+                                )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      AppAds.bannerAds(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTapCancel: () {
+                          setState(() {
+                            tap = false;
+                          });
+                        },
+                        onTapDown: (_) {
+                          setState(() {
+                            tap = true;
+                          });
+                        },
+                        onTapUp: (_) {
+                          setState(() {
+                            tap = false;
+                          });
+                        },
+                        onTap: () {
+                          // reportThisJob();
+
+                          if (verified) {
+                            reportDialog();
+                          } else {
+                            showCustomDialog(context, 'Please login to your account to access your report this post!');
+                          }
+                        },
+                        child: AnimatedOpacity(
+                          duration: Duration(milliseconds: 50),
+                          opacity: tap ? 0.3 : 1,
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 60,
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: red, borderRadius: BorderRadius.circular(15)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Icon(
+                                      Icons.warning_amber_rounded,
+                                      color: white,
+                                      size: 50,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: CustomText(
+                                    color: white,
+                                    fontFamily: 'Comfortaa-VariableFont_wght',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    text: 'Report this post',
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Container(
+                                    width: 40,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextButton(
+                          onPressed: () {
+                            if (verified) {
+                              feedback();
+                            } else {
+                              showCustomDialog(context, ' Please login to your account to access your send feedback!');
+                            }
+                          },
+                          child: Container(
                             alignment: Alignment.center,
                             child: CustomText(
                               color: white,
                               fontFamily: 'Comfortaa-VariableFont_wght',
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              text: 'Report this post',
+                              text: 'Send feedback about our Help Center',
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Container(
-                              width: 40,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextButton(
-                    onPressed: () {
-                      if (verified) {
-                        feedback();
-                      } else {
-                        showCustomDialog(context,
-                            ' Please login to your account to access your send feedback!');
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: CustomText(
-                        color: white,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        text: 'Send feedback about our Help Center',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ]),
+                )
+              ]),
+              isLoading
+                  ? Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6))
+                  : Container()
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -561,16 +579,9 @@ class _SingleJobState extends State<SingleJob> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/setFavourite'),
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/setFavourite'),
         headers: headers,
-        body: json.encode({
-          "verification": verification,
-          "app_id": "nzone_4457Was555@qsd_job",
-          "customer_id": customer_id,
-          "job_id": widget.addId
-        }));
+        body: json.encode({"verification": verification, "app_id": "nzone_4457Was555@qsd_job", "customer_id": customer_id, "job_id": addId}));
     var res = jsonDecode(response.body.toString());
 
     setState(() {
@@ -585,15 +596,8 @@ class _SingleJobState extends State<SingleJob> {
 
     var headers = {'Content-Type': 'application/json'};
 
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "verification": verification,
-          "customer_id": customer_id
-        }));
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "verification": verification, "customer_id": customer_id}));
     var res = jsonDecode(response.body.toString());
 
     if (res['data'].toString().isNotEmpty) {
@@ -611,15 +615,13 @@ class _SingleJobState extends State<SingleJob> {
         builder: (context) {
           var h = MediaQuery.of(context).size.height;
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
             contentPadding: EdgeInsets.only(top: 10.0),
             backgroundColor: black,
             content: Container(
               height: 300,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: black, borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color: black, borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
                   Container(
@@ -635,12 +637,8 @@ class _SingleJobState extends State<SingleJob> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: CustomText(
-                        text: text,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
+                    child:
+                        CustomText(text: text, fontSize: 20, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                   ),
                   SizedBox(
                     height: 35,
@@ -665,7 +663,7 @@ class _SingleJobState extends State<SingleJob> {
                                 if (item) {
                                 } else {
                                   Share.share(
-                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\n \nhttps://pitaratajobs.novasoft.lk/single.php?id=${widget.addId}\n\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
+                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\n \nhttps://pitaratajobs.novasoft.lk/single.php?id=${addId}\n\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
                                 }
 
                                 Navigator.pop(context);
@@ -692,8 +690,7 @@ class _SingleJobState extends State<SingleJob> {
           return StatefulBuilder(builder: (context, setState) {
             return SingleChildScrollView(
               child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
                 insetPadding: EdgeInsets.zero,
                 contentPadding: EdgeInsets.zero,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -717,12 +714,7 @@ class _SingleJobState extends State<SingleJob> {
                                   color: black,
                                 )),
                           ),
-                          CustomText(
-                              text: 'Report this job post',
-                              fontSize: 21.sp,
-                              fontFamily: 'Viga',
-                              color: red,
-                              fontWeight: FontWeight.w400),
+                          CustomText(text: 'Report this job post', fontSize: 21.sp, fontFamily: 'Viga', color: red, fontWeight: FontWeight.w400),
                           Divider(),
                           SizedBox(
                             height: 30,
@@ -763,16 +755,11 @@ class _SingleJobState extends State<SingleJob> {
                                   child: Container(
                                     alignment: Alignment.center,
                                     height: 60,
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.8,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: Colors.black38),
-                                        borderRadius: BorderRadius.circular(2)),
+                                    width: MediaQuery.of(context).size.width / 1.8,
+                                    decoration: BoxDecoration(border: Border.all(color: Colors.black38), borderRadius: BorderRadius.circular(2)),
                                     child: DropdownButton<String>(
                                       hint: Text(dropText),
-                                      style: TextStyle(
-                                          fontSize: 9.sp, color: black),
+                                      style: TextStyle(fontSize: 9.sp, color: black),
                                       borderRadius: BorderRadius.circular(4),
                                       items: <String>[
                                         'item sold/unavailable',
@@ -821,24 +808,16 @@ class _SingleJobState extends State<SingleJob> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.8,
+                                  width: MediaQuery.of(context).size.width / 1.8,
                                   child: TextField(
                                     controller: controller,
                                     decoration: InputDecoration(
                                       border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color:
-                                                Colors.black38), //<-- SEE HERE
+                                        borderSide: BorderSide(width: 1, color: Colors.black38), //<-- SEE HERE
                                       ),
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 40.0),
+                                      contentPadding: EdgeInsets.symmetric(vertical: 40.0),
                                       enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            width: 1,
-                                            color:
-                                                Colors.black38), //<-- SEE HERE
+                                        borderSide: BorderSide(width: 1, color: Colors.black38), //<-- SEE HERE
                                       ),
                                     ),
                                   ),
@@ -879,8 +858,7 @@ class _SingleJobState extends State<SingleJob> {
           return StatefulBuilder(builder: (context, setState) {
             return SingleChildScrollView(
               child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
                 backgroundColor: white,
                 contentPadding: EdgeInsets.all(0),
                 content: Container(
@@ -902,12 +880,7 @@ class _SingleJobState extends State<SingleJob> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                                text: 'Your Feedback',
-                                fontSize: 20.sp,
-                                fontFamily: 'Viga',
-                                color: red,
-                                fontWeight: FontWeight.w400),
+                            CustomText(text: 'Your Feedback', fontSize: 20.sp, fontFamily: 'Viga', color: red, fontWeight: FontWeight.w400),
                             Divider(),
                             SizedBox(
                               height: 30,
@@ -927,17 +900,12 @@ class _SingleJobState extends State<SingleJob> {
                               child: TextField(
                                 controller: controller2,
                                 decoration: InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 50.0),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 50.0),
                                   border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color: Colors.black38), //<-- SEE HERE
+                                    borderSide: BorderSide(width: 1, color: Colors.black38), //<-- SEE HERE
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1,
-                                        color: Colors.black38), //<-- SEE HERE
+                                    borderSide: BorderSide(width: 1, color: Colors.black38), //<-- SEE HERE
                                   ),
                                 ),
                               ),

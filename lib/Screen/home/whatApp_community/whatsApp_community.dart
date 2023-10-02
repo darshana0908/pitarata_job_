@@ -17,6 +17,8 @@ class WhatsAppCommunity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: black,
       appBar: AppBar(
@@ -46,7 +48,7 @@ class WhatsAppCommunity extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height / 200, horizontal: MediaQuery.of(context).size.width / 10),
-              child: Lottie.asset('assets/about_us_image.json'),
+              child: Lottie.asset('assets/home_animation.json'),
             ),
             Container(
               alignment: Alignment.center,
@@ -58,28 +60,48 @@ class WhatsAppCommunity extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             SizedBox(
-              height: 10,
+              height: h / 30,
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                alignment: Alignment.center,
-                child: RadiusButton(
-                    onTap: () async {
-                      // String url = 'whatsapp://send?text=${Uri.encodeFull(groupLink)}';
-                      final Uri _url = Uri.parse("https://chat.whatsapp.com/Kg3JsFB4EKoHo1MS32rT68");
-                      print(_url);
-                
-                      if (!await launchUrl(mode: LaunchMode.externalNonBrowserApplication, _url)) {
-                        throw Exception('Could not launch $_url');
-                      }
-                    },
-                    text: 'JOIN NOW',
-                    width: 250,
-                    height: 70,
-                    color: font_green,
-                    colortext: white),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: RadiusButton(
+                      onTap: () async {
+                        // String url = 'whatsapp://send?text=${Uri.encodeFull(groupLink)}';
+                        final Uri _url = Uri.parse("https://chat.whatsapp.com/Kg3JsFB4EKoHo1MS32rT68");
+                        print(_url);
+
+                        if (!await launchUrl(mode: LaunchMode.externalNonBrowserApplication, _url)) {
+                          throw Exception('Could not launch $_url');
+                        }
+                      },
+                      text: 'JOIN NOW',
+                      width: w / 2.5,
+                      height: 70,
+                      color: font_green,
+                      colortext: white),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: RadiusButton(
+                      onTap: () async {
+                        // String url = 'whatsapp://send?text=${Uri.encodeFull(groupLink)}';
+                        final Uri _url = Uri.parse("https://chat.whatsapp.com/Kg3JsFB4EKoHo1MS32rT68");
+                        print(_url);
+
+                        if (!await launchUrl(mode: LaunchMode.externalNonBrowserApplication, _url)) {
+                          throw Exception('Could not launch $_url');
+                        }
+                      },
+                      text: 'JOIN NOW',
+                      width: w / 2.5,
+                      height: 70,
+                      color: font_green,
+                      colortext: white),
+                ),
+              ],
             ),
           ]),
         ),

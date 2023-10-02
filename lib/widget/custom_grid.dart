@@ -8,12 +8,7 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import '../Screen/home/single_job/single_job.dart';
 
 class CustomGrid extends StatefulWidget {
-  const CustomGrid(
-      {super.key,
-      required this.row,
-      required this.gridList,
-      required this.x,
-      required this.update});
+  const CustomGrid({super.key, required this.row, required this.gridList, required this.x, required this.update});
 
   final bool row;
   final List gridList;
@@ -64,31 +59,30 @@ class _CustomGridState extends State<CustomGrid> {
                             MaterialPageRoute(
                                 builder: (context) => SingleJob(
                                       update: widget.update,
-                                      categoryId: widget.gridList[index]
-                                              ['biz_category_id']
-                                          .toString(),
+                                      addId: widget.gridList[index]['ads_id'].toString(),
+
                                       x: true,
-                                      whatapp: widget.gridList[index]
-                                              ['job_whatsapp']
-                                          .toString(),
-                                      mobile: widget.gridList[index]
-                                              ['job_mobile']
-                                          .toString(),
-                                      email: widget.gridList[index]['job_email']
-                                          .toString(),
-                                      salary: widget.gridList[index]
-                                              ['job_salary']
-                                          .toString(),
-                                      categoryName: widget.gridList[index]
-                                              ['biz_category_name']
-                                          .toString(),
-                                      addId: widget.gridList[index]['ads_id']
-                                          .toString(),
-                                      description: widget.gridList[index]
-                                              ['description']
-                                          .toString(),
-                                      img:
-                                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
+                                      // whatapp: widget.gridList[index]
+                                      //         ['job_whatsapp']
+                                      //     .toString(),
+                                      // mobile: widget.gridList[index]
+                                      //         ['job_mobile']
+                                      //     .toString(),
+                                      // email: widget.gridList[index]['job_email']
+                                      //     .toString(),
+                                      // salary: widget.gridList[index]
+                                      //         ['job_salary']
+                                      //     .toString(),
+                                      // categoryName: widget.gridList[index]
+                                      //         ['biz_category_name']
+                                      //     .toString(),
+                                      // addId: widget.gridList[index]['ads_id']
+                                      //     .toString(),
+                                      // description: widget.gridList[index]
+                                      //         ['description']
+                                      //     .toString(),
+                                      // img:https://ratapitajobs.lk/NovaTechZone_145626098020230930044331pm.jpg
+                                      //     'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
                                     )));
                       },
                       child: ClipRRect(
@@ -108,10 +102,7 @@ class _CustomGridState extends State<CustomGrid> {
                   right: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: light_dark,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15))),
+                        color: light_dark, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                     height: 40,
                     width: 150,
                     child: Row(
@@ -120,8 +111,7 @@ class _CustomGridState extends State<CustomGrid> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomText(
-                              text: widget.gridList[index]['biz_category_name']
-                                  .toString(),
+                              text: widget.gridList[index]['biz_category_name'].toString(),
                               fontSize: 12,
                               fontFamily: 'Comfortaa-VariableFont_wght',
                               color: white,
@@ -145,8 +135,7 @@ class _CustomGridState extends State<CustomGrid> {
                                       splashColor: font_gold,
                                       hoverColor: font_green,
                                       onTap: () {
-                                        alert(
-                                            'Are you sure you you need to remove this job from  your favorite list ?');
+                                        alert('Are you sure you you need to remove this job from  your favorite list ?');
                                       },
                                       child: Container(
                                         alignment: Alignment.center,
@@ -178,15 +167,13 @@ class _CustomGridState extends State<CustomGrid> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
             contentPadding: EdgeInsets.only(top: 10.0),
             backgroundColor: black,
             content: Container(
               height: 300,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: black, borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color: black, borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
                   Container(
@@ -202,12 +189,8 @@ class _CustomGridState extends State<CustomGrid> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: CustomText(
-                        text: text,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
+                    child:
+                        CustomText(text: text, fontSize: 20, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                   ),
                   SizedBox(
                     height: 35,
@@ -215,18 +198,18 @@ class _CustomGridState extends State<CustomGrid> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RadiusButton(onTap:  () {
-                        Navigator.pop(context);
-                      },
+                      RadiusButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                         colortext: black,
                         color: white,
                         height: 70,
                         width: 110,
                         text: 'NO',
                       ),
-                      RadiusButton(onTap: () {
-                        
-                      },
+                      RadiusButton(
+                        onTap: () {},
                         colortext: black,
                         color: red,
                         height: 70,

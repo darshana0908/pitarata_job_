@@ -3,7 +3,6 @@
        <uses-permission android:name="android.permission.INTERNET"/>
        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-         <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
          
    <application
         android:label="Pitarata Jobs"
@@ -29,6 +28,15 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+             <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+ <intent-filter android:autoVerify="true">
+     <action android:name="android.intent.action.VIEW" />
+     <category android:name="android.intent.category.DEFAULT" />
+     <category android:name="android.intent.category.BROWSABLE" />
+     <data android:scheme="http" android:host="ratapitajobs.lk" />
+     <data android:scheme="https" />
+ </intent-filter>
+
         </activity>
         <meta-data
   android:name="com.google.firebase.messaging.default_notification_channel_id"
@@ -62,10 +70,6 @@
         <intent>
             <action android:name="android.intent.action.SEND" />
             <data android:mimeType="*/*" />
-        </intent>
-          <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="https" />
         </intent>
     </queries>
        <queries>

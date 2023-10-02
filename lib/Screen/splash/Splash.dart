@@ -81,27 +81,17 @@ class _SplashPageState extends State<SplashPage> {
               SizedBox(
                 height: 10,
               ),
-              Text('PITA RATA JOBS',
-                  style: TextStyle(
-                      color: Colors.green,
-                      fontFamily: 'Viga',
-                      fontSize: 25.sp)),
+              Text('PITA RATA JOBS', style: TextStyle(color: Colors.green, fontFamily: 'Viga', fontSize: 25.sp)),
               SizedBox(
                 height: 5,
               ),
               Text(' the best place to find your dream job',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Comfortaa-VariableFont_wght',
-                      fontSize: 11.sp)),
+                  style: TextStyle(color: Colors.white, fontFamily: 'Comfortaa-VariableFont_wght', fontSize: 11.sp)),
             ]),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Text(' Powered By NovatechZone',
-                  style: TextStyle(
-                      color: Colors.white54,
-                      fontFamily: 'Comfortaa-VariableFont_wght',
-                      fontSize: 15)),
+              child:
+                  Text(' Powered By NovatechZone', style: TextStyle(color: Colors.white54, fontFamily: 'Comfortaa-VariableFont_wght', fontSize: 15)),
             ),
           ],
         ),

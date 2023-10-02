@@ -7,7 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/Screen/favorite/favorite.dart';
-import 'package:pitarata_job/Screen/home/about_us/about_us.dart';
+import 'package:pitarata_job/Screen/home/about_us/single.php.dart';
 import 'package:pitarata_job/Screen/home/contact_us/contact_us.dart';
 import 'package:pitarata_job/Screen/home/get_support/get_support.dart';
 import 'package:pitarata_job/Screen/home/logout/logout.dart';
@@ -170,7 +170,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.accessibility_new_sharp,
                           text: 'About Us',
                           on: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUs()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUs(id: '1',)));
                           }),
                     ],
                   ),

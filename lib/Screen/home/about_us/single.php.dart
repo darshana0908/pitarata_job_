@@ -2,15 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pitarata_job/widget/custom_text_two.dart';
+
 
 import '../../../color/colors.dart';
 import '../../../widget/arrow_button.dart';
 import '../../../widget/custom_text.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class AboutUs extends StatelessWidget {
-  const AboutUs({super.key});
+class AboutUs extends StatefulWidget {
+  const AboutUs({super.key, required this.id});
+  final String id;
+
+  @override
+  State<AboutUs> createState() => _AboutUsState();
+}
+
+class _AboutUsState extends State<AboutUs> {
+  @override
+  void initState() {
+    print("gggggggg${widget.id}");
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +49,14 @@ class AboutUs extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Container(
               alignment: Alignment.center,
-              child: CustomText(
-                  text: "Find your next job\n with us",
-                  fontSize: 40,
-                  fontFamily: "Viga",
-                  color: font_green,
-                  fontWeight: FontWeight.bold),
+              child:
+                  CustomText(text: "Find your next job\n with us", fontSize: 40, fontFamily: "Viga", color: font_green, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 200,
-                  horizontal: MediaQuery.of(context).size.width / 10),
+              padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height / 200, horizontal: MediaQuery.of(context).size.width / 10),
               child: Lottie.asset('assets/about_us_image.json'),
             ),
             Container(
@@ -68,11 +74,7 @@ class AboutUs extends StatelessWidget {
             ),
             GradientText(
               'The best place to find your dream job',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: "Viga",
-                  color: font_green,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontFamily: "Viga", color: font_green, fontWeight: FontWeight.bold),
               colors: [font_green, white],
             ),
             SizedBox(
@@ -81,8 +83,7 @@ class AboutUs extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               child: CustomText(
-                  text:
-                      "Copyright @ 2023 joby (Pvt) Ltd.\n All rights reserved.",
+                  text: "Copyright @ 2023 joby (Pvt) Ltd.\n All rights reserved.",
                   fontSize: 14,
                   fontFamily: "Viga-Regular",
                   color: white,
