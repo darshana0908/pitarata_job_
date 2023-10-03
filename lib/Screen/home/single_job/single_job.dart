@@ -263,7 +263,7 @@ class _SingleJobState extends State<SingleJob> {
     print(data);
 
     setState(() {
-      img = "https://pitaratajobs.novasoft.lk/reso/post_2023_06_20/NovaTechZone_5098205120230620044959am.jpeg";
+      img = res[0]['main_image'].toString();
       print(img);
       description = res[0]['description'].toString();
       addId = res[0]['ads_id'].toString();

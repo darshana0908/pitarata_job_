@@ -77,7 +77,7 @@ class WhatsAppCommunity extends StatelessWidget {
                           throw Exception('Could not launch $_url');
                         }
                       },
-                      text: 'JOIN NOW',
+                      text: 'Join Community',
                       width: w / 2.5,
                       height: 70,
                       color: font_green,
@@ -88,14 +88,14 @@ class WhatsAppCommunity extends StatelessWidget {
                   child: RadiusButton(
                       onTap: () async {
                         // String url = 'whatsapp://send?text=${Uri.encodeFull(groupLink)}';
-                        final Uri _url = Uri.parse("https://chat.whatsapp.com/Kg3JsFB4EKoHo1MS32rT68");
+                        final Uri _url = Uri.parse("https://whatsapp.com/channel/0029VaAR5QO9mrGkzIAtfe1v");
                         print(_url);
 
                         if (!await launchUrl(mode: LaunchMode.externalNonBrowserApplication, _url)) {
                           throw Exception('Could not launch $_url');
                         }
                       },
-                      text: 'JOIN NOW',
+                      text: 'Follow Channel',
                       width: w / 2.5,
                       height: 70,
                       color: font_green,
