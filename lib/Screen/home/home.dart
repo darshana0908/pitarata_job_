@@ -75,15 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) {
           var h = MediaQuery.of(context).size.height;
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
             contentPadding: EdgeInsets.only(top: 10.0),
             backgroundColor: black,
             content: Container(
               height: 270,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: black, borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color: black, borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
                   Container(
@@ -102,11 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         'Are you sure you want to Sign Out?',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15.sp,
-                            fontFamily: 'Comfortaa-VariableFont_wght',
-                            color: white,
-                            fontWeight: FontWeight.normal),
+                        style: TextStyle(fontSize: 15.sp, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                       )),
                   SizedBox(
                     height: 35,
@@ -192,16 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(
-        Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/authenticateCustomer'),
-        headers: headers,
-        body: json.encode({
-          "verification": ver,
-          "app_id": "nzone_4457Was555@qsd_job",
-          "customer_id": cid,
-          "api_key": "448755456"
-        }));
+    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/authenticateCustomer'),
+        headers: headers, body: json.encode({"verification": ver, "app_id": "nzone_4457Was555@qsd_job", "customer_id": cid, "api_key": "448755456"}));
     var res = jsonDecode(response.body.toString());
     // log(res['status']);
     if (res['status'] == '1') {
@@ -272,13 +258,12 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(15),
             child: SizedBox(
               child: BottomNavigationBar(
-                unselectedIconTheme:
-                    IconThemeData(color: font_green, size: 15.sp),
+                unselectedIconTheme: IconThemeData(color: font_green, size: 15.sp),
                 unselectedItemColor: Colors.deepOrangeAccent,
                 selectedIconTheme: IconThemeData(
-                  color: font_green,
+                  color: white,
                 ),
-                selectedItemColor: font_green,
+                selectedItemColor: white,
                 elevation: 16,
                 onTap: _onItemTapped,
                 showSelectedLabels: false,
@@ -336,15 +321,13 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
             contentPadding: EdgeInsets.only(top: 10.0),
             backgroundColor: black,
             content: Container(
               height: 300,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: black, borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color: black, borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
                   Container(
@@ -360,12 +343,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: CustomText(
-                        text: text,
-                        fontSize: 20,
-                        fontFamily: 'Comfortaa-VariableFont_wght',
-                        color: white,
-                        fontWeight: FontWeight.normal),
+                    child:
+                        CustomText(text: text, fontSize: 20, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                   ),
                   SizedBox(
                     height: 35,
@@ -388,8 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => NameScreen()),
+                            MaterialPageRoute(builder: (context) => NameScreen()),
                           );
                         },
                         colortext: black,

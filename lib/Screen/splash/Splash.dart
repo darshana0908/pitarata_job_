@@ -6,8 +6,13 @@ import 'package:pitarata_job/Screen/home/home.dart';
 import 'package:pitarata_job/Screen/intro/intro_1.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import '../../api/api_deatails.dart';
+import '../../helper/api.dart';
+import '../../providers/all_provider.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({super.key});
@@ -20,14 +25,32 @@ class _SplashPageState extends State<SplashPage> {
   String assetName = '';
   @override
   void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getWallpaper();
+      Api().getCategory(context);
+      Api().getJobCategory(context);
+    });
     Future.delayed(
       const Duration(seconds: 2),
       () {
         userLogin();
       },
     );
-    // TODO: implement initState
-    super.initState();
+  }
+
+  getWallpaper() async {
+    var headers = {'Content-Type': 'application/json'};
+    var response =
+        await http.post(Uri.parse('$apiUrl/getHomeWallpapers'), headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
+    var res = jsonDecode(response.body.toString());
+    List img = res['data'];
+    print(img);
+
+    if (img.isNotEmpty) {
+      Provider.of<AppProvider>(context, listen: false).wallPaper = img;
+    }
   }
 
   userLogin() async {

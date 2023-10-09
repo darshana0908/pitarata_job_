@@ -13,6 +13,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pitarata_job/Screen/home/single_job/single_job.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/db/sqldb.dart';
+import 'package:pitarata_job/providers/all_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -23,6 +25,7 @@ import 'custom_list.dart';
 import 'custom_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'custom_text_field.dart';
 import 'fade_home.dart';
 import 'radius_button.dart';
 
@@ -36,6 +39,8 @@ class CustomHome extends StatefulWidget {
 }
 
 class _CustomHomeState extends State<CustomHome> {
+  // ItemScrollController _scrollController = ItemScrollController();
+
   String selected = '0';
   bool color = false;
   List wallPaper = [];
@@ -52,6 +57,7 @@ class _CustomHomeState extends State<CustomHome> {
   bool _hasNextPage = true;
   bool _isLoadMoreRuning = false;
   late ScrollController mycontroller = ScrollController();
+  ScrollController categoryController = ScrollController();
   SqlDb sqlDb = SqlDb();
   String addId = '';
   List favoritesList = [];
@@ -62,9 +68,15 @@ class _CustomHomeState extends State<CustomHome> {
   String job_id = "";
   bool loadFavorites = false;
   bool noData = false;
+  bool _fromTop = true;
+  List jobCategoryList = [];
+  List temp = [];
+  List character = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "X", "Y", "Z"];
   @override
   void initState() {
     getWallpaper();
+    // getCategory();
+    // getJobCategory();
     userLogin();
 
     // TODO: implement initState
@@ -86,10 +98,6 @@ class _CustomHomeState extends State<CustomHome> {
     setState(() {
       verification = z.toString();
       customer_id = y.toString();
-      print(verification);
-      print(customer_id);
-
-      log(customer_id);
     });
 
     log("verificatio" + verification);
@@ -126,27 +134,32 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   getCategory() async {
-    setState(() {
-      isLoading = true;
-    });
-    var headers = {'Content-Type': 'application/json'};
+    if (jobCategoryName.isEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+      var headers = {'Content-Type': 'application/json'};
 
-    // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getCategory'),
-        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
-    var res = jsonDecode(response.body.toString());
+      // request.headers.addAll(headers);
+      var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getCategory'),
+          headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
+      var res = jsonDecode(response.body.toString());
 
-    List cat = [
-      {"category_id": "0", "category_name": "All"}
-    ];
+      List cat = [
+        {"category_id": "0", "category_name": "All"}
+      ];
+
+      setState(() {
+        jobCategoryList = res['data'];
+        print(res['data']);
+        cat.addAll(res['data']);
+        jobCategoryName = cat;
+
+        log('2');
+        isLoading = false;
+      });
+    }
     await getJobCategory();
-    setState(() {
-      cat.addAll(res['data']);
-      jobCategoryName = cat;
-
-      log('2');
-      isLoading = false;
-    });
   }
 
   void _loadeMore() async {
@@ -180,6 +193,7 @@ class _CustomHomeState extends State<CustomHome> {
 
   getJobCategory() async {
     setState(() {
+      // isLoading = true;
       _isFirstLoadRunning = true;
     });
     var headers = {'Content-Type': 'application/json'};
@@ -199,7 +213,8 @@ class _CustomHomeState extends State<CustomHome> {
     }
     setState(() {
       jobCategory = res['data'];
-
+      // Provider.of<AppProvider>(context, listen: false).getJobs=
+      // isLoading = false;
       _isFirstLoadRunning = false;
     });
   }
@@ -235,7 +250,6 @@ class _CustomHomeState extends State<CustomHome> {
       setState(() {
         if (res['data'].toString().isNotEmpty) {
           favoritesList = res['data'];
-          log('3');
         }
         loadFavorites = false;
         // _isFirstLoadRunning = false;
@@ -247,7 +261,6 @@ class _CustomHomeState extends State<CustomHome> {
     setState(() {
       FocusManager.instance.primaryFocus?.unfocus();
       getFavouriteJobs();
-      log('fffffffffddddddddddddddddd');
     });
   }
 
@@ -272,32 +285,52 @@ class _CustomHomeState extends State<CustomHome> {
                                 width: MediaQuery.of(context).size.width,
                                 margin: EdgeInsets.symmetric(horizontal: 1.0),
                                 decoration: BoxDecoration(color: black),
-                                child: CarouselSlider.builder(
-                                  itemBuilder: (context, index, realIndex) {
-                                    String img = wallPaper[index]['image_path'].toString();
-                                    print("https://pitaratajobs.novasoft.lk/$img");
+                                child: Consumer<AppProvider>(
+                                  builder: (context, value, child) => CarouselSlider.builder(
+                                    itemBuilder: (context, index, realIndex) {
+                                      String img = value.wallPaper[index]['image_path'].toString();
 
-                                    return Container(
-                                      child: Image.network(
-                                        "https://pitaratajobs.novasoft.lk/$img",
-                                        // i[index]['image_path'],
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    );
-                                  },
-                                  options: CarouselOptions(
-                                      padEnds: false,
-                                      viewportFraction: 1,
-                                      autoPlay: true,
-                                      enlargeCenterPage: true,
-                                      aspectRatio: 2.0,
-                                      autoPlayAnimationDuration: const Duration(milliseconds: 2000),
-                                      onPageChanged: (index, reason) {
-                                        setState(() {
-                                          _current = index;
-                                        });
-                                      }),
-                                  itemCount: wallPaper.length,
+                                      return Container(
+                                        child:
+                                            // Image.network(
+                                            //   "https://pitaratajobs.novasoft.lk/$img",
+                                            //   // i[index]['image_path'],
+                                            //   fit: BoxFit.scaleDown,
+                                            // ),
+                                            CachedNetworkImage(
+                                          imageUrl: "https://pitaratajobs.novasoft.lk/$img",
+                                          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                            child: SizedBox(
+                                              height: 50,
+                                              width: 50,
+                                              child: CircularProgressIndicator(value: downloadProgress.progress),
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) {
+                                            return Image.asset(
+                                              'assets/no-image-icon-23500.jpg',
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                          fit: BoxFit.scaleDown,
+                                        ),
+                                      );
+                                    },
+                                    options: CarouselOptions(
+                                        padEnds: false,
+                                        viewportFraction: 1,
+                                        autoPlayInterval: Duration(seconds: 4),
+                                        autoPlay: true,
+                                        enlargeCenterPage: true,
+                                        aspectRatio: 2.0,
+                                        autoPlayAnimationDuration: const Duration(milliseconds: 2000),
+                                        onPageChanged: (index, reason) {
+                                          // setState(() {
+                                          //   _current = index;
+                                          // });
+                                        }),
+                                    itemCount: value.wallPaper.length,
+                                  ),
                                 ),
                               ),
 
@@ -326,12 +359,29 @@ class _CustomHomeState extends State<CustomHome> {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                           ),
-                          child: CustomText(
-                              text: 'Job Categories',
-                              fontSize: 17,
-                              fontFamily: 'Comfortaa-VariableFont_wght',
-                              color: white,
-                              fontWeight: FontWeight.normal),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                  text: 'Job Categories',
+                                  fontSize: 17,
+                                  fontFamily: 'Comfortaa-VariableFont_wght',
+                                  color: white,
+                                  fontWeight: FontWeight.normal),
+                              IconButton(
+                                  onPressed: () {
+                                    SearchCategory();
+                                    setState(() {
+                                      temp = [];
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.search,
+                                    color: white,
+                                    size: 27,
+                                  ))
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 10,
@@ -353,46 +403,50 @@ class _CustomHomeState extends State<CustomHome> {
                                   ))
                                 : Container(
                                     height: 70,
-                                    child: ListView.builder(
-                                        itemCount: jobCategoryName.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (BuildContext context, int index) {
-                                          String catName = jobCategoryName[index]['category_name'].toString();
+                                    child: Consumer<AppProvider>(
+                                      builder: (context, value, child) => ListView.builder(
+                                          controller: categoryController,
+                                          itemCount: value.categoryList.length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            String catName = value.categoryList[index]['category_name'].toString();
 
-                                          return InkWell(
-                                            borderRadius: BorderRadius.circular(20),
-                                            onTap: () {
-                                              setState(() {
-                                                selected = jobCategoryName[index]['category_id'];
-                                              });
-                                              if (selected == jobCategoryName[index]['category_id']) {
-                                                log(selected);
-
-                                                getJobCategory();
-
+                                            return InkWell(
+                                              borderRadius: BorderRadius.circular(20),
+                                              onTap: () {
+                                                categoryController.animateTo(index * 100, duration: Duration(milliseconds: 50), curve: Curves.ease);
                                                 setState(() {
-                                                  selected;
-                                                  color = true;
+                                                  selected = value.categoryList[index]['category_id'];
                                                 });
-                                              }
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(6.0),
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    boxShadow: <BoxShadow>[
-                                                      BoxShadow(color: Colors.white54, blurRadius: 3.0, offset: Offset(0.7, 0.7))
-                                                    ],
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    color: selected == jobCategoryName[index]['category_id'] ? background_green : light_dark),
-                                                child: CustomText(
-                                                    text: catName, fontSize: 15, fontFamily: 'Viga', color: white, fontWeight: FontWeight.normal),
+                                                if (selected == value.categoryList[index]['category_id']) {
+                                                  log(selected);
+
+                                                  // getJobCategory();
+
+                                                  setState(() {
+                                                    selected;
+                                                    color = true;
+                                                  });
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(6.0),
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                      boxShadow: <BoxShadow>[
+                                                        BoxShadow(color: Colors.white54, blurRadius: 3.0, offset: Offset(0.7, 0.7))
+                                                      ],
+                                                      borderRadius: BorderRadius.circular(15),
+                                                      color: selected == value.categoryList[index]['category_id'] ? background_green : light_dark),
+                                                  child: CustomText(
+                                                      text: catName, fontSize: 15, fontFamily: 'Viga', color: white, fontWeight: FontWeight.normal),
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }),
+                                            );
+                                          }),
+                                    ),
                                   )
 
                             //  CustomList(cat: jobCategory),
@@ -415,8 +469,6 @@ class _CustomHomeState extends State<CustomHome> {
                                     shrinkWrap: true,
                                     itemCount: jobCategory.length,
                                     itemBuilder: (BuildContext context, int index) {
-                                      // print(noData.toString());
-                                      print(jobCategory[index]['main_image']);
                                       return noData
                                           ? Container(height: MediaQuery.of(context).size.height)
                                           : InkWell(
@@ -526,7 +578,12 @@ class _CustomHomeState extends State<CustomHome> {
                                                                       child: CircularProgressIndicator(value: downloadProgress.progress),
                                                                     ),
                                                                   ),
-                                                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                  errorWidget: (context, url, error) {
+                                                                    return Image.asset(
+                                                                      'assets/no-image-icon-23500.jpg',
+                                                                      fit: BoxFit.cover,
+                                                                    );
+                                                                  },
                                                                   fit: BoxFit.cover,
                                                                 ),
                                                               ),
@@ -697,5 +754,195 @@ class _CustomHomeState extends State<CustomHome> {
             ),
           );
         });
+  }
+
+  void _runFilter(String enteredKeyword) {
+    var results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = Provider.of<AppProvider>(context, listen: false).serchCategory;
+    } else if (Provider.of<AppProvider>(context, listen: false)
+        .serchCategory
+        .where((user) => user["category_name"][0].toLowerCase().contains(enteredKeyword.toLowerCase()))
+        .toList()
+        .isNotEmpty) {
+      results = Provider.of<AppProvider>(context, listen: false)
+          .serchCategory
+          .where((user) => user["category_name"][0].toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    // Refresh the UI
+    setState(() {
+      temp = results;
+      print(temp);
+    });
+  }
+
+  void _runFilter2(String enteredKeyword) {
+    var results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = Provider.of<AppProvider>(context, listen: false).serchCategory;
+    } else if (Provider.of<AppProvider>(context, listen: false)
+        .serchCategory
+        .where((user) => user["category_name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+        .toList()
+        .isNotEmpty) {
+      results = Provider.of<AppProvider>(context, listen: false)
+          .serchCategory
+          .where((user) => user["category_name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    // Refresh the UI
+    setState(() {
+      temp = results;
+      print(temp);
+    });
+  }
+
+  SearchCategory() {
+    TextEditingController controller = TextEditingController();
+    int selectedItem = 0;
+    ScrollController scrollController = ScrollController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        var h = MediaQuery.of(context).size.height;
+        var w = MediaQuery.of(context).size.width;
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            scrollable: true,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: font_green)),
+            contentPadding: EdgeInsets.all(0),
+            insetPadding: EdgeInsets.all(12),
+            actionsAlignment: MainAxisAlignment.start,
+            content: Container(
+              height: h,
+              width: w,
+              padding: EdgeInsets.all(12),
+              color: black,
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(children: [
+                  Container(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: white,
+                          ))),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomText(text: "Job Category", fontSize: 15.sp, fontFamily: 'Viga', color: white, fontWeight: FontWeight.normal),
+                  ),
+                  TextFormField(
+                    style: TextStyle(color: white, fontSize: 13.sp),
+                    controller: controller,
+                    onChanged: (value) {
+                      _runFilter2(value);
+                      setState(() {
+                        selectedItem = 2000;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        counterStyle: TextStyle(color: Colors.white),
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.search,
+                            color: background_green,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        contentPadding: EdgeInsets.all(8),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey[600]),
+                        hintText: 'search job category',
+                        fillColor: light_dark),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: character.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 8,
+                      ),
+                      itemBuilder: (context, index) => TextButton(
+                        onPressed: () {
+                          categoryController.animateTo(100, duration: Duration(milliseconds: 50), curve: Curves.ease);
+                          _runFilter(character[index]);
+                          setState(() {
+                            controller.text = character[index];
+                            selectedItem = index;
+                          });
+                        },
+                        child: Text(
+                          character[index],
+                          style: TextStyle(color: selectedItem == index ? white : Colors.blue, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: GridView.builder(
+                      padding: EdgeInsets.only(bottom: 100),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: temp.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisExtent: 100,
+                      ),
+                      itemBuilder: (context, index) {
+                        print(temp[index]);
+                        return TextButton(
+                          onPressed: () {
+                            setState(() {
+                              selected = temp[index]['category_id'];
+                              getJobCategory();
+                            });
+
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  boxShadow: <BoxShadow>[BoxShadow(color: Colors.white54, blurRadius: 3.0, offset: Offset(0.7, 0.7))],
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: selected == temp[index]['category_id'] ? background_green : light_dark),
+                              child: CustomText(
+                                  text: temp[index]["category_name"], fontSize: 15, fontFamily: 'Viga', color: white, fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ]),
+              ),
+            ),
+          );
+        });
+      },
+    );
   }
 }
