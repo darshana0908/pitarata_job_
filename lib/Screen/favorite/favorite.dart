@@ -52,39 +52,40 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     userLogin();
+
     //
   }
 
   userLogin() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     setState(() {
       var z = sharedPreferences.getString('verification');
       var y = sharedPreferences.getString('customer_id');
-      setState(() {
-        verification = z.toString();
-        customer_id = y.toString();
-      });
-
-      log("verificatio" + verification);
-      if (verification != '0') {
-        setState(() {
-          getFavouriteJobs();
-          log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
-          userLoging = true;
-        });
-      } else {
-        setState(() {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            showCustomDialog(context, 'Please login to your account to access your favorite jobs !');
-            log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
-          });
-          Future.delayed(Duration(milliseconds: 20));
-          userLoging = false;
-        });
-      }
+      verification = z.toString();
+      customer_id = y.toString();
     });
+
+    log("verificatio" + verification);
+    if (verification != '0') {
+      if (!mounted) return;
+      setState(() {
+        getFavouriteJobs();
+        log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
+        userLoging = true;
+      });
+    } else {
+      if (!mounted) return;
+      setState(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          showCustomDialog(context, 'Please login to your account to access your favorite jobs !');
+          log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
+        });
+        Future.delayed(Duration(milliseconds: 20));
+        userLoging = false;
+      });
+    }
   }
 
   getFavouriteJobs() async {
@@ -100,6 +101,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       isLoading = false;
     });
     if (res['data'].toString() != "null") {
+      if (!mounted) return;
       setState(() {
         print('kkkkkkkkkksssssssssssssssssssssssssssssssssssssssssssssssssssss');
         isLoading = false;
@@ -109,6 +111,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         log(favoritesList.toString());
       });
     } else {
+      if (!mounted) return;
       setState(() {
         print('kkkkkkkkkkssssssssssssswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwssssssssssssssssssssssssssssssssssssssss');
         noData == true;

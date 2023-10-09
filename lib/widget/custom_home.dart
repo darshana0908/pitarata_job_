@@ -421,7 +421,7 @@ class _CustomHomeState extends State<CustomHome> {
                                                 if (selected == value.categoryList[index]['category_id']) {
                                                   log(selected);
 
-                                                  // getJobCategory();
+                                                  getJobCategory();
 
                                                   setState(() {
                                                     selected;
