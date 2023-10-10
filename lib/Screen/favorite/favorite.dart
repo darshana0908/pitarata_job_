@@ -15,6 +15,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../api/api_deatails.dart';
 import '../../class/main_dialog.dart';
 import '../../widget/radius_button.dart';
 import '../home/single_job/single_job.dart';
@@ -93,7 +94,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       isLoading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+    var response = await http.post(Uri.parse('$apiUrl/getFavouriteJobs'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "verification": verification, "customer_id": customer_id}));
     var res = jsonDecode(response.body.toString());
     log("jjjj" + res.toString());
@@ -130,7 +131,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       isLoading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/removeFavourite'),
+    var response = await http.post(Uri.parse('$apiUrl/removeFavourite'),
         headers: headers,
         body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "verification": verification, "customer_id": customer_id, "job_id": id}));
 
@@ -227,7 +228,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                           borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                           child: CachedNetworkImage(
                                             alignment: Alignment(-1, -1),
-                                            imageUrl: "https://pitaratajobs.novasoft.lk/${favoritesList[index]['main_image']}}",
+                                            imageUrl: "$domain/${favoritesList[index]['main_image']}}",
                                             progressIndicatorBuilder: (context, url, downloadProgress) => Center(
                                               child: SizedBox(
                                                 height: 50,

@@ -28,12 +28,14 @@ class AppProvider with ChangeNotifier {
     _serchCategory = a;
     notifyListeners();
   }
+
   List _getJobs = [];
   List get getJobs => _getJobs;
   set getJobs(List a) {
     _getJobs = a;
     notifyListeners();
   }
+
   int _navigationScreen = 0;
   int get navigationScreen => _navigationScreen;
   set navigationScreen(int index) {
@@ -47,4 +49,12 @@ class AppProvider with ChangeNotifier {
     _wallPaper = a;
     notifyListeners();
   }
+
+  bool _internet = false;
+  bool get internet => _internet;
+  set internet(bool a) {
+    _internet = a;
+    notifyListeners();
+  }
+
 }

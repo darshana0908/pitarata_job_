@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 
 import 'Screen/home/about_us/single.php.dart';
 import 'Screen/home/single_job/single_job.dart';
+import 'class/network_helper.dart';
 import 'providers/all_provider.dart';
 import 'providers/google_sign_provider.dart';
 

@@ -33,15 +33,13 @@ class _LogoutState extends State<Logout> {
           builder: (context) {
             var h = MediaQuery.of(context).size.height;
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
               contentPadding: EdgeInsets.only(top: 10.0),
               backgroundColor: black,
               content: Container(
                 height: 300,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: black, borderRadius: BorderRadius.circular(15)),
+                decoration: BoxDecoration(color: black, borderRadius: BorderRadius.circular(15)),
                 child: Column(
                   children: [
                     Container(
@@ -84,15 +82,11 @@ class _LogoutState extends State<Logout> {
                         ),
                         RadiusButton(
                           onTap: () async {
-                            SharedPreferences sharedPreferences =
-                                await SharedPreferences.getInstance();
-                            var z = await sharedPreferences.setString(
-                                'verification', '0');
+                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                            var z = await sharedPreferences.setString('verification', '0');
+                            print(z);
                             Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const NameScreen()),
-                                (Route<dynamic> route) => false);
+                                context, MaterialPageRoute(builder: (_) => const NameScreen()), (Route<dynamic> route) => false);
                           },
                           colortext: black,
                           color: font_green,

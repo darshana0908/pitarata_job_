@@ -18,6 +18,7 @@ import 'package:pitarata_job/widget/radius_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import '../../api/api_deatails.dart';
 import '../../widget/otp_alert.dart';
 import 'name_screen_1.dart';
 
@@ -46,7 +47,7 @@ class _NameScreenState extends State<NameScreen> {
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/customerRequestPasswordReset'),
+            '$apiUrl/customerRequestPasswordReset'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
@@ -82,7 +83,7 @@ class _NameScreenState extends State<NameScreen> {
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/loginCustomer'),
+            '$apiUrl/loginCustomer'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",

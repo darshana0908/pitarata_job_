@@ -19,6 +19,7 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import '../Screen/home/more_by_team/more_by_team.dart';
 import '../Screen/home/whatApp_community/whatsApp_community.dart';
 import 'drawer_row.dart';
 
@@ -115,7 +116,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       SizedBox(
                         height: 10,
                       ),
-                      DrawerRow(icon: Icons.more, text: 'More by our team', on: () {}),
+                      DrawerRow(
+                          icon: Icons.more,
+                          text: 'More by our team',
+                          on: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MoreByTeam()));
+                          }),
                       SizedBox(
                         height: 10,
                       ),
@@ -170,7 +176,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.accessibility_new_sharp,
                           text: 'About Us',
                           on: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUs(id: '1',)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AboutUs(
+                                          id: '1',
+                                        )));
                           }),
                     ],
                   ),

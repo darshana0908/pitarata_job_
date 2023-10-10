@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pitarata_job/Screen/blog/blog.dart';
@@ -13,8 +16,11 @@ import 'package:pitarata_job/widget/custom_list.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/drawer.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import '../../api/api_deatails.dart';
+import '../../providers/all_provider.dart';
 import '../../widget/fade_home.dart';
 import '../../widget/radius_button.dart';
 import '../../widget/sign_out_buttn.dart';
@@ -186,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/authenticateCustomer'),
+    var response = await http.post(Uri.parse('$apiUrl/authenticateCustomer'),
         headers: headers, body: json.encode({"verification": ver, "app_id": "nzone_4457Was555@qsd_job", "customer_id": cid, "api_key": "448755456"}));
     var res = jsonDecode(response.body.toString());
     // log(res['status']);
@@ -206,12 +212,57 @@ class _HomeScreenState extends State<HomeScreen> {
     // log("ddddddddddddddddddddddddddddddddddddddddddddd" + res.toString());
   }
 
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   @override
   void initState() {
     userLogin();
+    initConnectivity();
 
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print('Couldn\'t check connectivity status');
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      print(result);
+      if (ConnectivityResult.none == result) {
+        print('ffffffffffffffffffffffffffffff');
+        Provider.of<AppProvider>(context, listen: false).internet = false;
+      } else {
+        Provider.of<AppProvider>(context, listen: false).internet = true;
+        print('ffffffffffffffffffffffffffffaaaaaaaaaaaaaaaaaaaff');
+      }
+      _connectionStatus = result;
+    });
   }
 
   @override
@@ -241,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: black,
           centerTitle: true,
           title: center == true
-              ? Text(title)
+              ? Consumer<AppProvider>(builder: (context, value, child) => Text("$title+ ${value.internet}"))
               : Container(
                   alignment: Alignment.centerRight,
                   child: CustomText(

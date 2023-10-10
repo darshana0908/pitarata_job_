@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:pitarata_job/api/api_deatails.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:pitarata_job/widget/radius_button.dart';
@@ -89,7 +90,7 @@ class _CustomGridState extends State<CustomGrid> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Image.network(
                           alignment: Alignment(-1, -1),
-                          'https://pitaratajobs.novasoft.lk/${widget.gridList[index]['main_image']}',
+                          '$domain/${widget.gridList[index]['main_image']}',
                           fit: BoxFit.cover,
                         ),
                       ),

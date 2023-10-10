@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../api/api_deatails.dart';
 import '../../../class/main_dialog.dart';
 import '../../../color/colors.dart';
 import '../../../widget/alert.dart';
@@ -68,7 +69,7 @@ class _GetSupportState extends State<GetSupport> {
 
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSupportMessages'),
+            '$apiUrl/getSupportMessages'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
@@ -96,7 +97,7 @@ class _GetSupportState extends State<GetSupport> {
 
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/sendSupportMessageByCustomer'),
+            '$apiUrl/sendSupportMessageByCustomer'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",

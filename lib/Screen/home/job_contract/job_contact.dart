@@ -7,6 +7,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:pitarata_job/class/add.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../api/api_deatails.dart';
 import '../../../color/colors.dart';
 import '../../../widget/arrow_button.dart';
 import '../../../widget/color_container.dart';
@@ -72,7 +73,7 @@ class _JobContactState extends State<JobContact> {
     // request.headers.addAll(headers);
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
+            '$apiUrl/updateJobView'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",

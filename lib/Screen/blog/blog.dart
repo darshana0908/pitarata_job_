@@ -13,6 +13,8 @@ import 'package:pitarata_job/widget/custom_text.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../api/api_deatails.dart';
+
 class Blog extends StatefulWidget {
   const Blog({super.key});
 
@@ -43,7 +45,7 @@ class _BlogState extends State<Blog> {
       var headers = {'Content-Type': 'application/json'};
       var response = await http.post(
           Uri.parse(
-              'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getJobBlog'),
+              '$apiUrl/getJobBlog'),
           headers: headers,
           body: json.encode({
             "app_id": "nzone_4457Was555@qsd_job",
@@ -76,7 +78,7 @@ class _BlogState extends State<Blog> {
     var headers = {'Content-Type': 'application/json'};
     var response = await http.post(
         Uri.parse(
-            'https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getJobBlog'),
+            '$apiUrl/getJobBlog'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
@@ -158,7 +160,7 @@ class _BlogState extends State<Blog> {
                                                 BorderRadius.circular(2),
                                             child: CachedNetworkImage(
                                               imageUrl:
-                                                  "https://pitaratajobs.novasoft.lk/${blogList[index]['post_image']}",
+                                                  "$domain/${blogList[index]['post_image']}",
                                               progressIndicatorBuilder:
                                                   (context, url,
                                                           downloadProgress) =>

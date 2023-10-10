@@ -15,9 +15,9 @@ class SqlDb {
 
   intialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'dbn.db');
+    String path = join(databasepath, 'mms.db');
     Database mydb = await openDatabase(path,
-        onCreate: _onCreate, version: 3, onUpgrade: _onUpgrade);
+        onCreate: _onCreate, version: 6, onUpgrade: _onUpgrade);
     return mydb;
   }
 
@@ -51,6 +51,17 @@ class SqlDb {
       "developer" TEXT NOT NULL,
       "release_date" TEXT NOT NULL,
       "short_description" TEXT NOT NULL
+      
+    
+
+
+  )
+ ''');
+     await db.execute('''
+  CREATE TABLE "notification_list" (
+    "id" INTEGER  NOT NULL PRIMARY KEY  ,
+      "not" TEXT NOT NULL
+    
       
     
 

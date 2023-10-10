@@ -25,7 +25,7 @@ import 'custom_list.dart';
 import 'custom_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'custom_text_field.dart';
+import 'package:logger/logger.dart';
 import 'fade_home.dart';
 import 'radius_button.dart';
 
@@ -40,7 +40,7 @@ class CustomHome extends StatefulWidget {
 
 class _CustomHomeState extends State<CustomHome> {
   // ItemScrollController _scrollController = ItemScrollController();
-
+  var logger = Logger();
   String selected = '0';
   bool color = false;
   List wallPaper = [];
@@ -74,7 +74,6 @@ class _CustomHomeState extends State<CustomHome> {
   List character = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O", "P", "Q", "R", "S", "T", "U", "V", "X", "Y", "Z"];
   @override
   void initState() {
-    getWallpaper();
     // getCategory();
     // getJobCategory();
     userLogin();
@@ -99,14 +98,19 @@ class _CustomHomeState extends State<CustomHome> {
       verification = z.toString();
       customer_id = y.toString();
     });
-
+    logger.d(verification);
+    logger.d(customer_id);
     log("verificatio" + verification);
-    if (verification != '0') {
+    if (verification != '0' && verification != 'null') {
+      getWallpaper();
+      print('ddddddddddddddddddddd');
       await getFavouriteJobs();
       setState(() {
         userStatus = true;
       });
     } else {
+      getWallpaper();
+      logger.d('ccccccccccccccccccccccccc');
       setState(() {
         userStatus = false;
       });
@@ -114,35 +118,38 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   getWallpaper() async {
-    setState(() {
-      isLoading = true;
-    });
-    var headers = {'Content-Type': 'application/json'};
-    var response =
-        await http.post(Uri.parse('$apiUrl/getHomeWallpapers'), headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
-    var res = jsonDecode(response.body.toString());
-    List img = res['data'];
-
-    if (img.isNotEmpty) {
+    if (Provider.of<AppProvider>(context, listen: false).wallPaper.isEmpty) {
       setState(() {
-        wallPaper = img;
-        log('1');
-        isLoading = false;
-        getCategory();
+        isLoading = true;
       });
+      var headers = {'Content-Type': 'application/json'};
+      var response =
+          await http.post(Uri.parse('$apiUrl/getHomeWallpapers'), headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
+      var res = jsonDecode(response.body.toString());
+      List img = res['data'];
+
+      if (img.isNotEmpty) {
+        setState(() {
+          wallPaper = img;
+          Provider.of<AppProvider>(context, listen: false).wallPaper = img;
+          log('1');
+          isLoading = false;
+        });
+      }
     }
+    getCategory(true);
   }
 
-  getCategory() async {
-    if (jobCategoryName.isEmpty) {
+  getCategory(bool load) async {
+    if (Provider.of<AppProvider>(context, listen: false).categoryList.isEmpty ||
+        Provider.of<AppProvider>(context, listen: false).serchCategory.isEmpty) {
       setState(() {
         isLoading = true;
       });
       var headers = {'Content-Type': 'application/json'};
 
       // request.headers.addAll(headers);
-      var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getCategory'),
-          headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
+      var response = await http.post(Uri.parse('$apiUrl/getCategory'), headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
       var res = jsonDecode(response.body.toString());
 
       List cat = [
@@ -154,7 +161,8 @@ class _CustomHomeState extends State<CustomHome> {
         print(res['data']);
         cat.addAll(res['data']);
         jobCategoryName = cat;
-
+        Provider.of<AppProvider>(context, listen: false).categoryList = cat;
+        Provider.of<AppProvider>(context, listen: false).serchCategory = cat;
         log('2');
         isLoading = false;
       });
@@ -171,13 +179,13 @@ class _CustomHomeState extends State<CustomHome> {
       _page += 50;
       var headers = {'Content-Type': 'application/json'};
       // request.headers.addAll(headers);
-      var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getJobsToHome'),
+      var response = await http.post(Uri.parse('$apiUrl/getJobsToHome'),
           headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "category_id": selected, "from": _page.toString(), "to": "50"}));
       var res = jsonDecode(response.body);
       List job = res['data'];
       if (job.isNotEmpty) {
         setState(() {
-          jobCategory.addAll(job);
+          Provider.of<AppProvider>(context, listen: false).getJobs.addAll(job);
         });
       } else {
         setState(() {
@@ -192,13 +200,15 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   getJobCategory() async {
+    logger.d(Provider.of<AppProvider>(context, listen: false).getJobs);
+
     setState(() {
       // isLoading = true;
       _isFirstLoadRunning = true;
     });
     var headers = {'Content-Type': 'application/json'};
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getJobsToHome'),
+    var response = await http.post(Uri.parse('$apiUrl/getJobsToHome'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "category_id": selected, "from": 0, "to": "50"}));
     var res = jsonDecode(response.body.toString());
 
@@ -213,7 +223,7 @@ class _CustomHomeState extends State<CustomHome> {
     }
     setState(() {
       jobCategory = res['data'];
-      // Provider.of<AppProvider>(context, listen: false).getJobs=
+      Provider.of<AppProvider>(context, listen: false).getJobs = jobCategory;
       // isLoading = false;
       _isFirstLoadRunning = false;
     });
@@ -226,7 +236,7 @@ class _CustomHomeState extends State<CustomHome> {
     });
     var headers = {'Content-Type': 'application/json'};
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/setFavourite'),
+    var response = await http.post(Uri.parse('$apiUrl/setFavourite'),
         headers: headers,
         body: json.encode({"verification": verification, "app_id": "nzone_4457Was555@qsd_job", "customer_id": customer_id, "job_id": addId}));
     var res = jsonDecode(response.body.toString());
@@ -242,7 +252,7 @@ class _CustomHomeState extends State<CustomHome> {
     });
     var headers = {'Content-Type': 'application/json'};
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+    var response = await http.post(Uri.parse('$apiUrl/getFavouriteJobs'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "verification": verification, "customer_id": customer_id}));
     var res = jsonDecode(response.body.toString());
 
@@ -298,7 +308,7 @@ class _CustomHomeState extends State<CustomHome> {
                                             //   fit: BoxFit.scaleDown,
                                             // ),
                                             CachedNetworkImage(
-                                          imageUrl: "https://pitaratajobs.novasoft.lk/$img",
+                                          imageUrl: "$domain/$img",
                                           progressIndicatorBuilder: (context, url, downloadProgress) => Center(
                                             child: SizedBox(
                                               height: 50,
@@ -460,198 +470,204 @@ class _CustomHomeState extends State<CustomHome> {
                                 child: Center(
                                     child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6)),
                               )
-                            : jobCategory.length == 0
+                            : Provider.of<AppProvider>(context, listen: false).getJobs.length == 0
                                 ? Container(
                                     height: 500,
                                   )
-                                : ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: jobCategory.length,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return noData
-                                          ? Container(height: MediaQuery.of(context).size.height)
-                                          : InkWell(
-                                              borderRadius: BorderRadius.circular(20),
-                                              onTap: () async {
-                                                if (userStatus == true) {
-                                                  if (favoritesList.any(
-                                                          (element) => element["ads_id"].toString() == jobCategory[index]["ads_id"].toString()) ==
-                                                      true) {
-                                                    setState(() {
-                                                      x = true;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      x = false;
-                                                    });
-                                                  }
-                                                }
-                                                log(jobCategory[index]['job_category_id'].toString());
-                                                await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => SingleJob(
-                                                              update: updateFavorites,
-                                                              x: x,
-                                                              // categoryId: jobCategory[index]['job_category_id'].toString(),
-                                                              // whatapp: jobCategory[index]['job_whatsapp'].toString(),
-                                                              // mobile: jobCategory[index]['job_mobile'].toString(),
-                                                              // email: jobCategory[index]['job_email'].toString(),
-                                                              // salary: jobCategory[index]['job_salary'].toString(),
-                                                              // categoryName: jobCategory[index]['biz_category_name'].toString(),
-                                                              addId: jobCategory[index]['ads_id'].toString(),
-                                                              // description: jobCategory[index]['description'].toString(),
-                                                              // img: 'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
-                                                            )));
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: light_dark,
-                                                    border: Border.all(color: Colors.green, width: 0.8),
-                                                    borderRadius: BorderRadius.only(
-                                                        topRight: Radius.circular(20),
-                                                        topLeft: Radius.circular(20),
-                                                        bottomLeft: Radius.circular(15),
-                                                        bottomRight: Radius.circular(15)),
-                                                  ),
-                                                  height: MediaQuery.of(context).size.height / 2.8,
-                                                  child: joblist
-                                                      ? Center(child: CircularProgressIndicator())
-                                                      : Stack(children: [
-                                                          Positioned(
-                                                            bottom: 0,
-                                                            left: 0,
-                                                            right: 0,
-                                                            child: Container(
-                                                              alignment: Alignment.bottomLeft,
-                                                              decoration: BoxDecoration(
-                                                                  color: light_dark,
-                                                                  borderRadius: BorderRadius.only(
-                                                                      bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
-                                                              height: MediaQuery.of(context).size.height / 4.2,
-                                                              width: double.infinity,
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: CustomText(
-                                                                        text: jobCategory[index]['biz_category_name'],
-                                                                        fontSize: 12,
-                                                                        fontFamily: 'Comfortaa-VariableFont_wght',
-                                                                        color: white,
-                                                                        fontWeight: FontWeight.w600),
+                                : Consumer<AppProvider>(
+                                    builder: (context, value, child) => ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: value.getJobs.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return noData
+                                              ? Container(height: MediaQuery.of(context).size.height)
+                                              : InkWell(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  onTap: () async {
+                                                    if (userStatus == true) {
+                                                      if (favoritesList.any((element) =>
+                                                              element["ads_id"].toString() == value.getJobs[index]["ads_id"].toString()) ==
+                                                          true) {
+                                                        setState(() {
+                                                          x = true;
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          x = false;
+                                                        });
+                                                      }
+                                                    }
+                                                    log(value.getJobs[index]['job_category_id'].toString());
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => SingleJob(
+                                                                  update: updateFavorites,
+                                                                  x: x,
+                                                                  // categoryId: jobCategory[index]['job_category_id'].toString(),
+                                                                  // whatapp: jobCategory[index]['job_whatsapp'].toString(),
+                                                                  // mobile: jobCategory[index]['job_mobile'].toString(),
+                                                                  // email: jobCategory[index]['job_email'].toString(),
+                                                                  // salary: jobCategory[index]['job_salary'].toString(),
+                                                                  // categoryName: jobCategory[index]['biz_category_name'].toString(),
+                                                                  addId: value.getJobs[index]['ads_id'].toString(),
+                                                                  // description: jobCategory[index]['description'].toString(),
+                                                                  // img: 'https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}',
+                                                                )));
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: light_dark,
+                                                        border: Border.all(color: Colors.green, width: 0.8),
+                                                        borderRadius: BorderRadius.only(
+                                                            topRight: Radius.circular(20),
+                                                            topLeft: Radius.circular(20),
+                                                            bottomLeft: Radius.circular(15),
+                                                            bottomRight: Radius.circular(15)),
+                                                      ),
+                                                      height: MediaQuery.of(context).size.height / 2.8,
+                                                      child: joblist
+                                                          ? Center(child: CircularProgressIndicator())
+                                                          : Stack(children: [
+                                                              Positioned(
+                                                                bottom: 0,
+                                                                left: 0,
+                                                                right: 0,
+                                                                child: Container(
+                                                                  alignment: Alignment.bottomLeft,
+                                                                  decoration: BoxDecoration(
+                                                                      color: light_dark,
+                                                                      borderRadius: BorderRadius.only(
+                                                                          bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+                                                                  height: MediaQuery.of(context).size.height / 4.2,
+                                                                  width: double.infinity,
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: CustomText(
+                                                                            text: value.getJobs[index]['biz_category_name'],
+                                                                            fontSize: 12,
+                                                                            fontFamily: 'Comfortaa-VariableFont_wght',
+                                                                            color: white,
+                                                                            fontWeight: FontWeight.w600),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: CustomText(
+                                                                            text: "#${value.getJobs[index]['ads_id'].toString()}",
+                                                                            fontSize: 10,
+                                                                            fontFamily: 'Comfortaa-VariableFont_wght',
+                                                                            color: white,
+                                                                            fontWeight: FontWeight.w300),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: CustomText(
-                                                                        text: "#${jobCategory[index]['ads_id'].toString()}",
-                                                                        fontSize: 10,
-                                                                        fontFamily: 'Comfortaa-VariableFont_wght',
-                                                                        color: white,
-                                                                        fontWeight: FontWeight.w300),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Positioned(
-                                                            right: 0,
-                                                            left: 0,
-                                                            top: 0,
-                                                            child: Container(
-                                                              height: MediaQuery.of(context).size.height / 3.2,
-                                                              width: double.infinity,
-                                                              decoration: BoxDecoration(color: light_dark, borderRadius: BorderRadius.circular(20)),
-                                                              child: ClipRRect(
-                                                                borderRadius: BorderRadius.circular(20),
-                                                                child: CachedNetworkImage(
-                                                                  alignment: Alignment(-1, -1),
-                                                                  imageUrl: "https://pitaratajobs.novasoft.lk/${jobCategory[index]['main_image']}",
-                                                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                                                    child: SizedBox(
-                                                                      height: 50,
-                                                                      width: 50,
-                                                                      child: CircularProgressIndicator(value: downloadProgress.progress),
-                                                                    ),
-                                                                  ),
-                                                                  errorWidget: (context, url, error) {
-                                                                    return Image.asset(
-                                                                      'assets/no-image-icon-23500.jpg',
-                                                                      fit: BoxFit.cover,
-                                                                    );
-                                                                  },
-                                                                  fit: BoxFit.cover,
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          Positioned(
-                                                            right: 8,
-                                                            child: IconButton(
-                                                                onPressed: () {
-                                                                  if (userStatus == true) {
-                                                                    setState(() {
-                                                                      addId = jobCategory[index]['ads_id'].toString();
-                                                                      log(addId);
-                                                                    });
-                                                                    favoritesList.any((element) =>
-                                                                            element["ads_id"].toString() == jobCategory[index]["ads_id"].toString())
-                                                                        ? alert(
-                                                                            'You have already added this job to your favorite list!',
-                                                                            true,
-                                                                            true,
-                                                                          )
-                                                                        : setFavorite();
-
-                                                                    setState(() {
-                                                                      favoritesList;
-                                                                    });
-                                                                  } else {
-                                                                    alert(
-                                                                      'Please login to your account to add this job to your favorite list!',
-                                                                      false,
-                                                                      false,
-                                                                    );
-                                                                  }
-                                                                },
-                                                                icon: loadFavorites == true &&
-                                                                        jobCategory[index]['ads_id'].toString() == addId.toString()
-                                                                    ? CircularProgressIndicator(
-                                                                        color: red,
-                                                                      )
-                                                                    : ShaderMask(
-                                                                        shaderCallback: (Rect bounds) {
-                                                                          return LinearGradient(
-                                                                            begin: Alignment.topCenter,
-                                                                            end: Alignment.bottomCenter,
-                                                                            colors: [Colors.red, Colors.orange],
-                                                                          ).createShader(bounds);
-                                                                        },
-                                                                        child: Icon(
-                                                                          userStatus == true &&
-                                                                                  favoritesList.any((element) =>
-                                                                                      element["ads_id"].toString() ==
-                                                                                      jobCategory[index]["ads_id"].toString())
-                                                                              ? Icons.favorite
-                                                                              : Icons.favorite_border,
-                                                                          color: userStatus == true &&
-                                                                                  favoritesList.any((element) =>
-                                                                                      element["ads_id"].toString() ==
-                                                                                      jobCategory[index]["ads_id"].toString())
-                                                                              ? red
-                                                                              : white,
+                                                              Positioned(
+                                                                right: 0,
+                                                                left: 0,
+                                                                top: 0,
+                                                                child: Container(
+                                                                  height: MediaQuery.of(context).size.height / 3.2,
+                                                                  width: double.infinity,
+                                                                  decoration:
+                                                                      BoxDecoration(color: light_dark, borderRadius: BorderRadius.circular(20)),
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(20),
+                                                                    child: CachedNetworkImage(
+                                                                      alignment: Alignment(-1, -1),
+                                                                      imageUrl: "$domain/${value.getJobs[index]['main_image']}",
+                                                                      progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                                                        child: SizedBox(
+                                                                          height: 50,
+                                                                          width: 50,
+                                                                          child: CircularProgressIndicator(value: downloadProgress.progress),
                                                                         ),
-                                                                      )),
-                                                          ),
-                                                        ]),
-                                                ),
-                                              ),
-                                            );
-                                    })
+                                                                      ),
+                                                                      errorWidget: (context, url, error) {
+                                                                        return Image.asset(
+                                                                          'assets/no-image-icon-23500.jpg',
+                                                                          fit: BoxFit.cover,
+                                                                        );
+                                                                      },
+                                                                      fit: BoxFit.cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: 8,
+                                                                child: IconButton(
+                                                                    onPressed: () {
+                                                                      logger.w(userStatus);
+                                                                      if (userStatus == true) {
+                                                                        setState(() {
+                                                                          addId = value.getJobs[index]['ads_id'].toString();
+                                                                          print(addId);
+                                                                          logger.w("Logger is working!");
+                                                                        });
+                                                                        favoritesList.any((element) =>
+                                                                                element["ads_id"].toString() ==
+                                                                                value.getJobs[index]["ads_id"].toString())
+                                                                            ? alert(
+                                                                                'You have already added this job to your favorite list!',
+                                                                                true,
+                                                                                true,
+                                                                              )
+                                                                            : setFavorite();
+
+                                                                        setState(() {
+                                                                          favoritesList;
+                                                                        });
+                                                                      } else {
+                                                                        alert(
+                                                                          'Please login to your account to add this job to your favorite list!',
+                                                                          false,
+                                                                          false,
+                                                                        );
+                                                                      }
+                                                                    },
+                                                                    icon: loadFavorites == true &&
+                                                                            value.getJobs[index]['ads_id'].toString() == addId.toString()
+                                                                        ? CircularProgressIndicator(
+                                                                            color: red,
+                                                                          )
+                                                                        : ShaderMask(
+                                                                            shaderCallback: (Rect bounds) {
+                                                                              return LinearGradient(
+                                                                                begin: Alignment.topCenter,
+                                                                                end: Alignment.bottomCenter,
+                                                                                colors: [Colors.red, Colors.orange],
+                                                                              ).createShader(bounds);
+                                                                            },
+                                                                            child: Icon(
+                                                                              userStatus == true &&
+                                                                                      favoritesList.any((element) =>
+                                                                                          element["ads_id"].toString() ==
+                                                                                          value.getJobs[index]["ads_id"].toString())
+                                                                                  ? Icons.favorite
+                                                                                  : Icons.favorite_border,
+                                                                              color: userStatus == true &&
+                                                                                      favoritesList.any((element) =>
+                                                                                          element["ads_id"].toString() ==
+                                                                                          value.getJobs[index]["ads_id"].toString())
+                                                                                  ? red
+                                                                                  : white,
+                                                                            ),
+                                                                          )),
+                                                              ),
+                                                            ]),
+                                                    ),
+                                                  ),
+                                                );
+                                        }),
+                                  )
                       ]),
                       if (_isLoadMoreRuning == true)
                         Positioned(

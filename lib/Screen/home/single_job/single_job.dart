@@ -19,6 +19,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
+import '../../../api/api_deatails.dart';
 import '../../../class/add.dart';
 import '../../../class/main_dialog.dart';
 import '../../../widget/custom_container.dart';
@@ -126,7 +127,7 @@ class _SingleJobState extends State<SingleJob> {
       loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSimilarJobs'),
+    var response = await http.post(Uri.parse('$apiUrl/getSimilarJobs'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "job_category_id": categoryId}));
 
     var res = jsonDecode(response.body.toString());
@@ -134,6 +135,7 @@ class _SingleJobState extends State<SingleJob> {
     setState(() {
       loading = false;
       getSimilarJobsList = res['data'];
+      print(getSimilarJobsList);
     });
   }
 
@@ -142,7 +144,7 @@ class _SingleJobState extends State<SingleJob> {
       // loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
+    var response = await http.post(Uri.parse('$apiUrl/reportThisJob'),
         headers: headers,
         body: json.encode({
           "verification": verification,
@@ -177,7 +179,7 @@ class _SingleJobState extends State<SingleJob> {
       // loading = true;
     });
     var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/sendFeedbackForJob'),
+    var response = await http.post(Uri.parse('$apiUrl/sendFeedbackForJob'),
         headers: headers,
         body: json.encode({
           "verification": verification,
@@ -215,9 +217,12 @@ class _SingleJobState extends State<SingleJob> {
     setState(() {
       verification = z.toString();
       customer_id = y.toString();
+      print('11111111111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+      print(customer_id);
+      print('11111111111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     });
 
-    if (verification != '0') {
+    if (verification != '0' && verification != 'null') {
       await updateJobView(customer_id);
       setState(() {
         verified = true;
@@ -238,7 +243,7 @@ class _SingleJobState extends State<SingleJob> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/updateJobView'),
+    var response = await http.post(Uri.parse('$apiUrl/updateJobView'),
         headers: headers,
         body: json.encode({
           "app_id": "nzone_4457Was555@qsd_job",
@@ -255,7 +260,7 @@ class _SingleJobState extends State<SingleJob> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getSingleJobDetails'),
+    var response = await http.post(Uri.parse('$apiUrl/getSingleJobDetails'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "job_id": "${widget.addId}"}));
     var data = jsonDecode(response.body.toString());
     var res = data['data'];
@@ -263,7 +268,7 @@ class _SingleJobState extends State<SingleJob> {
     print(data);
 
     setState(() {
-      img = res[0]['main_image'].toString();
+      img = "$domain/${res[0]['main_image'].toString()}";
       print(img);
       description = res[0]['description'].toString();
       addId = res[0]['ads_id'].toString();
@@ -579,7 +584,7 @@ class _SingleJobState extends State<SingleJob> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/setFavourite'),
+    var response = await http.post(Uri.parse('$apiUrl/setFavourite'),
         headers: headers,
         body: json.encode({"verification": verification, "app_id": "nzone_4457Was555@qsd_job", "customer_id": customer_id, "job_id": addId}));
     var res = jsonDecode(response.body.toString());
@@ -596,7 +601,7 @@ class _SingleJobState extends State<SingleJob> {
 
     var headers = {'Content-Type': 'application/json'};
 
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getFavouriteJobs'),
+    var response = await http.post(Uri.parse('$apiUrl/getFavouriteJobs'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "verification": verification, "customer_id": customer_id}));
     var res = jsonDecode(response.body.toString());
 
