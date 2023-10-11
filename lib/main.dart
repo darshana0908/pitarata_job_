@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pitarata_job/Screen/splash/Splash.dart';
-import 'package:pitarata_job/class/notification.dart';
+import 'package:pitarata_job/class/push_notification.dart';
 import 'package:pitarata_job/provider/get_Job.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/services.dart';
 
-import 'Screen/home/about_us/single.php.dart';
+
 import 'Screen/home/single_job/single_job.dart';
-import 'class/network_helper.dart';
+
 import 'providers/all_provider.dart';
 import 'providers/google_sign_provider.dart';
 
@@ -24,7 +24,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
-  // await notify().initNotifications();
+  await notify().initNotifications();
   // print(fcmToken);
 
   runApp(MultiProvider(

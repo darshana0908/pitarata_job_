@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/db/sqldb.dart';
@@ -59,30 +60,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     });
   }
 
-  dd() async {
-    bool result = await InternetConnectionChecker().hasConnection;
-    if (result == true) {
-      print('YAY! Free cute dog pics!');
-    } else {
-      print('No internet :( Reason:');
-      ;
-    }
-  }
-
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    setState(() {
-      print(result);
-      if (ConnectivityResult.none == result) {
-        print('ffffffffffffffffffffffffffffff');
-        Provider.of<AppProvider>(context, listen: false).internet = false;
-      } else {
-        Provider.of<AppProvider>(context, listen: false).internet = true;
-        print('ffffffffffffffffffffffffffffaaaaaaaaaaaaaaaaaaaff');
-      }
-      ;
-    });
-  }
-
   getCustomerNotifications() async {
     bool result = await InternetConnectionChecker().hasConnection;
     print(result);
@@ -90,7 +67,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     setState(() {
       isLoading = true;
     });
-    // noteList = await sqlDb.readData("select * from notification_list");
+    noteList = await sqlDb.readData("select * from notification_list");
     if (result == true) {
       print('ffffffff');
       var headers = {'Content-Type': 'application/json'};

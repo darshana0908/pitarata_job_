@@ -668,7 +668,7 @@ class _SingleJobState extends State<SingleJob> {
                                 if (item) {
                                 } else {
                                   Share.share(
-                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\n \nhttps://pitaratajobs.novasoft.lk/single.php?id=${addId}\n\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
+                                      'Hey, I found this amazing job post in Pita Rata Jobs app. Check this out.\n \n$domain/single.php?id=${addId}\n\nDownload and try Pita Rata Jobs app.\nApp Link - https://shorturl.at/jwHPQ ');
                                 }
 
                                 Navigator.pop(context);

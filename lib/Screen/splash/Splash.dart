@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:pitarata_job/Screen/home/home.dart';
+import 'package:pitarata_job/Screen/home/navigation.dart';
 import 'package:pitarata_job/Screen/intro/intro_1.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 import 'package:pitarata_job/color/colors.dart';

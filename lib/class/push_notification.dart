@@ -39,14 +39,14 @@ class notify {
         handleBckgroundMessage(message);
       },
     );
-    final platform =
-        localNotificationsPlugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final platform = localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await platform?.createNotificationChannel(channel);
   }
 
   Future<void> initNotifications() async {
+    print('sssssssssssssssssssssssssssssssssssssssssssssssss');
     await firebaseMessaging.requestPermission();
+    print('sssssssssssssssssssssssssssssssssssssssssssssssss');
     final fCMTocken = await firebaseMessaging.getToken();
     print(fCMTocken);
     initLocalNotificatons();

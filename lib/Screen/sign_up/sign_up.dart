@@ -7,7 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pitarata_job/Screen/home/home.dart';
+import 'package:pitarata_job/Screen/home/navigation.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
 
 import 'package:pitarata_job/widget/custom_text.dart';

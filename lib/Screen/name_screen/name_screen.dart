@@ -8,7 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:motion_toast/motion_toast.dart';
-import 'package:pitarata_job/Screen/home/home.dart';
+import 'package:pitarata_job/Screen/home/navigation.dart';
 import 'package:pitarata_job/Screen/name_screen/reset_pasword.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/alert.dart';

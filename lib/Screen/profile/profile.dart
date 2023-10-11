@@ -85,8 +85,14 @@ class _ProfileState extends State<Profile> {
       });
     } else {
       setState(() {
-        userLoging = false;
-        showCustomDialog(context, 'Please login to your account to access your profile setting !');
+        print('ddddddddddddddddddddddddddddddddddddd');
+
+        isloading = false;
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          showCustomDialog(context, 'Please login to your account to access your profile setting !');
+          Future.delayed(Duration(milliseconds: 20));
+          log('kkkkkkkkkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkkkkkkkkkddddddddddddddddddk');
+        });
       });
     }
     setState(() {
@@ -203,10 +209,10 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: black,
-        body: userLoging
-            ? Stack(
-                children: [
-                  SingleChildScrollView(
+        body: Stack(
+          children: [
+            userLoging
+                ? SingleChildScrollView(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Container(
                         height: MediaQuery.of(context).size.height / 3,
@@ -505,12 +511,12 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ]),
-                  ),
-                  isloading
-                      ? Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6))
-                      : Container()
-                ],
-              )
-            : Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6)));
+                  )
+                : Container(),
+            isloading
+                ? Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6))
+                : Container()
+          ],
+        ));
   }
 }

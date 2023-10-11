@@ -13,6 +13,7 @@ import 'package:pitarata_job/Screen/home/get_support/get_support.dart';
 import 'package:pitarata_job/Screen/home/logout/logout.dart';
 import 'package:pitarata_job/Screen/profile/profile.dart';
 import 'package:pitarata_job/Screen/name_screen/name_screen.dart';
+import 'package:pitarata_job/api/api_deatails.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
 import 'package:pitarata_job/widget/custom_text.dart';
@@ -21,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import '../Screen/home/more_by_team/more_by_team.dart';
 import '../Screen/home/whatApp_community/whatsApp_community.dart';
+import '../api/api_deatails.dart';
 import 'drawer_row.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -42,7 +44,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/reportThisJob'),
+    var response = await http.post(Uri.parse('$apiUrl/reportThisJob'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
     var res = jsonDecode(response.body.toString());
     List img = res['data'];
@@ -153,7 +155,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           icon: Icons.privacy_tip,
                           text: 'Privacy Policy',
                           on: () async {
-                            var url = Uri.parse("https://pitaratajobs.novasoft.lk/privacy_policy.php");
+                            var url = Uri.parse("$domain/privacy_policy.php");
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
                             } else {

@@ -19,15 +19,15 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
-import '../api/api_deatails.dart';
-import '../color/colors.dart';
-import 'custom_list.dart';
-import 'custom_text.dart';
+import '../../api/api_deatails.dart';
+import '../../color/colors.dart';
+import '../../widget/custom_list.dart';
+import '../../widget/custom_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
-import 'fade_home.dart';
-import 'radius_button.dart';
+import '../../widget/fade_home.dart';
+import '../../widget/radius_button.dart';
 
 class CustomHome extends StatefulWidget {
   const CustomHome({super.key, required this.customerId, required this.userStatus});
@@ -42,6 +42,7 @@ class _CustomHomeState extends State<CustomHome> {
   // ItemScrollController _scrollController = ItemScrollController();
   var logger = Logger();
   String selected = '0';
+  String selectedCharacter = '100';
   bool color = false;
   List wallPaper = [];
   List jobCategory = [];
@@ -162,7 +163,7 @@ class _CustomHomeState extends State<CustomHome> {
         cat.addAll(res['data']);
         jobCategoryName = cat;
         Provider.of<AppProvider>(context, listen: false).categoryList = cat;
-        Provider.of<AppProvider>(context, listen: false).serchCategory = cat;
+        Provider.of<AppProvider>(context, listen: false).serchCategory = jobCategoryList;
         log('2');
         isLoading = false;
       });
@@ -820,7 +821,7 @@ class _CustomHomeState extends State<CustomHome> {
 
   SearchCategory() {
     TextEditingController controller = TextEditingController();
-    int selectedItem = 0;
+    int Item = 100;
     ScrollController scrollController = ScrollController();
     showDialog(
       context: context,
@@ -862,7 +863,7 @@ class _CustomHomeState extends State<CustomHome> {
                     onChanged: (value) {
                       _runFilter2(value);
                       setState(() {
-                        selectedItem = 2000;
+                        Item = 2000;
                       });
                     },
                     decoration: InputDecoration(
@@ -904,12 +905,12 @@ class _CustomHomeState extends State<CustomHome> {
                           _runFilter(character[index]);
                           setState(() {
                             controller.text = character[index];
-                            selectedItem = index;
+                            Item = index;
                           });
                         },
                         child: Text(
                           character[index],
-                          style: TextStyle(color: selectedItem == index ? white : Colors.blue, fontSize: 18),
+                          style: TextStyle(color: Item == index ? white : Colors.blue, fontSize: 18),
                         ),
                       ),
                     ),
@@ -932,6 +933,7 @@ class _CustomHomeState extends State<CustomHome> {
                             setState(() {
                               selected = temp[index]['category_id'];
                               getJobCategory();
+                              Item = 100;
                             });
 
                             Navigator.pop(context);

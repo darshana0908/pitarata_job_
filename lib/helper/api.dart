@@ -24,7 +24,7 @@ class Api {
     var headers = {'Content-Type': 'application/json'};
 
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getCategory'),
+    var response = await http.post(Uri.parse('$apiUrl/getCategory'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job"}));
     var res = jsonDecode(response.body.toString());
 
@@ -42,7 +42,7 @@ class Api {
   getJobCategory(BuildContext context) async {
     var headers = {'Content-Type': 'application/json'};
     // request.headers.addAll(headers);
-    var response = await http.post(Uri.parse('https://pitaratajobs.novasoft.lk/_app_remove_server/nzone_server_nzone_api/getJobsToHome'),
+    var response = await http.post(Uri.parse('$apiUrl/getJobsToHome'),
         headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "category_id": '0', "from": 0, "to": "50"}));
     var res = jsonDecode(response.body.toString());
     print(res['data']);
