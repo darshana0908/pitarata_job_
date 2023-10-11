@@ -101,13 +101,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     } else {
       print('fffffffddddddddddddf');
       noteList = await sqlDb.readData("select * from notification_list");
-
-      setState(() {
-        var myNote = jsonDecode(noteList[0]['not']);
-        notificationsList = myNote;
-        print(notificationsList);
-        isLoading = false;
-      });
+      print(noteList);
+      if (noteList.isNotEmpty) {
+        setState(() {
+          var myNote = jsonDecode(noteList[0]['not']);
+          notificationsList = myNote;
+          print(notificationsList);
+          isLoading = false;
+        });
+      }
     }
 
     setState(() {

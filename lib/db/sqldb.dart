@@ -15,9 +15,8 @@ class SqlDb {
 
   intialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'mms.db');
-    Database mydb = await openDatabase(path,
-        onCreate: _onCreate, version: 6, onUpgrade: _onUpgrade);
+    String path = join(databasepath, 'aaana.db');
+    Database mydb = await openDatabase(path, onCreate: _onCreate, version: 12, onUpgrade: _onUpgrade);
     return mydb;
   }
 
@@ -57,10 +56,50 @@ class SqlDb {
 
   )
  ''');
-     await db.execute('''
+    await db.execute('''
   CREATE TABLE "notification_list" (
     "id" INTEGER  NOT NULL PRIMARY KEY  ,
       "not" TEXT NOT NULL
+    
+      
+    
+
+
+  )
+ ''');
+    await db.execute('''
+  CREATE TABLE "profile" (
+    "id" INTEGER  NOT NULL PRIMARY KEY  ,
+      "m_no" TEXT NOT NULL,
+       "m2_no" TEXT NOT NULL,
+        "gender" TEXT NOT NULL, 
+        "birthday" TEXT NOT NULL,
+         "address" TEXT NOT NULL,
+          "email" TEXT NOT NULL,
+           "name" TEXT NOT NULL,
+           "status" TEXT NOT NULL
+           
+
+    
+      
+    
+
+
+  )
+ ''');
+    await db.execute('''
+  CREATE TABLE "profile_update" (
+    "id" INTEGER  NOT NULL PRIMARY KEY  ,
+      "m_no" TEXT NOT NULL,
+       "m2_no" TEXT NOT NULL,
+        "gender" TEXT NOT NULL, 
+        "birthday" TEXT NOT NULL,
+         "address" TEXT NOT NULL,
+          "email" TEXT NOT NULL,
+           "name" TEXT NOT NULL,
+           "user_name" TEXT NOT NULL
+           
+
     
       
     

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -15,6 +16,7 @@ import 'package:pitarata_job/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api_deatails.dart';
+import '../../db/sqldb.dart';
 import '../../widget/alert.dart';
 
 class UpdateProfile extends StatefulWidget {
@@ -82,44 +84,67 @@ class _UpdateProfileState extends State<UpdateProfile> {
   bool male = false;
   bool female = false;
   bool mybirth = false;
+  SqlDb sqlDb = SqlDb();
+  List localProfile = [];
 
   updateCustomerProfile() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    localProfile = await sqlDb.readData("select * from profile");
     setState(() {
       isLoading = true;
     });
-    var headers = {'Content-Type': 'application/json'};
+    if (result == true) {
+      print('dddddddaaaaaaaaaaaaaaaaadddddddddddddddddddd');
+      var headers = {'Content-Type': 'application/json'};
 
-    var response = await http.post(Uri.parse('$apiUrl/updateCustomerProfile'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "verification": widget.vId,
-          "customer_id": widget.cId,
-          "name": editName.text,
-          "mobile_1": editmobile.text,
-          "mobile_2": editmobile2.text,
-          "email": editEmail.text,
-          "gender": male == true ? "1" : "2",
-          "address": editAddress.text,
-          'birthday': birthday
-        }));
-    log(customerId + verification);
+      var response = await http.post(Uri.parse('$apiUrl/updateCustomerProfile'),
+          headers: headers,
+          body: json.encode({
+            "app_id": "nzone_4457Was555@qsd_job",
+            "verification": widget.vId,
+            "customer_id": widget.cId,
+            "name": editName.text,
+            "mobile_1": editmobile.text,
+            "mobile_2": editmobile2.text,
+            "email": editEmail.text,
+            "gender": male == true ? "1" : "2",
+            "address": editAddress.text,
+            'birthday': birthday
+          }));
+      log(customerId + verification);
 
-    var res = jsonDecode(response.body.toString());
-    if (res['status'] == '1') {
-      log(res.toString());
+      var res = jsonDecode(response.body.toString());
+      if (res['status'] == '1') {
+        log(res.toString());
 
-      setState(() {
-        male = false;
-        female = false;
-        update = false;
-        isLoading = false;
-        widget.update();
-      });
-      back();
+        setState(() {
+          male = false;
+          female = false;
+          update = false;
+          isLoading = false;
+          widget.update();
+        });
+        back();
+      }
+
+      MotionToast.info(title: Text("info"), description: Text(res['msg'])).show(context);
+    } else {
+      print('ddddddddddddddddddddddddddd');
+
+      if (localProfile.isEmpty) {
+        var r = await sqlDb.insertData(
+            "insert into profile ('m_no','m2_no','gender','birthday','address','email','name','status') values('${editmobile.text}','${editmobile2.text}','${editGender.text}','$birthday','${editAddress.text}','${editEmail.text}','${editName.text}','0')");
+        back();
+      } else {
+        print('fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffssssssssssssssssffffffffffffff');
+        await sqlDb.updateData(
+            "update profile set 'm_no' = '${editmobile.text}','m2_no'='${editmobile2.text}','gender'='${editGender.text}','birthday'='$birthday','address'='${editAddress.text}','email'='${editEmail.text}','name'='${editName.text}','status'='0' where id ='1' ");
+        localProfile = await sqlDb.readData("select * from profile");
+        print(localProfile);
+        print('cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
+        back();
+      }
     }
-
-    MotionToast.info(title: Text("info"), description: Text(res['msg'])).show(context);
   }
 
   back() {

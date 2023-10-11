@@ -5,8 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:pitarata_job/color/colors.dart';
 import 'package:pitarata_job/db/sqldb.dart';
 import 'package:pitarata_job/widget/arrow_button.dart';
@@ -59,6 +61,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   userLogin() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     setState(() {
@@ -72,7 +76,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     if (verification != '0' && verification != "null") {
       if (!mounted) return;
       setState(() {
-        getFavouriteJobs();
+        if (result == true) {
+          getFavouriteJobs();
+        } else {}
+
         log('kkkkkkkkkkkkkkkkkkddddddqqqqqqqqqqqqqqqqqrrrrrrrrrrrrrrrrrrddddddddddddk');
         userLoging = true;
       });

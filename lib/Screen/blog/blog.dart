@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pitarata_job/color/colors.dart';
@@ -34,18 +35,14 @@ class _BlogState extends State<Blog> {
 
   loadeMore() async {
     log('hhhhhhhhhhhhhh');
-    if (hasNextPage == true &&
-        isFirstLoadRunning == false &&
-        isLoadMoreRunning == false) {
+    if (hasNextPage == true && isFirstLoadRunning == false && isLoadMoreRunning == false) {
       setState(() {
         isLoadMoreRunning = true;
       });
 
       page += 1;
       var headers = {'Content-Type': 'application/json'};
-      var response = await http.post(
-          Uri.parse(
-              '$apiUrl/getJobBlog'),
+      var response = await http.post(Uri.parse('$apiUrl/getJobBlog'),
           headers: headers,
           body: json.encode({
             "app_id": "nzone_4457Was555@qsd_job",
@@ -72,27 +69,34 @@ class _BlogState extends State<Blog> {
   }
 
   getJobBlog() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+
     setState(() {
       loading = true;
     });
-    var headers = {'Content-Type': 'application/json'};
-    var response = await http.post(
-        Uri.parse(
-            '$apiUrl/getJobBlog'),
-        headers: headers,
-        body: json.encode({
-          "app_id": "nzone_4457Was555@qsd_job",
-          "from": '0',
-          "to": '20',
-        }));
+    if (result == true) {
+      var headers = {'Content-Type': 'application/json'};
+      var response = await http.post(Uri.parse('$apiUrl/getJobBlog'),
+          headers: headers,
+          body: json.encode({
+            "app_id": "nzone_4457Was555@qsd_job",
+            "from": '0',
+            "to": '20',
+          }));
 
-    var res = jsonDecode(response.body.toString());
-    log(res.toString());
-    // Navigator.pop(context);
-    setState(() {
-      loading = false;
-      blogList = res['data'];
-    });
+      var res = jsonDecode(response.body.toString());
+      log(res.toString());
+
+      // Navigator.pop(context);
+      setState(() {
+        loading = false;
+        blogList = res['data'];
+      });
+    } else {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -108,15 +112,9 @@ class _BlogState extends State<Blog> {
     return Scaffold(
       backgroundColor: black,
       body: loading
-          ? Center(
-              child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.grey,
-                  size: MediaQuery.of(context).size.width / 6))
+          ? Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.grey, size: MediaQuery.of(context).size.width / 6))
           : blogList.isEmpty
-              ? Center(
-                  child: SizedBox(
-                      height: 200,
-                      child: Lottie.asset('assets/nothing_found.json')))
+              ? Center(child: SizedBox(height: 200, child: Lottie.asset('assets/nothing_found.json')))
               : Stack(
                   children: [
                     ListView.builder(
@@ -132,67 +130,46 @@ class _BlogState extends State<Blog> {
                                 child: Container(
                                   padding: EdgeInsets.all(8),
                                   width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: light_dark,
-                                      borderRadius: BorderRadius.circular(20)),
+                                  decoration: BoxDecoration(color: light_dark, borderRadius: BorderRadius.circular(20)),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
                                         height: 20,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
                                         child: CustomText(
                                             text: blogList[index]['title'],
                                             fontSize: 17,
-                                            fontFamily:
-                                                'Comfortaa-VariableFont_wght',
+                                            fontFamily: 'Comfortaa-VariableFont_wght',
                                             color: white,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Container(
                                           padding: EdgeInsets.all(20),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
+                                            borderRadius: BorderRadius.circular(2),
                                             child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "$domain/${blogList[index]['post_image']}",
-                                              progressIndicatorBuilder:
-                                                  (context, url,
-                                                          downloadProgress) =>
-                                                      Center(
+                                              imageUrl: "$domain/${blogList[index]['post_image']}",
+                                              progressIndicatorBuilder: (context, url, downloadProgress) => Center(
                                                 child: SizedBox(
                                                   height: 50,
                                                   width: 50,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                          value:
-                                                              downloadProgress
-                                                                  .progress),
+                                                  child: CircularProgressIndicator(value: downloadProgress.progress),
                                                 ),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
+                                              errorWidget: (context, url, error) => Icon(Icons.error),
                                               fit: BoxFit.scaleDown,
                                             ),
                                           )),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20),
                                         child: Container(
                                             child: Text(
                                           blogList[index]['summary'],
                                           style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily:
-                                                  'Comfortaa-VariableFont_wght',
-                                              color: white,
-                                              fontWeight: FontWeight.normal),
+                                              fontSize: 14, fontFamily: 'Comfortaa-VariableFont_wght', color: white, fontWeight: FontWeight.normal),
                                         )),
                                       ),
                                       Padding(
@@ -205,11 +182,9 @@ class _BlogState extends State<Blog> {
                                                   : "${blogList[index]['date']}+ ${blogList[index]['time']}",
                                               style: TextStyle(
                                                   fontSize: 14,
-                                                  fontFamily:
-                                                      'Comfortaa-VariableFont_wght',
+                                                  fontFamily: 'Comfortaa-VariableFont_wght',
                                                   color: Colors.white60,
-                                                  fontWeight:
-                                                      FontWeight.normal),
+                                                  fontWeight: FontWeight.normal),
                                             )),
                                       ),
                                     ],

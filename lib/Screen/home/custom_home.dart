@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pitarata_job/Screen/home/single_job/single_job.dart';
@@ -77,6 +78,7 @@ class _CustomHomeState extends State<CustomHome> {
   void initState() {
     // getCategory();
     // getJobCategory();
+
     userLogin();
 
     // TODO: implement initState
@@ -91,6 +93,7 @@ class _CustomHomeState extends State<CustomHome> {
   }
 
   userLogin() async {
+    bool result = await InternetConnectionChecker().hasConnection;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     var z = sharedPreferences.getString('verification');
@@ -101,14 +104,29 @@ class _CustomHomeState extends State<CustomHome> {
     });
     logger.d(verification);
     logger.d(customer_id);
+
     log("verificatio" + verification);
+
     if (verification != '0' && verification != 'null') {
-      getWallpaper();
-      print('ddddddddddddddddddddd');
-      await getFavouriteJobs();
-      setState(() {
-        userStatus = true;
-      });
+      if (result == true) {
+        print('ddddddddddddddddddddd');
+        getWallpaper();
+        await getFavouriteJobs();
+        setState(() {
+          userStatus = true;
+        });
+      } else {
+        var snackBar = SnackBar(
+            duration: Duration(seconds: 20),
+            content: Text(
+              'No internet connecteion',
+              style: TextStyle(color: red),
+            ));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Provider.of<AppProvider>(context, listen: false).wallPaper = [
+          {'image_path': 'reso/post_2023_10_10/NovaTechZone_48855689520231010032846am.jpg#', 'url': '', 'title': '', 'caption': ''},
+        ];
+      }
     } else {
       getWallpaper();
       logger.d('ccccccccccccccccccccccccc');
@@ -132,6 +150,7 @@ class _CustomHomeState extends State<CustomHome> {
       if (img.isNotEmpty) {
         setState(() {
           wallPaper = img;
+          print(wallPaper);
           Provider.of<AppProvider>(context, listen: false).wallPaper = img;
           log('1');
           isLoading = false;

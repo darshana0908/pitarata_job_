@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:html/parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -21,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api_deatails.dart';
 import '../../class/main_dialog.dart';
+import '../../db/sqldb.dart';
 import '../../widget/alert.dart';
 
 class Profile extends StatefulWidget {
@@ -62,6 +67,10 @@ class _ProfileState extends State<Profile> {
   bool proimg = false;
   bool imgLoad = false;
   bool tap = false;
+  SqlDb sqlDb = SqlDb();
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   userLogin() async {
     setState(() {
       isloading = true;
@@ -101,37 +110,88 @@ class _ProfileState extends State<Profile> {
   }
 
   getCustomerProfileDetails() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    List pList = await sqlDb.readData("select * from profile");
     print('ffffffff');
     setState(() {
       isloading = true;
     });
+    if (result == true) {
+      var headers = {'Content-Type': 'application/json'};
 
-    var headers = {'Content-Type': 'application/json'};
+      var response = await http.post(Uri.parse('$apiUrl/getCustomerProfileDetails'),
+          headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "customer_id": customerId, "verification": verification}));
+      var res = jsonDecode(response.body.toString());
+      print(res.toString());
+      if (res.toString().isNotEmpty) {
+        for (var index = 0; index < res['data'].length; ++index) {
+          final value = res['data'][0];
 
-    var response = await http.post(Uri.parse('$apiUrl/getCustomerProfileDetails'),
-        headers: headers, body: json.encode({"app_id": "nzone_4457Was555@qsd_job", "customer_id": customerId, "verification": verification}));
-    var res = jsonDecode(response.body.toString());
-    log(res.toString());
-    if (res.toString().isNotEmpty) {
-      for (var index = 0; index < res['data'].length; ++index) {
-        final value = res['data'][0];
+          print('dddddddddddddddddddd' + res['data'][index]['name'].toString());
 
-        log('dddddddddddddddddddd' + res['data'][index]['name'].toString());
-
-        setState(() {
+          var lname = res['data'][index]['name'].toString();
+          var laddress = res['data'][index]['address'].toString();
+          var lmobile = res['data'][index]['mobile'].toString();
+          var lmobile2 = res['data'][index]['mobile_2'].toString();
+          var limg = res['data'][index]['profile_image'].toString();
+          var lgender = res['data'][index]['gender'].toString();
+          var lbirtday = res['data'][index]['birthday'].toString();
+          var lemail = res['data'][index]['email'].toString();
+          var lusername = res['data'][index]['username'].toString();
+          print(lusername);
           isloading = false;
 
-          name = res['data'][index]['name'].toString();
           address = res['data'][index]['address'].toString();
-          mobile = res['data'][index]['mobile'].toString();
-          mobile2 = res['data'][index]['mobile_2'].toString();
-          img = res['data'][index]['profile_image'].toString();
-          gender = res['data'][index]['gender'].toString();
-          birtday = res['data'][index]['birthday'].toString();
-          email = res['data'][index]['email'].toString();
-          username = res['data'][index]['username'].toString();
-          isloading = false;
-        });
+          address = res['data'][index]['address'].toString();
+          if (pList.isEmpty) {
+            print('fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+            var r = await sqlDb.insertData(
+                "insert into profile ('m_no','m2_no','gender','birthday','address','email','name','status') values('$lmobile','$lmobile2','$lgender','$lbirtday','$laddress','$lemail','$lname','1')");
+          } else {
+            print('fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffssssssssssssssssffffffffffffff');
+            await sqlDb.updateData(
+                "update profile set 'm_no' = '$lmobile','m2_no'='$lmobile2','gender'='$lgender','birthday'='$lbirtday','address'='$laddress','email'='$lemail','name'='$lname','status'='1' where id ='1' ");
+          }
+          pList = await sqlDb.readData("select * from profile");
+          print(pList);
+          setState(() {
+            isloading = false;
+
+            name = pList[index]['name'].toString();
+            address = pList[index]['address'].toString();
+            mobile = pList[index]['m_no'].toString();
+            mobile2 = pList[index]['m2_no'].toString();
+            img = res['data'][index]['profile_image'].toString();
+            gender = pList[index]['gender'].toString();
+            birtday = pList[index]['birthday'].toString();
+            email = pList[index]['email'].toString();
+            username = pList[index]['email'].toString();
+            print(username);
+            isloading = false;
+          });
+        }
+      }
+    } else {
+      pList = await sqlDb.readData("select * from profile");
+      if (pList.isNotEmpty) {
+        for (var index = 0; index < pList.length; ++index) {
+          pList = await sqlDb.readData("select * from profile");
+          print(pList);
+          setState(() {
+            isloading = false;
+
+            name = pList[index]['name'].toString();
+            address = pList[index]['address'].toString();
+            mobile = pList[index]['m_no'].toString();
+            mobile2 = pList[index]['m2_no'].toString();
+
+            gender = pList[index]['gender'].toString();
+            birtday = pList[index]['birthday'].toString();
+            email = pList[index]['email'].toString();
+            username = pList[index]['email'].toString();
+            isloading = false;
+          });
+        }
       }
     }
   }
@@ -157,7 +217,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       imgLoad = true;
     });
-    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl/upload_customer_profile_image.php'));
+    var request = http.MultipartRequest('POST', Uri.parse('$domain/uploads/upload_customer_profile_image.php'));
     request.fields.addAll({'action': 'simple'});
     request.files.add(await http.MultipartFile.fromPath('my_field', imageFile));
 
@@ -201,8 +261,93 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     userLogin();
+    initConnectivity();
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // TODO: implement initState
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(
+        'Couldn\'t check connectivity status',
+      );
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+      print(result);
+      if (result != 'ConnectivityResult.none') {
+        print('dddddd');
+        updateCustomerProfile();
+      } else {
+        print('ddddddssssssssssss');
+      }
+    });
+  }
+
+  updateCustomerProfile() async {
+    List localProfile = await sqlDb.readData("select * from profile");
+    setState(() {
+      isloading = true;
+    });
+
+    for (var index = 0; index < localProfile.length; ++index) {
+      if (localProfile[index]['status'] == '0') {
+        var headers = {'Content-Type': 'application/json'};
+        var response = await http.post(Uri.parse('$apiUrl/updateCustomerProfile'),
+            headers: headers,
+            body: json.encode({
+              "app_id": "nzone_4457Was555@qsd_job",
+              "verification": verification,
+              "customer_id": customerId,
+              "name": localProfile[index]['name'].toString(),
+              "mobile_1": localProfile[index]['m_no'].toString(),
+              "mobile_2": localProfile[index]['m2_no'].toString(),
+              "email": localProfile[index]['email'].toString(),
+              "gender": localProfile[index]['gender'].toString(),
+              "address": localProfile[index]['address'].toString(),
+              'birthday': localProfile[index]['birthday'].toString()
+            }));
+        log(customerId + verification);
+
+        var res = jsonDecode(response.body.toString());
+        if (res['status'] == '1') {
+          await sqlDb.updateData("update profile set status ='1' where id ='1' ");
+          localProfile = await sqlDb.readData("select * from profile");
+          print(localProfile);
+          getCustomerProfileDetails();
+        }
+
+        print(res);
+      }
+    }
+    setState(() {
+      isloading = false;
+    });
   }
 
   @override
