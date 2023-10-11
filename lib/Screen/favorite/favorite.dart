@@ -69,7 +69,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     });
 
     log("verificatio" + verification);
-    if (verification != '0') {
+    if (verification != '0' && verification != "null") {
       if (!mounted) return;
       setState(() {
         getFavouriteJobs();
@@ -77,7 +77,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         userLoging = true;
       });
     } else {
-      if (!mounted) return;
       setState(() {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           showCustomDialog(context, 'Please login to your account to access your favorite jobs !');

@@ -85,12 +85,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   getCustomerNotifications() async {
     bool result = await InternetConnectionChecker().hasConnection;
+    print(result);
     noteList = await sqlDb.readData("select * from notification_list");
     setState(() {
       isLoading = true;
     });
     // noteList = await sqlDb.readData("select * from notification_list");
     if (result == true) {
+      print('ffffffff');
       var headers = {'Content-Type': 'application/json'};
       var response = await http.post(Uri.parse('$apiUrl/getCustomerNotifications'),
           headers: headers,
@@ -101,10 +103,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           }));
 
       var res = jsonDecode(response.body.toString());
-      log(res.toString());
-      setState(() {
-        isLoading = false;
-      });
+      print(res.toString());
 
       if (res['data'] != "null") {
         var data = jsonEncode(res['data']);
@@ -123,6 +122,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         });
       }
     } else {
+      print('fffffffddddddddddddf');
       noteList = await sqlDb.readData("select * from notification_list");
 
       setState(() {

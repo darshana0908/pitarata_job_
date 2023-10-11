@@ -24,7 +24,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
-  await notify().initNotifications();
+  // await notify().initNotifications();
   // print(fcmToken);
 
   runApp(MultiProvider(
