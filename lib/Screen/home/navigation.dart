@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: black,
           centerTitle: true,
           title: center == true
-              ? Consumer<AppProvider>(builder: (context, value, child) => Text("$title+ ${value.internet}"))
+              ? Consumer<AppProvider>(builder: (context, value, child) => Text("$title"))
               : Container(
                   alignment: Alignment.centerRight,
                   child: CustomText(

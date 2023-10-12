@@ -15,8 +15,8 @@ class SqlDb {
 
   intialDb() async {
     String databasepath = await getDatabasesPath();
-    String path = join(databasepath, 'aaana.db');
-    Database mydb = await openDatabase(path, onCreate: _onCreate, version: 12, onUpgrade: _onUpgrade);
+    String path = join(databasepath, 'qa.db');
+    Database mydb = await openDatabase(path, onCreate: _onCreate, version: 14, onUpgrade: _onUpgrade);
     return mydb;
   }
 
@@ -29,6 +29,32 @@ class SqlDb {
   CREATE TABLE "notification" (
     "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
       "key" TEXT NOT NULL
+     
+     
+ 
+ 
+  
+
+
+  )
+ ''');
+    await db.execute('''
+  CREATE TABLE "wallpaper" (
+    "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
+      "data" TEXT NOT NULL
+     
+     
+ 
+ 
+  
+
+
+  )
+ ''');
+    await db.execute('''
+  CREATE TABLE "category" (
+    "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
+      "data" TEXT NOT NULL
      
      
  
